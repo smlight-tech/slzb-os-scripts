@@ -113,7 +113,7 @@ SLZB-OS - єдина операційна система для всіх при�
 - повний буффер пакету, тип ```bytes```
 
 Якщо після виконання ви поврнете ```true``` то цей пакет даних не буде відправлено до зігбі сокету **(не працює для для EFR32x)**
-<br>Приклад: перевірте [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/cc2652x_reports_stats/reports_stats.be)
+<br>Приклад: перевірте [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/report_stats/report_stats.be)
 
 ```ZB.on_connect(f)``` викликається при підключенні нового сокет-клієнту в режимі мережевого координатора.<br>
 Приймає один аргумент типу ```function```.<br>
@@ -136,7 +136,7 @@ ZB.on_connect(conn_cb)
 При виконанні надає 1 аргумент:
 - id клієнта (позиція в массиві клієнтів), тип ```int```
 
-<br>Приклад: перевірте [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/cc2652x_reports_stats/reports_stats.be)
+<br>Приклад: перевірте [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/report_stats/report_stats.be)
 
 ### FS - доступ до файлової системи. Використовуйте з обережністю
 ```FS.exists(x)``` перевіряє чи існує вказаний файл. Повертає ```boolean```
@@ -168,7 +168,7 @@ ZB.on_connect(conn_cb)
 - z - текст відповіді, тип ```string```
 
 Повертає: нічого.<br>
-Приклад: перевірте [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/cc2652x_reports_stats/reports_stats.be)
+Приклад: перевірте [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/report_stats/report_stats.be)
 
 #### Доступні події
 ```WEBSERVER.on_webhook(f)``` - викликається коли виконується GET/POST запит на ```<device ip>/script/webhook```<br>
@@ -176,4 +176,4 @@ ZB.on_connect(conn_cb)
 При виконанні надає 1 аргумент:
 - кількість аргументів GET/POST запиту, тип ```int```
 
-Приклад: перевірте [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/cc2652x_reports_stats/reports_stats.be)
+Приклад: перевірте [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/report_stats/report_stats.be)
