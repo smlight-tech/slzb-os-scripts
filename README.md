@@ -78,4 +78,4 @@ Example: ```ZB.suspend(true) SLZB.delay(5000) ZB.suspend(false)``` suspends the 
 Example: ```FS.exists("/be/test.be")``` returns `true` if the script `/be/test.be` exists.
 
 ```FS.open(filename, mode)``` Native function for file operations. [Documentation](https://berry.readthedocs.io/en/latest/source/en/Chapter-7.html?highlight=open#open-function).  
-Example: Refer to the [get_file_size.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examlpes/basic/get_file_size.be) example.
+Example: Refer to the [get_file_size.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examples/basic/get_file_size.be) example.
