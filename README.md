@@ -66,7 +66,7 @@ This means that if your script function execution takes more than 500ms, you may
 
 ### ZB - Access to the Zigbee Chip (Use with Caution)
 #### Coexistence of the Zigbee Socket and the ZB Module
-<img src="./images/zigbee_access_control.png?raw=true" width=650px/>
+<img src="./images/zigbee access control.png?raw=true" width=650px/>
 <br>SLZB-OS uses parallel task execution. This means that when you want to access the Zigbee chip, you must first "lock" access using ```ZB.suspend()```
 <br>Most functions do this automatically, so you don’t need to worry, but some functionality requires doing this manually.
 
