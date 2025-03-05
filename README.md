@@ -173,7 +173,7 @@ Returns a ```string```. If the argument does not exist, it returns an empty stri
 ```WEBSERVER.has_arg(x)``` returns ```true``` if the argument ```x``` exists.  
 Takes as input a ```string``` (argument name).
 
-```WEBSERVER.send(x, y, z)``` sends a response to the client's request.  
+```WEBSERVER.send(x, y, z)``` sends a response to the client's request.<br>
 **PLEASE USE THIS ONLY INSIDE ```WEBSERVER.on_webhook()```**  
 
 Takes as input:
