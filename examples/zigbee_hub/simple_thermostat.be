@@ -12,6 +12,11 @@ var hysteresis = 2 # +- 2 deg
 var heating = true # heating or cooling selector
 var relayState = false
 
+# zHub takes some time to start so we have to wait
+# for it to fully start before accessing ZigBee devices.
+SLZB.log("Waiting for Zigbee Hub start...")
+ZHB.waitForStart(0xff) # 0xff - to wait forever
+
 # ZHB.getDevice("some name") # to get device by name
 var tempSensor = ZHB.getDevice(tempSensorIeee)
 var relay = ZHB.getDevice(relayIeee)
