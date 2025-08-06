@@ -4,7 +4,7 @@ import ZB
 import WEBSERVER
 import json
 
-var model = SLZB.device_model()
+var model = SLZB.deviceModel()
 var isEfr32 = model == "SLZB-06M" || model == "SLZB-06Mg24"
 var targetCmd = isEfr32 ? 0x0045 : 0x4481 # incomingMessageHandler for efr32 and AF_INCOMING_MSG for cc2652x
 var step = 7 # must be '(2 ^ step) - 1' for fast calculation (power of 2)

@@ -61,8 +61,8 @@ This means that if your script function execution takes more than 500ms, you may
 <br>Example: ```SLZB.log("Free RAM: " .. SLZB.freeHeap())``` prints the amount of free RAM in the console.
 
 (Starting from v2.8.2.dev1)<br>
-```SLZB.device_model()``` returns the device model (string).
-<br>Example: ```SLZB.log("Device model: " .. SLZB.device_model())``` prints the device model (SLZB-06/SLZB-06P7/SLZB-06P10/SLZB-06M/SLZB-06Mg24) to the console.
+```SLZB.deviceModel()``` returns the device model (string).
+<br>Example: ```SLZB.log("Device model: " .. SLZB.deviceModel())``` prints the device model (SLZB-06/SLZB-06P7/SLZB-06P10/SLZB-06M/SLZB-06Mg24) to the console.
 
 ### ZB - Access to the Zigbee Chip (Use with Caution)
 #### Coexistence of the Zigbee Socket and the ZB Module
@@ -166,11 +166,11 @@ Your script can receive POST/GET parameters when this webhook is called, and you
 
 #### Available Functions
 
-```WEBSERVER.get_arg(x)``` returns the value of argument ```x```.  
+```WEBSERVER.getArg(x)``` returns the value of argument ```x```.  
 Takes as input an ```int``` (to get an argument by ID) or a ```string``` (to get an argument by name).  
 Returns a ```string```. If the argument does not exist, it returns an empty string ```""```.
 
-```WEBSERVER.has_arg(x)``` returns ```true``` if the argument ```x``` exists.  
+```WEBSERVER.hasArg(x)``` returns ```true``` if the argument ```x``` exists.  
 Takes as input a ```string``` (argument name).
 
 ```WEBSERVER.send(x, y, z)``` sends a response to the client's request.<br>
