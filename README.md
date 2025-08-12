@@ -200,7 +200,7 @@ See [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main
 
 ---
 
-### ZHB (Available from v2.9.6)
+### ZHB (Available from v2.9.6) - Allows you to access your ZigBee devices
 
 | Attribute                                                                                                             | Description                                                                                                                                                                                                                                                                                                                                  |
 | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -228,6 +228,7 @@ See [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main
 | sendColor( color:`string`, channel:`int` )                            | Changes the color of the lamp.&#xA;Color format should be [#rrggbb](https://www.w3schools.com/colors/colors_hexadecimal.asp) or `r,g,b` <br>`channel` is optional, if not specified, **channel 1** will be used. <br>`dev.sendColor("#0062ff") # send hex color dev.sendColor("0,0,255") # send color in RGB format`                                       |
 | sendColorTemp( mireds:`int`, channel:`int`)                 | Changes the color tempetature of the lamp in `mireds` - https://en.wikipedia.org/wiki/Mired&#xA;channel is optional, if not specified, **channel 1** will be used. `dev.sendColorTemp(180) # send Daylight(average) color temp`                                                                                                                        |
 | getVal( endpoint:`int`, cluster:`int`, attribute:`int` )              | Returns the last saved value from the ZigBee end device.&#xA;Returns `nil` if the value is empty (has not been reported yet).&#xA;The type of the returned value depends on data type sent by the ZigBee device. It can be `bool`/`float`/`int`/`string`/`bytes`                                                                                                   |
+| `int` sendCmd(endpoint:`int`, cluster:`int`, command:`int`, payload:`bytes`(optional)) | Allows you to send any ZCL command to your device!<br>Returns the ZCL transaction number (currently not used).<br>Example:<br>`sendCmd(1, 6, 1) # turn on the relay`<br>`sendCmd(1, 6, 0) # will turn off the relay` |
 
 #### Example:
 See [Zigbee Hub examples](https://github.com/smlight-tech/slzb-os-scripts/tree/main/examples/zigbee_hub)
