@@ -198,6 +198,8 @@ When executed, it provides one argument:
 #### Example:
 See [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examples/report_stats/report_stats.be)
 
+---
+
 ### ZHB (Available from v2.9.6)
 
 | Attribute                                                                                                             | Description                                                                                                                                                                                                                                                                                                                                  |
@@ -226,3 +228,9 @@ See [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main
 | sendColor( color:`string`, channel:`int` )                            | Changes the color of the lamp.&#xA;Color format should be [#rrggbb](https://www.w3schools.com/colors/colors_hexadecimal.asp) or `r,g,b` <br>`channel` is optional, if not specified, **channel 1** will be used. <br>`dev.sendColor("#0062ff") # send hex color dev.sendColor("0,0,255") # send color in RGB format`                                       |
 | sendColorTemp( mireds:`int`, channel:`int`)                 | Changes the color tempetature of the lamp in `mireds` - https://en.wikipedia.org/wiki/Mired&#xA;channel is optional, if not specified, **channel 1** will be used. `dev.sendColorTemp(180) # send Daylight(average) color temp`                                                                                                                        |
 | getVal( endpoint:`int`, cluster:`int`, attribute:`int` )              | Returns the last saved value from the ZigBee end device.&#xA;Returns `nil` if the value is empty (has not been reported yet).&#xA;The type of the returned value depends on data type sent by the ZigBee device. It can be `bool`/`float`/`int`/`string`/`bytes`                                                                                                   |
+
+#### Example:
+See [Zigbee Hub examples](https://github.com/smlight-tech/slzb-os-scripts/tree/main/examples/zigbee_hub)
+
+---
+
