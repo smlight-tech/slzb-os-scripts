@@ -234,3 +234,31 @@ See [Zigbee Hub examples](https://github.com/smlight-tech/slzb-os-scripts/tree/m
 
 ---
 
+### HTTP (Available from v2.9.8) - Allows your script to perform HTTP(S) POST/GET requests and receive a response
+
+**All scripts share one common HTTP client! So you can only use it with one script at a time**
+
+#### Features:
+- HTTPS support (without certificate verification)
+- GET/POST requests
+- You can add headers
+- You can add POST payload
+
+#### Available Functions
+
+| Attribute | Description |
+|---|---|
+| `bool` HTTP.open(url:`string`, method:`string`:`get\|post`, buffer:`int`) | Takes as input:<br>- `url` - Request URL<br>- `method` - Request method, `get` and `post` methods are supported, **case sensitive!**<br>- `buffer` - The size of the response buffer in which the server response will be stored.<br>It is not recommended to use a buffer larger than ```4096```.<br>If the server returns short text, you should use a small buffer accordingly.<br>If the size of the server response is larger than the buffer size, you will receive a truncated response.<br>**U-series devices can use a larger buffer.**<br>Returns `true` if HTTP client opened successfully. |
+| `int` perform() | Executes the request and returns HTTP server response code. 200 is OK |
+| `string` getResponse() | Returns server response text but no more than the buffer size.<br>**WARNING! You should not log text (SLZB.log()) longer than 1024 characters, this will lead to a crash!** |
+| `bool` setPostData(data:`string`) | Sets the POST data for a POST request.<br>Returns ```true``` if post data set successfully.<br>Takes as input\:<br>- `data` - POST data, type ```string``` |
+| `bool` setHeader(name:`string`, value:`string`) | Sets the header for request.<br>Returns `true` if successfully.<br>Takes as input\:<br>- `name` - header name, type `string`<br>- `value` - header value, type `string` |
+| `bool` setMethod(method:`string`:`get\|post`) | **reuse api**<br>Call this function to change the `method` for an already opened client.<br>Sets the request method. Returns `true` if successfully.<br>Takes as input\:<br>- `method` - header name, type `string` |
+| `bool` setUrl(url:`string`) | **reuse api**<br>Call this function to change the `url` for an already open client.<br>Sets the request method. Returns `true` if successfully.<br>Takes as input:<br>- `url` - new request url |
+| `bool` isOpened() | Returns `true` if the HTTP client is already opened. |
+| close() | Closes the client and frees memory |
+
+#### HTTP client examples:
+See [HTTP client examples folder](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examples/http_client/)
+
+---
