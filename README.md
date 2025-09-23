@@ -210,25 +210,192 @@ See [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main
 #### Available classes
 
 ##### ZigbeeDevice
+<table>
+<tr><td> Attribute </td> <td> Description </td></tr>
 
-| Attribute |                                                                                                                                                                                       Description |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bool`  matcher( manufacturer:`string`, model:`string`) | Matches the provided `model` and `manufacturer` with the device data, returns `true` if they match.&#xA;**Case sensetive.** |
-| `string`  getName()                                                   | Returns the `name` of the device set by the user                                                                                                                                                                                                                                                                                                                   |
-| `string`  getModel()                                                  | Returns device `model`                                                                                                                                                                                                                                                                                                                                             |
-| `string`  getManuf()                                                  | Returns device `manufacturer`                                                                                                                                                                                                                                                                                                                                      |
-| `int`  getNwk()                                                       | Returns the `network address` of the device                                                                                                                                                                                                                                                                                                                        |
-| `int`  getPS()                                                        | Returns the device `power source`                                                                                                                                                                                                                                                                                                                                  |
-| `int`  getBattery()                                                   | Returns the device `battery percentage`                                                                                                                                                                                                                                                                                                                            |
-| `int`  getIAS()                                                       | Returns the device `IAS type`                                                                                                                                                                                                                                                                                                                                      |
-| `int`  getLastSeen()                                                  | Returns the `timestamp` of the last time a data packet was received from the device                                                                                                                                                                                                                                                                                |
-| `int`  getLqi()                                                       | Returns the device `LQI`                                                                                                                                                                                                                                                                                                                                           |
-| sendOnOff( state:`int`, channel:`int`)                      | Sends a `state` command to the device to turn on or off. If your relay has multiple channels then specify the `channel` number as the second argument.**&#xA;**`channel` is optional, if not specified, **channel 1** will be used.<br>EX:<br>`dev.sendOnOff(1) # turn on relay`<br>`dev.sendOnOff(0) # turn off relay`<br>`dev.sendOnOff(1, 2) # turn on relay channel 2` |
-| sendBri( brightness:`int`, channel:`int`)                   | Changes the `brightness` of the lamp.&#xA;`brightness` range: 1 - 254&#xA;`channel` is optional, if not specified, **channel 1** will be used.                                                                                                                                                                                                                     |
-| sendColor( color:`string`, channel:`int` )                            | Changes the color of the lamp.&#xA;Color format should be [#rrggbb](https://www.w3schools.com/colors/colors_hexadecimal.asp) or `r,g,b` <br>`channel` is optional, if not specified, **channel 1** will be used. <br>`dev.sendColor("#0062ff") # send hex color dev.sendColor("0,0,255") # send color in RGB format`                                       |
-| sendColorTemp( mireds:`int`, channel:`int`)                 | Changes the color tempetature of the lamp in `mireds` - https://en.wikipedia.org/wiki/Mired&#xA;channel is optional, if not specified, **channel 1** will be used. `dev.sendColorTemp(180) # send Daylight(average) color temp`                                                                                                                        |
-| getVal( endpoint:`int`, cluster:`int`, attribute:`int` )              | Returns the last saved value from the ZigBee end device.&#xA;Returns `nil` if the value is empty (has not been reported yet).&#xA;The type of the returned value depends on data type sent by the ZigBee device. It can be `bool`/`float`/`int`/`string`/`bytes`                                                                                                   |
-| `int` sendCmd(endpoint:`int`, cluster:`int`, command:`int`, payload:`bytes`(optional)) | Allows you to send any ZCL command to your device!<br>Returns the ZCL transaction number (currently not used).<br>Example:<br>`sendCmd(1, 6, 1) # turn on the relay`<br>`sendCmd(1, 6, 0) # will turn off the relay` |
+<tr>
+<td>
+
+`bool`  matcher( manufacturer:`string`, model:`string`)
+</td>
+<td>
+
+Matches the provided `model` and `manufacturer` with the device data, returns `true` if they match.&#xA;**Case sensetive.**
+</td>
+</tr>
+
+<tr>
+<td>
+
+`string`  getName()
+</td>
+<td>
+
+Returns the `name` of the device set by the user
+</td>
+</tr>
+
+<tr>
+<td>
+
+`string`  getModel()
+</td>
+<td>
+
+Returns device `model`
+</td>
+</tr>
+
+<tr>
+<td>
+
+`string`  getManuf()</td>
+<td>
+
+Returns device `manufacturer`
+</td>
+</tr>
+
+<tr>
+<td>
+
+`int`  getNwk()</td>
+<td>
+
+Returns the `network address` of the device
+</td>
+</tr>
+
+<tr>
+<td>
+
+`int`  getPS()</td>
+<td>
+
+Returns the device `power source`
+</td>
+</tr>
+
+<tr>
+<td>
+
+`int`  getBattery()</td>
+<td>
+
+Returns the device `battery percentage`
+</td>
+</tr>
+
+<tr>
+<td>
+
+`int`  getIAS()</td>
+<td>
+
+Returns the device `IAS type`
+</td>
+</tr>
+
+<tr>
+<td>
+
+`int`  getLastSeen()</td>
+<td>
+
+Returns the `timestamp` of the last time a data packet was received from the device
+</td>
+</tr>
+
+<tr>
+<td>
+
+`int`  getLqi()</td>
+<td>
+
+Returns the device `LQI`
+</td>
+</tr>
+
+<tr>
+<td>
+
+sendOnOff( state:`int`, channel:`int`)</td>
+<td>
+
+Sends a `state` command to the device to turn on or off. If your relay has multiple channels then specify the `channel` number as the second argument.**&#xA;**`channel` is optional, if not specified, **channel 1** will be used.
+```berry
+dev.sendOnOff(1) # turn on relay
+dev.sendOnOff(0) # turn off relay
+dev.sendOnOff(1, 2) # turn on relay channel 2
+```
+</td>
+</tr>
+
+<tr>
+<td>
+
+sendBri( brightness:`int`, channel:`int`)</td>
+<td>
+
+Changes the `brightness` of the lamp.&#xA;`brightness` range: 1 - 254&#xA;`channel` is optional, if not specified, **channel 1** will be used.
+</td>
+</tr>
+
+<tr>
+<td>
+
+sendColor( color:`string`, channel:`int` )
+</td>
+<td>
+
+Changes the color of the lamp.&#xA;Color format should be [#rrggbb](https://www.w3schools.com/colors/colors_hexadecimal.asp) or `r,g,b` <br>`channel` is optional, if not specified, **channel 1** will be used.
+```berry
+dev.sendColor("#0062ff") # send hex color
+dev.sendColor("0,0,255") # send color in RGB format
+```
+</td>
+</tr>
+
+<tr>
+<td>
+
+sendColorTemp( mireds:`int`, channel:`int`)
+</td>
+<td>
+
+Changes the color tempetature of the lamp in `mireds` - https://en.wikipedia.org/wiki/Mired&#xA;channel is optional, if not specified, **channel 1** will be used.
+```berry
+dev.sendColorTemp(180) # send Daylight(average) color temp
+```
+</td>
+</tr>
+
+<tr>
+<td>
+
+getVal( endpoint:`int`, cluster:`int`, attribute:`int` )
+</td>
+<td>
+
+Returns the last saved value from the ZigBee end device.&#xA;Returns `nil` if the value is empty (has not been reported yet).&#xA;The type of the returned value depends on data type sent by the ZigBee device. It can be `bool`/`float`/`int`/`string`/`bytes`
+</td>
+</tr>
+
+<tr>
+<td>
+
+`int` sendCmd(endpoint:`int`, cluster:`int`, command:`int`, payload:`bytes`(optional))
+</td>
+<td>
+
+Allows you to send any ZCL command to your device!<br>Returns the ZCL transaction number (currently not used).
+```berry
+sendCmd(1, 6, 1) # turn on the relay
+sendCmd(1, 6, 0) # will turn off the relay
+```
+</td>
+</tr>
+</table>
 
 #### Example:
 See [Zigbee Hub examples](https://github.com/smlight-tech/slzb-os-scripts/tree/main/examples/zigbee_hub)
