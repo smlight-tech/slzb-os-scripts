@@ -206,6 +206,7 @@ See [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main
 | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ZigbeeDevice`  getDevice( device name:`string` \| device network addr :`int` \| device ieee : `string` )  | this function allows you to get a device by its **name&#x20;**&#x6F;r **network address or IEEE**. Returns the `ZigbeeDevice` class if the device is found or an **error&#x20;**&#x69;f not.&#xA;Please note!&#xA;IEEE format must be `0x0000000000000000` (hex string).&#xA;Network addr must be a number!                                  |
 | waitForStart( wait time:`int`)                                                                         | blocks script execution for \<wait time> seconds until Zigbee Hub starts.&#xA;Maximum 254 seconds to wait, if you specify 255 it will wait forever                                                                                                                                                                                           |
+| permitJoin( time:`int`, addr:`int`)|(Available from v3.0.6)<br>Enables adding new devices to the network.<br>`time` - time in seconds that the network will be open.<br>Minimum 1 sec, maximum 254 seconds.<br>If you specify 0, the network will be closed immediately.<br>If you specify 255, the network will be open permanently.<br><br>`addr` - (optional) network address of the device on which you want to enable adding new devices. If not specified, the entire network will be opened |
 
 #### Available classes
 
@@ -395,6 +396,58 @@ sendCmd(1, 6, 0) # will turn off the relay
 ```
 </td>
 </tr>
+
+<tr>
+<td>
+
+`int` readAttr(endpoint:`int`, cluster:`int`, attr:`int`, ...)
+</td>
+<td>
+
+(Available from v3.0.6)<br>Sends a request to read the attributes of the end device.<br>**Does not wait for a response**<br>You can add more attributes to the query by adding more arguments.
+
+```berry
+#0x0b04 - Electrical Measurement cluster
+#0x0505 - RMSVoltage attribute
+readAttr(1, 0x0b04, 0x0505) # req AC voltage report
+readAttr(1, 0x0b04, 0x0505, 0x0508, 0x050b) # req AC voltage, current and power
+```
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bool` bindToHub(scrEp:`int`, scrCl:`int`)
+</td>
+<td>
+
+(Available from v3.0.6)<br>Sends a request to the end device to bind the `scrEp` and `scrCl` to the hub.
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bool` bindToDevice(scrEp:`int`, scrCl:`int`, dstIeee:`string`, dstEp:`int`)
+</td>
+<td>
+
+(Available from v3.0.6)<br>Sends a request to the end device to bind the `scrEp` and `scrCl` to another end device with `dstIeee` and `dstEp`.<br>
+`dstIeee` - IEEE address of the target device in HEX format (string).
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bool` bindToGroup(scrEp:`int`, scrCl:`int`, dstGroupAddr:`int`)
+</td>
+<td>
+
+(Available from v3.0.6)<br>Sends a request to the end device to bind the `scrEp` and `scrCl` to the group with the address `dstGroupAddr`
+</td>
+</tr>
 </table>
 
 #### Example:
@@ -428,5 +481,89 @@ See [Zigbee Hub examples](https://github.com/smlight-tech/slzb-os-scripts/tree/m
 
 #### HTTP client examples:
 See [HTTP client examples folder](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examples/http_client/)
+
+---
+
+### TIME (Available from v3.0.6) - Accurate date/time from the internal clock with NTP synchronization
+
+#### Features:
+- Can wait for NTP synchronization.
+- Accurate time: hours, minutes, seconds.
+- Accurate date: year, month, day, day of the week (**counting from Sunday**).
+- Takes into account time zone and daylight saving time.
+
+#### Available Functions
+
+<table>
+<tr><td> Attribute </td> <td> Description </td></tr>
+
+<tr>
+<td> 
+
+bool waitSync(timeout:`int`)</td>
+<td> 
+
+Waiting for time synchronization for `timeout` seconds.<br>
+If time is already synchronized it will return instantly.<br>
+Maximum 254 seconds. Will return `false` if the time is not synchronized after the `timeout` expires.<br>
+If you specify 255 seconds it will wait forever.
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`datetime` getAll()</td>
+<td> 
+
+returns an `datetime` map containing the **time** and **date**. Map structure is below:
+```js
+{
+  year,
+  month,
+  day,
+  hour,
+  min,
+  sec,
+  weekday
+}
+```
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`time` getTime()</td>
+<td> 
+
+returns an `time` map. Map structure is below:
+```js
+{
+  hour,
+  min,
+  sec
+}
+```
+</td>
+</tr>
+</table>
+
+#### TIME examples:
+```berry
+import TIME
+
+var time = TIME.getAll()
+
+if(!time)
+  SLZB.log("Waiting for NTP sync...")
+  
+  TIME.waitSync(0xff)
+  
+  time = TIME.getAll()
+end
+
+SLZB.log("year: " .. time["year"] .. " month: " .. time["month"] .. " day: " .. time["day"] .. " hour: " .. time["hour"] .. " min: " .. time["min"] .. " sec: " .. time["sec"] .. " weekday: " .. time["weekday"])
+```
 
 ---
