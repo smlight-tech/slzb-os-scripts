@@ -141,13 +141,37 @@ See [reports_stats.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main
 ---
 
 ### FS - Access to the File System (Use with Caution)
-
-```FS.exists(x)``` checks if the specified file exists. Returns ```boolean```.  
+(Available from v3.0.6)<br>
+`bool` FS.deleteFile(filename:`string`) - Deletes a file by its full path. **Does not delete folders!** Returns `true` if the file was deleted successfully.<br>
 #### Example:
-```FS.exists("/be/test.be")```  
-Returns ```true``` if the script ```/be/test.be``` exists.
+```berry
+FS.deleteFile("/be/test.be")
+```
+<br>
+(Available from v3.0.6)<br>
 
-```FS.open(filename, mode)``` is a native function for working with files.  
+FS.deleteDir(patch:`string`) - Deletes all files in a folder and deletes the folder itself. **Does not support recursion**, i.e. if a folder has **subfolders**, they will **not be deleted**.
+
+#### Example:
+```berry
+FS.deleteDir("/be/my_test_directory")
+```
+
+<br>
+
+`bool` FS.exists(filename:`string`) - checks if file(or folder) with `filename` exists. Returns `bool`.
+#### Example:
+```berry
+if FS.exists("/be/test.be")
+  SLZB.log("File exists")
+else
+  SLZB.log("File does not exists")
+end
+```
+
+<br>
+
+`File` FS.open(filename:`string`, mode:`string`) - native function for working with files.  
 [Documentation](https://berry.readthedocs.io/en/latest/source/en/Chapter-7.html?highlight=open#open-function)  
 #### Example:
 See [get_file_size.be](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examples/basic/get_file_size.be)
