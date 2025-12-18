@@ -601,3 +601,123 @@ SLZB.log("year: " .. time["year"] .. " month: " .. time["month"] .. " day: " .. 
 ```
 
 ---
+### GPIO (Available from v3.1.6.dev3) - Direct GPIO control. Use with EXTREME caution
+
+#### Features:
+- GPIO mode selection (INPUT/OUTPUT).
+- Reading the digital gpio state (HIGH/LOW).
+- Reading voltage on GPIO inputs (maximum 3.3V).
+- Changing the digital state for GPIO outputs (HIGH 3.3v /LOW 0v).
+- PWM generation with 0 - 100% duty cycle.
+- Frequency generator.
+
+#### Available Functions
+
+<table>
+<tr><td> Attribute </td> <td> Description </td></tr>
+
+<tr>
+<td> 
+
+MOD_OUTPUT</td>
+<td> 
+
+GPIO output mode constant
+</td>
+</tr>
+
+<tr>
+<td> 
+
+MOD_INPUT</td>
+<td> 
+
+GPIO input mode constant
+</td>
+</tr>
+
+<tr>
+<td> 
+
+pinMode(pin:`int`, mode: `GPIO input mode constant`)</td>
+<td> 
+
+Changes the operating mode for `pin` to `GPIO input mode constant`<br>
+Must be called before using `pin` GPIO!
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`bool` digitalRead(pin:`int`)</td>
+<td> 
+
+Returns the digital state for `pin`
+</td>
+</tr>
+
+<tr>
+<td> 
+
+digitalWrite(pin:`int`, state:`bool`)</td>
+<td> 
+
+Set `state` on gpio `pin`
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`int` analogRead(pin:`int`)</td>
+<td> 
+
+Returns voltage on `pin`.<br>
+Range 0 - 4096 (0 - 3.3v)
+</td>
+</tr>
+
+<tr>
+<td> 
+
+analogWrite(pin:`int`, dutycycle:`int`)</td>
+<td> 
+
+Generates a PWM with duty cycle `dutycycle` on gpio `pin`
+</td>
+</tr>
+
+<tr>
+<td> 
+
+tone(pin:`int`, freq:`int`)</td>
+<td> 
+
+Generates a frequency `freq` on gpio `pin`
+</td>
+</tr>
+
+<tr>
+<td> 
+
+noTone(pin:`int`)</td>
+<td> 
+
+Cancels frequency generation on gpio `pin`
+</td>
+</tr>
+
+</table>
+
+#### GPIO examples:
+```berry
+import GPIO
+
+var power_pin = 46 # blue LED on SLZB-06p7u
+
+GPIO.pinMode(power_pin, GPIO.MOD_OUTPUT)
+GPIO.digitalWrite(power_pin, 1)
+```
+
+---
