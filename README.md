@@ -503,6 +503,16 @@ See [Zigbee Hub examples](https://github.com/smlight-tech/slzb-os-scripts/tree/m
 | `bool` isOpened() | Returns `true` if the HTTP client is already opened. |
 | close() | Closes the client and frees memory |
 
+##### Stream mode (Available from v3.1.6.dev3)
+If you set buffer size to 0, the HTTP client will be run in <b>stream mode</b>, without buffer. You can read response in <b>chunks</b>, this allows you to process large pages or download files.
+
+| Attribute | Description |
+|---|---|
+| `int` streamReadBytes(count:`int`, buffer:`bytes`) | Reads bytes from a stream in to external `bytes` buffer.<br>Will read no more than `count`, but not more than available in stream.<br>Returns the number of bytes readed.<br>IMPORTANT: `buffer` size must be equal or greater than `count` |
+| `str` streamReadString(count:`int`) | Same as `streamReadBytes()` but make and return string from readed bytes |
+| streamFlush(count:`int`) | Discard `count` number of bytes |
+| `int` streamGetLen() | Returns the total number of bytes in the stream (from Content-Length header) |
+
 #### HTTP client examples:
 See [HTTP client examples folder](https://github.com/smlight-tech/slzb-os-scripts/blob/main/examples/http_client/)
 
