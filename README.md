@@ -1,5 +1,5 @@
 ## Basic Information
-SLZB-OS is the only operating system for all SLZB-06/06p7/06p10/06M devices and future devices in this series.
+SLZB-OS is the universal operating system for all SLZB-06x/MRx/06xU/MRxU devices and future devices in this series.
 <br>SLZB-OS uses Berry Script Language [Official page](https://berry-lang.github.io/) Documentation: [berry’s documentation](https://berry.readthedocs.io/en/latest/) and [Berry in 20 minutes or less](https://berry.readthedocs.io/en/latest/source/en/Berry-in-20-minutes.html)
 
 ## Features of Berry on SLZB-OS
