@@ -6,3 +6,6 @@ Berry implementation of a simple thermostat for heating or cooling using data fr
 **chkInterval** - defines the pause between checks. It is not recommended to specify less than 10ms.<br>
 **hysteresis** - chkInterval - defines the temperature difference to activate heating/cooling.<br>
 **heating** - defines thermostat mode. true - heating, false - cooling.<br>
+
+# Scheduled management of ZigBee sockets (UA Lang)
+https://github.com/Tarik2142/slzb-outage-commander/blob/main/commander.be
