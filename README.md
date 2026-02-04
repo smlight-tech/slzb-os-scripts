@@ -723,3 +723,114 @@ GPIO.digitalWrite(power_pin, 1)
 ```
 
 ---
+
+### MQTT (Available from v3.2.4) - Receiving/sending MQTT messages
+**To use this module, please enable MQTT in the coordinator interface.**
+
+#### Features:
+- Subscribe to topics.
+- Send messages.
+- Receive messages.
+- Connect to a local broker or a remote.
+
+#### Available Functions
+
+<table>
+<tr><td> Attribute </td> <td> Description </td></tr>
+
+<tr>
+<td> 
+
+`bool` waitConnect(time:`int`)</td>
+<td> 
+
+Waits for a connection to the MQTT broker.<br>
+`time` in seconds from 1 to 254 seconds.<br>
+If 255 is specified, it will wait forever.<br>
+Returns `true` on success.<br>
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`bool` isConnected()</td>
+<td> 
+
+Returns `true` if the connection is active.
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bool` subscribe(topic:`string`)</td>
+<td> 
+
+Subscription to a `<base topic>/<topic>`. Returns `true` on success.<br>
+This function adds `<base topic>/` to your `topic`<br>
+To subscribe to **all** subtopics use `#`, for example: `#` - will subscribe to all topics that `<base topic>` include.
+You can configure `<base topic>` on the MQTT page.
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`bool` subscribeCustom(topic:`string`)</td>
+<td> 
+
+Subscription to a `topic`. Returns `true` on success.<br>
+To subscribe to **all** subtopics use `/#`, for example: `/#` - will subscribe to all topics.
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`bool` publish(topic:`string`, payload:`string`)</td>
+<td> 
+
+Send `data` to a `<base topic>/<topic>`. Returns `true` on success.
+</td>
+</tr>
+
+<tr>
+<td> 
+
+`bool` publishCustom(topic:`string`, payload:`string`)</td>
+<td> 
+
+Send `data` to a `/<topic>`. Returns `true` on success.
+</td>
+</tr>
+
+<tr>
+<td> 
+
+on_message(handler:`func(topic, data)`)</td>
+<td> 
+
+This event is called when a new message is received.<br>
+2 arguments are provided: `topic` - the topic to which the message was sent, `data` - the message text.
+</td>
+</tr>
+
+</table>
+
+#### MQTT examples:
+```berry
+import MQTT
+
+MQTT.waitConnect(0xff) # wait for connection
+MQTT.subscribe("my_test_topic) # subscribe to '<base topic>/my_test_topic' only
+# MQTT.subscribe("my_test_topic/#) # subscribe to '<base topic>/my_test_topic' all subtopics.
+
+def handler(topic, data)
+  SLZB.log("Topic: " .. topic .. " data: " .. data)
+end
+
+MQTT.on_message(handler)
+
+MQTT.publish("my_test_send", "hello from SLZB-OS!") # will send message to '<base topic>/my_test_send'
+```
