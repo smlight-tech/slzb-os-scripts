@@ -21,7 +21,9 @@ Metadata is system information that SLZB-OS uses to determine how to load a scri
 - 1 - the script starts automatically at system startup
 
 ### Optional Metadata
-Currently under development.
+`stack` - force stack size for this script. The default stack size is 5120, if your script is very large and crashes, it is probably out of memory, try using this option to increase the amount of memory.<br>
+`psram` - If `true` then forces the script task to be placed in PSRAM completely. **Works only for U series devices.**<br>
+**WARNING! If this option is active then you cannot access the file system from this script! Any attempt will result in a crash!**
 
 ## Event System (available since v2.8.2.dev0)
 The event system allows you to "subscribe" to a specific event in SLZB-OS and specify a function to be called when this event occurs.
