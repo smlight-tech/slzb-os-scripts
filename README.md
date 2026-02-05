@@ -823,8 +823,8 @@ This event is called when a new message is received.<br>
 import MQTT
 
 MQTT.waitConnect(0xff) # wait for connection
-MQTT.subscribe("my_test_topic) # subscribe to '<base topic>/my_test_topic' only
-# MQTT.subscribe("my_test_topic/#) # subscribe to '<base topic>/my_test_topic' all subtopics.
+MQTT.subscribe("my_test_topic") # subscribe to '<base topic>/my_test_topic' only
+# MQTT.subscribe("my_test_topic/#") # subscribe to '<base topic>/my_test_topic' all subtopics.
 
 def handler(topic, data)
   SLZB.log("Topic: " .. topic .. " data: " .. data)
