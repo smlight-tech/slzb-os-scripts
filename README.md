@@ -858,8 +858,45 @@ Plays a melody on the built-in buzzer<br>
 
 </table>
 
-#### MQTT examples:
+#### BUZZER examples:
 ```berry
 import BUZZER
 BUZZER.play("Arkanoid:d=4,o=5,b=140:8g6,16p,16g.6,2a#6,32p,8a6,8g6,8f6,8a6,2g6")
+```
+
+---
+
+### BUTTON (Available from v3.2.5.dev1) - Overrides button functions
+#### Features:
+- Disables standard actions for the physical button and redirects its press actions to the Berry script
+- Supports short and long press actions
+
+#### Available Functions
+
+<table>
+<tr><td> Attribute </td> <td> Description </td></tr>
+
+<tr>
+<td> 
+
+on_press(int:`button id`, func:`callback`)</td>
+<td> 
+
+Overrides the button action.<br>
+`button id` - Button number, currently only button 0 is supported.<br>
+`callback` - The function that will be called when the button is pressed. When called, one argument of type `int` is provided - `0` - for regular press and `1` - for long press.
+</td>
+</tr>
+
+</table>
+
+#### BUTTON examples:
+```berry
+import BUTTON
+
+def press_handler(t)
+  SLZB.log("Button press type: " .. t)
+end
+
+BUTTON.on_press(0, press_handler)
 ```
