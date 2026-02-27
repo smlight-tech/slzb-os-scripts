@@ -834,3 +834,32 @@ MQTT.on_message(handler)
 
 MQTT.publish("my_test_send", "hello from SLZB-OS!") # will send message to '<base topic>/my_test_send'
 ```
+
+---
+
+### BUZZER (FOR Ultima3 ONLY! Available from v3.2.5.dev1) - Plays a melody on the built-in buzzer
+**This module is only available for Ultima3!**
+
+#### Available Functions
+
+<table>
+<tr><td> Attribute </td> <td> Description </td></tr>
+
+<tr>
+<td> 
+
+play(string:`melody`)</td>
+<td> 
+
+Plays a melody on the built-in buzzer<br>
+`melody` - A string with a melody in RTTL format
+</td>
+</tr>
+
+</table>
+
+#### MQTT examples:
+```berry
+import BUZZER
+BUZZER.play("Arkanoid:d=4,o=5,b=140:8g6,16p,16g.6,2a#6,32p,8a6,8g6,8f6,8a6,2g6")
+```
