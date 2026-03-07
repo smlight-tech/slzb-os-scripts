@@ -41,4 +41,5 @@ SLZB.log("Date: " .. t["year"] .. "-" .. t["month"] .. "-" .. t["day"])
 ## See Also
 
 - [SLZB — Core Functions](slzb.md) — `SLZB.millis()` for relative timing (uptime)
-- [Example: Reboot every day](../../examples/basic/reboot_every_day.be)
+- [Example: Reboot at 3 AM](../../examples/time/reboot_at_3am.be)
+- [Example: Log date and time](../../examples/time/log_datetime.be)

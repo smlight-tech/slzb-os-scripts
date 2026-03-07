@@ -39,3 +39,5 @@ GPIO.digitalWrite(led_pin, 1)  # turn on
 
 - [BUZZER — Play melodies](buzzer.md) — Higher-level audio output (Ultima3)
 - [BUTTON — Physical button override](button.md) — Intercept hardware button presses
+- [Example: Blink LED](../../examples/gpio/blink_led.be)
+- [Example: Read analog voltage](../../examples/gpio/read_analog.be)

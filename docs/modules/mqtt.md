@@ -57,3 +57,5 @@ MQTT.publish("status", "hello!")      # publishes to '<base_topic>/status'
 - [ZHB — Zigbee Hub](zhb.md) — Combine with MQTT to publish Zigbee device state
 - [WEBSERVER — Webhooks](webserver.md) — Alternative: HTTP-based communication
 - [HTTP — HTTP Client](http.md) — Alternative: send data via HTTP requests
+- [Example: Subscribe and log](../../examples/mqtt/mqtt_subscribe.be)
+- [Example: Publish temperature](../../examples/mqtt/mqtt_publish_temperature.be)

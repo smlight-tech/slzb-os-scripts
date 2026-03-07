@@ -94,7 +94,8 @@ Each module is documented in its own file with API details, examples, and cross-
 | [BUZZER](docs/modules/buzzer.md) | Play melodies on the built-in buzzer | v3.2.5.dev1 | Ultima3 |
 | [BUTTON](docs/modules/button.md) | Override physical button actions | v3.2.5.dev1 | All |
 | [AMBILIGHT](docs/modules/ambilight.md) | WS2812B LED strip effects and colors | v3.2.5.dev1 | Ultima |
-| [IR](docs/modules/ir.md) | Infrared send/receive with protocol support | v3.2.5.dev1 | Ultima |
+| [IR Transmitter](docs/modules/ir_transmitter.md) | Send infrared commands to TVs, ACs, and other IR devices | v3.2.5.dev1 | Ultima |
+| [IR Receiver](docs/modules/ir_receiver.md) | Receive IR signals from remote controls, learn and replay codes | v3.2.5.dev1 | Ultima |
 
 ---
 
@@ -121,10 +122,31 @@ Ready-to-use scripts in the [`examples/`](examples/) folder:
 | [http_post.be](examples/http_client/http_post.be) | Send JSON data via POST | HTTP |
 | [report_stats.be](examples/report_stats/report_stats.be) | Track Zigbee device report counts, serve via webhook | ZB, WEBSERVER |
 | [simple_thermostat.be](examples/zigbee_hub/simple_thermostat.be) | Thermostat using Zigbee sensor + relay | ZHB |
+| [reboot_at_3am.be](examples/time/reboot_at_3am.be) | Reboot device daily at 3:00 AM | TIME |
+| [log_datetime.be](examples/time/log_datetime.be) | Log current date and time | TIME |
+| [blink_led.be](examples/gpio/blink_led.be) | Blink an LED on/off every second | GPIO |
+| [read_analog.be](examples/gpio/read_analog.be) | Read voltage on an analog pin | GPIO |
+| [mqtt_subscribe.be](examples/mqtt/mqtt_subscribe.be) | Subscribe to MQTT topic and log messages | MQTT |
+| [mqtt_publish_temperature.be](examples/mqtt/mqtt_publish_temperature.be) | Publish Zigbee sensor temperature to MQTT | MQTT, ZHB |
+| [play_melody.be](examples/buzzer/play_melody.be) | Play an RTTTL melody on the buzzer | BUZZER |
+| [doorbell.be](examples/buzzer/doorbell.be) | Zigbee button triggers a doorbell sound | BUZZER, ZHB |
+| [button_toggle_relay.be](examples/button/button_toggle_relay.be) | Physical button toggles a Zigbee relay | BUTTON, ZHB |
+| [effects_demo.be](examples/ambilight/effects_demo.be) | Cycle through all LED effects | AMBILIGHT |
+| [color_cycle_on_button.be](examples/ambilight/color_cycle_on_button.be) | Zigbee button cycles LED colors | AMBILIGHT, ZHB |
+| [send_nec_command.be](examples/ir_transmitter/send_nec_command.be) | Send an NEC IR command | IR |
+| [zigbee_button_sends_ir.be](examples/ir_transmitter/zigbee_button_sends_ir.be) | Zigbee button sends IR commands to TV | IR, ZHB |
+| [log_ir_codes.be](examples/ir_receiver/log_ir_codes.be) | Log all received IR codes (discovery tool) | IR |
+| [ir_to_zigbee_bridge.be](examples/ir_receiver/ir_to_zigbee_bridge.be) | Control Zigbee devices with an IR remote | IR, ZHB |
 
 Community examples:
 - [Scheduled socket management](https://github.com/Tarik2142/slzb-outage-commander/blob/main/commander.be) — ZHB + TIME
 - [Stream mode HTML parser](https://github.com/Tarik2142/slzb-outage-commander/blob/main/parser.be) — HTTP stream mode
+
+---
+
+## AI-Assisted Scripting
+
+Use **[AI_PROMPT.md](AI_PROMPT.md)** as a context file for AI agents (ChatGPT, Claude, etc.) when writing Berry scripts. It contains a compact summary of all modules, script rules, and quick-reference patterns — designed so the AI reads only the detailed docs it needs for your specific task.
 
 ---
 

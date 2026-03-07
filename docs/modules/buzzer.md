@@ -24,3 +24,5 @@ You can find RTTTL melody strings online — search for "RTTTL ringtones" to fin
 - [BUTTON — Physical button override](button.md) — Combine: play a sound on button press
 - [ZHB — Zigbee Hub](zhb.md) — Combine: play a sound when a Zigbee event occurs
 - [GPIO — Direct pin control](gpio.md) — Lower-level `tone()` function for simple frequencies
+- [Example: Play melody](../../examples/buzzer/play_melody.be)
+- [Example: Doorbell with Zigbee button](../../examples/buzzer/doorbell.be)

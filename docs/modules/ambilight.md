@@ -111,6 +111,9 @@ SLZB.log("Effect: " .. effect .. " Brightness: " .. bri)
 
 ## See Also
 
-- [IR — Infrared control](ir.md) — Another Ultima-only module; combine: trigger LED effects from IR remote
+- [IR Receiver](ir_receiver.md) — Combine: trigger LED effects from IR remote
+- [IR Transmitter](ir_transmitter.md) — Another Ultima-only module
 - [BUTTON — Physical button](button.md) — Combine: change LED effect on button press
 - [ZHB — Zigbee Hub](zhb.md) — Combine: change LED color based on Zigbee sensor data
+- [Example: Effects demo](../../examples/ambilight/effects_demo.be)
+- [Example: Cycle colors with Zigbee button](../../examples/ambilight/color_cycle_on_button.be)

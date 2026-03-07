@@ -37,7 +37,8 @@ Below is every module with a one-line summary. **Read the linked file only for m
 | BUZZER | Play RTTTL melodies: `play(melody_string)` | v3.2.5.dev1 | Ultima3 | [docs/modules/buzzer.md](docs/modules/buzzer.md) |
 | BUTTON | Override physical device button: `on_press(0, callback)` → press_type 0=short, 1=long | v3.2.5.dev1 | All | [docs/modules/button.md](docs/modules/button.md) |
 | AMBILIGHT | WS2812B LED strip: effects, colors, brightness, speed, direction. 18 built-in effects | v3.2.5.dev1 | Ultima | [docs/modules/ambilight.md](docs/modules/ambilight.md) |
-| IR | Infrared send/receive: `send(protocol, addr, cmd)`, `sendRaw()`, `on_receive` event. 14 protocol constants | v3.2.5.dev1 | Ultima | [docs/modules/ir.md](docs/modules/ir.md) |
+| IR Transmitter | Send IR commands: `send(protocol, addr, cmd)`, `sendRaw()`. 13 protocol constants | v3.2.5.dev1 | Ultima | [docs/modules/ir_transmitter.md](docs/modules/ir_transmitter.md) |
+| IR Receiver | Receive IR signals: `on_receive` event, `getProtocol/Address/Command()`, `getRaw()` for learning. 14 protocol constants | v3.2.5.dev1 | Ultima | [docs/modules/ir_receiver.md](docs/modules/ir_receiver.md) |
 
 ## Guides
 
@@ -56,6 +57,21 @@ Below is every module with a one-line summary. **Read the linked file only for m
 | [examples/http_client/http_post.be](examples/http_client/http_post.be) | POST request with JSON body |
 | [examples/report_stats/report_stats.be](examples/report_stats/report_stats.be) | Zigbee packet stats + webhook API (ZB + WEBSERVER) |
 | [examples/zigbee_hub/simple_thermostat.be](examples/zigbee_hub/simple_thermostat.be) | Thermostat with temp sensor + relay (ZHB) |
+| [examples/time/reboot_at_3am.be](examples/time/reboot_at_3am.be) | Reboot device at a specific time daily (TIME) |
+| [examples/time/log_datetime.be](examples/time/log_datetime.be) | Log current date and time (TIME) |
+| [examples/gpio/blink_led.be](examples/gpio/blink_led.be) | Blink an LED on/off (GPIO) |
+| [examples/gpio/read_analog.be](examples/gpio/read_analog.be) | Read analog voltage (GPIO) |
+| [examples/mqtt/mqtt_subscribe.be](examples/mqtt/mqtt_subscribe.be) | Subscribe to MQTT topic and log messages |
+| [examples/mqtt/mqtt_publish_temperature.be](examples/mqtt/mqtt_publish_temperature.be) | Publish Zigbee sensor data to MQTT (MQTT + ZHB) |
+| [examples/buzzer/play_melody.be](examples/buzzer/play_melody.be) | Play RTTTL melody (BUZZER) |
+| [examples/buzzer/doorbell.be](examples/buzzer/doorbell.be) | Zigbee button doorbell (BUZZER + ZHB) |
+| [examples/button/button_toggle_relay.be](examples/button/button_toggle_relay.be) | Physical button toggles Zigbee relay (BUTTON + ZHB) |
+| [examples/ambilight/effects_demo.be](examples/ambilight/effects_demo.be) | Cycle through all LED effects (AMBILIGHT) |
+| [examples/ambilight/color_cycle_on_button.be](examples/ambilight/color_cycle_on_button.be) | Zigbee button cycles LED colors (AMBILIGHT + ZHB) |
+| [examples/ir_transmitter/send_nec_command.be](examples/ir_transmitter/send_nec_command.be) | Send an NEC IR command |
+| [examples/ir_transmitter/zigbee_button_sends_ir.be](examples/ir_transmitter/zigbee_button_sends_ir.be) | Zigbee button sends IR to TV (IR + ZHB) |
+| [examples/ir_receiver/log_ir_codes.be](examples/ir_receiver/log_ir_codes.be) | Log all received IR codes (discovery) |
+| [examples/ir_receiver/ir_to_zigbee_bridge.be](examples/ir_receiver/ir_to_zigbee_bridge.be) | Control Zigbee devices with IR remote (IR + ZHB) |
 
 ## Quick reference: common patterns
 

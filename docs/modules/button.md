@@ -37,4 +37,6 @@ Callback receives one argument:
 
 - [ZHB.on_action — Zigbee wireless button events](../guides/zigbee-button-actions.md) — For Zigbee buttons, not the physical device button
 - [BUZZER — Play sounds](buzzer.md) — Combine: play a tone on button press
+- [IR Receiver](ir_receiver.md) — Combine: trigger actions from IR remote
 - [GPIO — Direct pin control](gpio.md)
+- [Example: Toggle relay with physical button](../../examples/button/button_toggle_relay.be)
