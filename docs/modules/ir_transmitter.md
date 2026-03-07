@@ -14,8 +14,8 @@ IR.send(IR.NEC, 0x04, 0x08)  # send NEC power command
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `IR.send(protocol, address, command)` | Send an IR code using a known protocol (see [Protocol Constants](#protocol-constants)). | — |
-| `IR.sendRaw(hexString)` | Send raw IR timing data at 38 kHz. Each byte = 50us tick, alternating mark/space. Use for unsupported protocols or replaying captured codes. | `bool` |
+| `IR.send(protocol:int, address:int, command:int)` | Send an IR code using a known protocol (see [Protocol Constants](#protocol-constants)). | — |
+| `IR.sendRaw(hexString:string)` | Send raw IR timing data at 38 kHz. Each byte = 50us tick, alternating mark/space. Use for unsupported protocols or replaying captured codes. | `bool` |
 
 ## Protocol Constants
 

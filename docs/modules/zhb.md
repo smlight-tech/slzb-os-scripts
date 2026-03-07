@@ -21,9 +21,9 @@ relay.sendOnOff(1)  # turn on
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `ZHB.getDevice(identifier)` | Get device by name (`string`), network address (`int`), or IEEE address (`string`, format `"0x0000000000000000"`). | `ZigbeeDevice` (or error if not found) |
-| `ZHB.waitForStart(timeout)` | Block until Zigbee Hub is fully started. Max 254 seconds. Use `255` to wait forever. | — |
-| `ZHB.permitJoin(time, addr)` | Open network for new devices. `time`: 1–254 sec, `0` = close, `255` = permanent. `addr` (optional): specific device address. *(since v3.0.6)* | — |
+| `ZHB.getDevice(identifier:string\|int)` | Get device by name (`string`), network address (`int`), or IEEE address (`string`, format `"0x0000000000000000"`). | `ZigbeeDevice` (or error if not found) |
+| `ZHB.waitForStart(timeout:int)` | Block until Zigbee Hub is fully started. Max 254 seconds. Use `255` to wait forever. | — |
+| `ZHB.permitJoin(time:int, addr:int?)` | Open network for new devices. `time`: 1–254 sec, `0` = close, `255` = permanent. `addr` (optional): specific device address. *(since v3.0.6)* | — |
 
 ### ZigbeeDevice Class
 
@@ -40,18 +40,18 @@ relay.sendOnOff(1)  # turn on
 | `getIAS()` | IAS type | `int` |
 | `getLastSeen()` | Timestamp of last received packet | `int` |
 | `getLqi()` | Link quality indicator | `int` |
-| `matcher(manufacturer, model)` | Check if device matches manufacturer and model. **Case sensitive.** | `bool` |
+| `matcher(manufacturer:string, model:string)` | Check if device matches manufacturer and model. **Case sensitive.** | `bool` |
 
 #### Control Commands
 
 | Function | Description |
 |----------|-------------|
-| `sendOnOff(state, channel?)` | Turn on (`1`) or off (`0`). `channel` optional, defaults to 1. |
-| `sendBri(brightness, channel?)` | Set brightness (1–254). `channel` optional. |
-| `sendColor(color, channel?)` | Set color. Format: `"#rrggbb"` or `"r,g,b"`. `channel` optional. |
-| `sendColorTemp(mireds, channel?)` | Set color temperature in [mireds](https://en.wikipedia.org/wiki/Mired). `channel` optional. |
-| `sendCmd(endpoint, cluster, command, payload?)` | Send any ZCL command. `payload` (`bytes`) optional. Returns ZCL transaction number (`int`). |
-| `readAttr(endpoint, cluster, attr, ...)` | Request attribute read. Does **not** wait for response. Supports multiple attributes. *(since v3.0.6)* |
+| `sendOnOff(state:int, channel:int?)` | Turn on (`1`) or off (`0`). `channel` optional, defaults to 1. |
+| `sendBri(brightness:int, channel:int?)` | Set brightness (1–254). `channel` optional. |
+| `sendColor(color:string, channel:int?)` | Set color. Format: `"#rrggbb"` or `"r,g,b"`. `channel` optional. |
+| `sendColorTemp(mireds:int, channel:int?)` | Set color temperature in [mireds](https://en.wikipedia.org/wiki/Mired). `channel` optional. |
+| `sendCmd(endpoint:int, cluster:int, command:int, payload:bytes?)` | Send any ZCL command. `payload` (`bytes`) optional. Returns ZCL transaction number (`int`). |
+| `readAttr(endpoint:int, cluster:int, attr:int, ...)` | Request attribute read. Does **not** wait for response. Supports multiple attributes. Returns ZCL transaction number (`int`). *(since v3.0.6)* |
 
 ```berry
 dev.sendOnOff(1)         # turn on relay
@@ -61,13 +61,17 @@ dev.sendColor("#0062ff") # send hex color
 dev.sendColor("0,0,255") # send RGB color
 dev.sendColorTemp(180)   # daylight color temperature
 dev.sendCmd(1, 6, 1)     # turn on via raw ZCL command
+
+# readAttr examples:
+dev.readAttr(1, 0x0b04, 0x0505)                # request AC voltage (Electrical Measurement cluster)
+dev.readAttr(1, 0x0b04, 0x0505, 0x0508, 0x050b) # request voltage, current, and power at once
 ```
 
 #### Reading Values
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `getVal(endpoint, cluster, attribute)` | Last saved value from the device. Returns `nil` if not yet reported. | `bool` / `float` / `int` / `string` / `bytes` |
+| `getVal(endpoint:int, cluster:int, attribute:int)` | Last saved value from the device. Returns `nil` if not yet reported. | `bool` / `float` / `int` / `string` / `bytes` |
 
 ```berry
 # Read temperature from a sensor (cluster 0x0402, attribute 0)
@@ -81,13 +85,13 @@ var state = relay.getVal(1, 6, 0)
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `bindToHub(srcEp, srcCl)` | Bind endpoint/cluster to the hub. | `bool` |
-| `bindToDevice(srcEp, srcCl, dstIeee, dstEp)` | Bind to another device. `dstIeee` in hex string format. | `bool` |
-| `bindToGroup(srcEp, srcCl, dstGroupAddr)` | Bind to a group address. | `bool` |
+| `bindToHub(srcEp:int, srcCl:int)` | Bind endpoint/cluster to the hub. | `bool` |
+| `bindToDevice(srcEp:int, srcCl:int, dstIeee:string, dstEp:int)` | Bind to another device. `dstIeee` in hex string format. | `bool` |
+| `bindToGroup(srcEp:int, srcCl:int, dstGroupAddr:int)` | Bind to a group address. | `bool` |
 
 ### Events
 
-#### ZHB.on_action(callback)
+#### ZHB.on_action(callback:function)
 
 Called when a Zigbee device sends an action — button click, double click, long press, rotary encoder rotation, etc.
 

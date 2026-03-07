@@ -26,7 +26,7 @@ BUTTON.on_press(0, press_handler)
 
 | Function | Description |
 |----------|-------------|
-| `BUTTON.on_press(button_id, callback)` | Override button actions. Currently only button `0` is supported. |
+| `BUTTON.on_press(button_id:int, callback:function)` | Override button actions. Currently only button `0` is supported. |
 
 Callback receives one argument:
 - `press_type` (`int`) — `0` for short press, `1` for long press

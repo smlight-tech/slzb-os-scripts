@@ -20,10 +20,10 @@ end
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `FS.exists(path)` | Check if file or folder exists. | `bool` |
-| `FS.open(filename, mode)` | Open a file for reading or writing. See [Berry file documentation](https://berry.readthedocs.io/en/latest/source/en/Chapter-7.html?highlight=open#open-function). | `File` |
-| `FS.deleteFile(path)` | Delete a file by its full path. Does **not** delete folders. | `bool` |
-| `FS.deleteDir(path)` | Delete all files in a folder and the folder itself. Does **not** support recursion — subfolders will **not** be deleted. | — |
+| `FS.exists(path:string)` | Check if file or folder exists. | `bool` |
+| `FS.open(filename:string, mode:string)` | Open a file for reading or writing. See [Berry file documentation](https://berry.readthedocs.io/en/latest/source/en/Chapter-7.html?highlight=open#open-function). | `File` |
+| `FS.deleteFile(path:string)` | Delete a file by its full path. Does **not** delete folders. | `bool` |
+| `FS.deleteDir(path:string)` | Delete all files in a folder and the folder itself. Does **not** support recursion — subfolders will **not** be deleted. | — |
 
 ## Examples
 

@@ -4,7 +4,8 @@
 
 Make HTTP/HTTPS GET and POST requests from your scripts and process responses.
 
-**All scripts share one HTTP client** — only one script can use it at a time.
+- HTTPS is supported (without certificate verification).
+- **All scripts share one HTTP client** — only one script can use it at a time.
 
 ## Quick Example
 
@@ -26,13 +27,13 @@ end
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `HTTP.open(url, method, buffer)` | Open the HTTP client. `method`: `"get"` or `"post"` (**case sensitive**). `buffer`: response buffer size in bytes (recommended max ~4096; U-series can use more). | `bool` |
+| `HTTP.open(url:string, method:string, buffer:int)` | Open the HTTP client. `method`: `"get"` or `"post"` (**case sensitive**). `buffer`: response buffer size in bytes (recommended max ~4096; U-series can use more). | `bool` |
 | `HTTP.perform()` | Execute the request. | `int` (HTTP status code, 200 = OK) |
 | `HTTP.getResponse()` | Get the response text, up to `buffer` size. **Do not log responses longer than 1024 characters — this will crash!** | `string` |
-| `HTTP.setPostData(data)` | Set POST request body. | `bool` |
-| `HTTP.setHeader(name, value)` | Set a request header. | `bool` |
-| `HTTP.setMethod(method)` | Change method on an already-open client (**reuse API**). | `bool` |
-| `HTTP.setUrl(url)` | Change URL on an already-open client (**reuse API**). | `bool` |
+| `HTTP.setPostData(data:string)` | Set POST request body. | `bool` |
+| `HTTP.setHeader(name:string, value:string)` | Set a request header. | `bool` |
+| `HTTP.setMethod(method:string)` | Change method on an already-open client (**reuse API**). | `bool` |
+| `HTTP.setUrl(url:string)` | Change URL on an already-open client (**reuse API**). | `bool` |
 | `HTTP.isOpened()` | Check if the client is currently open. | `bool` |
 | `HTTP.close()` | Close the client and free memory. | — |
 
@@ -42,9 +43,9 @@ Set `buffer` to `0` in `HTTP.open()` to enable stream mode. This lets you proces
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `HTTP.streamReadBytes(count, buffer)` | Read bytes from the stream into a `bytes` buffer. `buffer` size must be >= `count`. Returns actual bytes read. | `int` |
-| `HTTP.streamReadString(count)` | Read bytes from the stream as a string. | `string` |
-| `HTTP.streamFlush(count)` | Discard `count` bytes from the stream. | — |
+| `HTTP.streamReadBytes(count:int, buffer:bytes)` | Read bytes from the stream into a `bytes` buffer. `buffer` size must be >= `count`. Returns actual bytes read. | `int` |
+| `HTTP.streamReadString(count:int)` | Read bytes from the stream as a string. | `string` |
+| `HTTP.streamFlush(count:int)` | Discard `count` bytes from the stream. | — |
 | `HTTP.streamGetLen()` | Total response size (from `Content-Length` header). | `int` |
 
 ## See Also

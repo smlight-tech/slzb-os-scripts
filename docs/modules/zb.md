@@ -35,17 +35,17 @@ After executing `ZB.suspend(true)`, the following events will **not** be generat
 | `ZB.reboot()` | Reboot the Zigbee chip immediately. | — |
 | `ZB.flashMode()` | Put Zigbee chip into firmware mode. Restart the chip or send the bootloader command to return to normal mode. | — |
 | `ZB.routerPairMode()` | Start network search for pairing (when chip is flashed as a router). | — |
-| `ZB.writeBytes(data)` | Send bytes directly to the Zigbee chip. Arg: `bytes`. | `int` (bytes sent) |
+| `ZB.writeBytes(data:bytes)` | Send bytes directly to the Zigbee chip. | `int` (bytes sent) |
 | `ZB.readBytes()` | Read bytes from the Zigbee chip. **Requires `ZB.suspend(true)` first!** | `bytes` |
 | `ZB.availableBytes()` | Number of bytes available for reading from the Zigbee chip. | `int` |
 | `ZB.getZbClients()` | Number of clients connected to the Zigbee socket. | `int` |
-| `ZB.suspend(state)` | Stop (`true`) or resume (`false`) Zigbee socket processing. | — |
+| `ZB.suspend(state:bool)` | Stop (`true`) or resume (`false`) Zigbee socket processing. | — |
 
 ## Events
 
 > Available since v2.8.2.dev0
 
-### ZB.on_pkt(callback)
+### ZB.on_pkt(callback:`function`)
 
 Called when a new data packet is received from the Zigbee chip in network coordinator mode.
 
@@ -66,7 +66,7 @@ end
 ZB.on_pkt(zb_pkt_handler)
 ```
 
-### ZB.on_connect(callback)
+### ZB.on_connect(callback:`function`)
 
 Called when a new socket client connects in network coordinator mode.
 
@@ -84,7 +84,7 @@ end
 ZB.on_connect(conn_cb)
 ```
 
-### ZB.on_disconnect(callback)
+### ZB.on_disconnect(callback:`function`)
 
 Called when a socket client disconnects in network coordinator mode.
 

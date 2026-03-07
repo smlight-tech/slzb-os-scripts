@@ -18,7 +18,7 @@ end)
 
 | Function | Description |
 |----------|-------------|
-| `IR.on_receive(callback)` | Register a callback that fires on every received IR code. Callback: `def (protocol, address, command)`. |
+| `IR.on_receive(callback:function)` | Register a callback that fires on every received IR code. Callback: `def (protocol:int, address:int, command:int)`. |
 
 ### Reading Last Received Code
 

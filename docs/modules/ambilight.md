@@ -18,37 +18,37 @@ AMBILIGHT.setEffect(AMBILIGHT.SOLID)  # static color
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `AMBILIGHT.setEffect(effect)` | Set LED effect (int or constant). | — |
+| `AMBILIGHT.setEffect(effect:int)` | Set LED effect (use effect constants below). | — |
 | `AMBILIGHT.getEffect()` | Get current effect. | `int` |
 
 ### Brightness
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `AMBILIGHT.setBrightness(bri)` | Set brightness, 1–254. | — |
+| `AMBILIGHT.setBrightness(bri:int)` | Set brightness, 1–254. | — |
 | `AMBILIGHT.getBrightness()` | Get current brightness. | `int` |
 
 ### Speed
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `AMBILIGHT.setSpeed(speed)` | Set effect animation speed. | — |
+| `AMBILIGHT.setSpeed(speed:int)` | Set effect animation speed. | — |
 | `AMBILIGHT.getSpeed()` | Get current speed. | `int` |
 
 ### Colors
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `AMBILIGHT.setColor(color)` | Set primary color as `0xRRGGBB`. | — |
+| `AMBILIGHT.setColor(color:int)` | Set primary color as `0xRRGGBB`. | — |
 | `AMBILIGHT.getColor()` | Get current primary color. | `int` |
-| `AMBILIGHT.setColor2(color)` | Set secondary color (used by Gradient effect). | — |
+| `AMBILIGHT.setColor2(color:int)` | Set secondary color (used by Gradient effect). | — |
 | `AMBILIGHT.getColor2()` | Get current secondary color. | `int` |
 
 ### Direction
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `AMBILIGHT.setDirection(dir)` | `0` = Forward, `1` = Reverse. | — |
+| `AMBILIGHT.setDirection(dir:int)` | `0` = Forward, `1` = Reverse. | — |
 | `AMBILIGHT.getDirection()` | Get current direction. | `int` |
 
 ## Effect Constants

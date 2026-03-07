@@ -25,18 +25,13 @@ Then visit: `http://<device-ip>/script/webhook?name=World`
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `WEBSERVER.getArg(x)` | Get argument value by index (`int`) or name (`string`). Returns `""` if argument does not exist. | `string` |
-| `WEBSERVER.hasArg(name)` | Check if argument exists by name. | `bool` |
-| `WEBSERVER.send(code, content_type, body)` | Send a response to the client. **Use only inside `on_webhook` callback.** | — |
-
-`WEBSERVER.send()` parameters:
-- `code` (`int`) — HTTP status code (e.g. `200`)
-- `content_type` (`string`) — Response content type (e.g. `"text/plain"`, `"application/json"`)
-- `body` (`string`) — Response text
+| `WEBSERVER.getArg(x:int\|string)` | Get argument value by index (`int`) or by name (`string`). Returns `""` if argument does not exist. | `string` |
+| `WEBSERVER.hasArg(name:string)` | Check if argument exists by name. | `bool` |
+| `WEBSERVER.send(code:int, content_type:string, body:string)` | Send a response to the client. **Use only inside `on_webhook` callback.** | — |
 
 ### Events
 
-#### WEBSERVER.on_webhook(callback)
+#### WEBSERVER.on_webhook(callback:`function`)
 
 Triggered when a GET or POST request is made to `<device-ip>/script/webhook`.
 

@@ -1,141 +1,180 @@
-# SLZB-OS Berry Scripting — AI Agent Context
+# SLZB-OS Berry Scripting — AI Agent Reference
 
-Use this file as a prompt for AI agents when writing Berry scripts for SLZB-OS devices. Copy this entire file into your prompt, then describe what you want to build. Optionally specify which modules you need — the agent will read only the relevant documentation files.
+Berry scripts run on SMLIGHT Zigbee coordinators (SLZB-06x, MRx, Ultima). Scripts start with `#META {"start":1}` (auto) or `#META {"start":0}` (manual). Space after `#META` required. `SLZB` module is auto-loaded, all others need `import`. Event callbacks: no `delay()`, no infinite loops, return fast. `SLZB.log()` max 1024 chars. Only one script can use HTTP at a time. For detailed docs, read the linked files for the modules you need.
 
----
-
-## What is this?
-
-SLZB-OS is the operating system for SMLIGHT Zigbee coordinators (SLZB-06x, MRx, Ultima series). It supports user scripts written in [Berry](https://berry-lang.github.io/), a lightweight embedded scripting language. Scripts run directly on the device — no external server needed.
-
-## Script rules
-
-- Up to 3 scripts can run simultaneously.
-- Every script must start with a metadata line: `#META {"start":1}` (auto-start) or `#META {"start":0}` (manual).
-- The space after `#META` is required. The line must end with a newline.
-- Optional metadata: `"stack":8192` (increase memory), `"psram":true` (U-series only, disables filesystem access).
-- The `SLZB` module is auto-loaded. All others require `import`.
-- Event callbacks must not use `SLZB.delay()`, must not contain infinite loops, and must return quickly.
-- `SLZB.log()` crashes if text exceeds 1024 characters.
-- All scripts share one HTTP client — only one script can use HTTP at a time.
-
-## Available modules
-
-Below is every module with a one-line summary. **Read the linked file only for modules you need.**
-
-| Module | Description | Min Firmware | Devices | Documentation |
-|--------|-------------|:------------:|---------|---------------|
-| SLZB | Core: `delay()`, `log()`, `reboot()`, `millis()`, `freeHeap()`, `deviceModel()` | v2.8.0 | All | [docs/modules/slzb.md](docs/modules/slzb.md) |
-| ZB | Low-level Zigbee chip: `reboot()`, `writeBytes()`, `readBytes()`, `suspend()`, socket events (`on_pkt`, `on_connect`, `on_disconnect`) | v2.8.0 | All | [docs/modules/zb.md](docs/modules/zb.md) |
-| WEBSERVER | Incoming HTTP webhook at `<ip>/script/webhook`: `getArg()`, `hasArg()`, `send()`, `on_webhook` event | v2.8.2.dev0 | All | [docs/modules/webserver.md](docs/modules/webserver.md) |
-| ZHB | Zigbee Hub device control: `getDevice()`, `waitForStart()`, `permitJoin()`. ZigbeeDevice class: `sendOnOff()`, `sendBri()`, `sendColor()`, `sendColorTemp()`, `sendCmd()`, `getVal()`, `readAttr()`, binding, `on_action` event | v2.9.6 | All | [docs/modules/zhb.md](docs/modules/zhb.md) |
-| HTTP | Outgoing HTTP/S requests: `open()`, `perform()`, `getResponse()`, `setPostData()`, `setHeader()`, stream mode for large responses | v2.9.8 | All | [docs/modules/http.md](docs/modules/http.md) |
-| TIME | NTP-synced clock: `waitSync()`, `getAll()` → `{year, month, day, hour, min, sec, weekday}`, `getTime()` | v3.0.6 | All | [docs/modules/time.md](docs/modules/time.md) |
-| FS | File system: `exists()`, `open()`, `deleteFile()`, `deleteDir()` | v3.0.6 | All | [docs/modules/fs.md](docs/modules/fs.md) |
-| GPIO | Direct pin control: `pinMode()`, `digitalRead/Write()`, `analogRead/Write()`, `tone()`, `noTone()` | v3.1.6.dev3 | All | [docs/modules/gpio.md](docs/modules/gpio.md) |
-| MQTT | Messaging: `waitConnect()`, `subscribe()`, `publish()`, `on_message` event. Requires MQTT enabled in web UI | v3.2.4 | All | [docs/modules/mqtt.md](docs/modules/mqtt.md) |
-| BUZZER | Play RTTTL melodies: `play(melody_string)` | v3.2.5.dev1 | Ultima3 | [docs/modules/buzzer.md](docs/modules/buzzer.md) |
-| BUTTON | Override physical device button: `on_press(0, callback)` → press_type 0=short, 1=long | v3.2.5.dev1 | All | [docs/modules/button.md](docs/modules/button.md) |
-| AMBILIGHT | WS2812B LED strip: effects, colors, brightness, speed, direction. 18 built-in effects | v3.2.5.dev1 | Ultima | [docs/modules/ambilight.md](docs/modules/ambilight.md) |
-| IR Transmitter | Send IR commands: `send(protocol, addr, cmd)`, `sendRaw()`. 13 protocol constants | v3.2.5.dev1 | Ultima | [docs/modules/ir_transmitter.md](docs/modules/ir_transmitter.md) |
-| IR Receiver | Receive IR signals: `on_receive` event, `getProtocol/Address/Command()`, `getRaw()` for learning. 14 protocol constants | v3.2.5.dev1 | Ultima | [docs/modules/ir_receiver.md](docs/modules/ir_receiver.md) |
-
-## Guides
-
-| Guide | When to read |
-|-------|-------------|
-| [docs/guides/zigbee-button-actions.md](docs/guides/zigbee-button-actions.md) | When using `ZHB.on_action()` — contains action string tables for different device brands and full examples |
-
-## Examples
-
-| File | What it demonstrates |
-|------|---------------------|
-| [examples/basic/reboot_every_day.be](examples/basic/reboot_every_day.be) | Scheduled reboot with delay loop |
-| [examples/basic/zb_reboot_on_drop.be](examples/basic/zb_reboot_on_drop.be) | Monitor Zigbee socket clients, reboot chip on disconnect |
-| [examples/basic/get_file_size.be](examples/basic/get_file_size.be) | Open and inspect a file |
-| [examples/http_client/http_get.be](examples/http_client/http_get.be) | GET request with JSON parsing |
-| [examples/http_client/http_post.be](examples/http_client/http_post.be) | POST request with JSON body |
-| [examples/report_stats/report_stats.be](examples/report_stats/report_stats.be) | Zigbee packet stats + webhook API (ZB + WEBSERVER) |
-| [examples/zigbee_hub/simple_thermostat.be](examples/zigbee_hub/simple_thermostat.be) | Thermostat with temp sensor + relay (ZHB) |
-| [examples/time/reboot_at_3am.be](examples/time/reboot_at_3am.be) | Reboot device at a specific time daily (TIME) |
-| [examples/time/log_datetime.be](examples/time/log_datetime.be) | Log current date and time (TIME) |
-| [examples/time/alarm.be](examples/time/alarm.be) | Wake-up alarm with LED + buzzer (TIME + AMBILIGHT + BUZZER) |
-| [examples/gpio/blink_led.be](examples/gpio/blink_led.be) | Blink an LED on/off (GPIO) |
-| [examples/gpio/read_analog.be](examples/gpio/read_analog.be) | Read analog voltage (GPIO) |
-| [examples/mqtt/mqtt_subscribe.be](examples/mqtt/mqtt_subscribe.be) | Subscribe to MQTT topic and log messages |
-| [examples/mqtt/mqtt_publish_temperature.be](examples/mqtt/mqtt_publish_temperature.be) | Publish Zigbee sensor data to MQTT (MQTT + ZHB) |
-| [examples/buzzer/play_melody.be](examples/buzzer/play_melody.be) | Play RTTTL melody (BUZZER) |
-| [examples/buzzer/doorbell.be](examples/buzzer/doorbell.be) | Zigbee button doorbell (BUZZER + ZHB) |
-| [examples/button/button_toggle_relay.be](examples/button/button_toggle_relay.be) | Physical button toggles Zigbee relay (BUTTON + ZHB) |
-| [examples/ambilight/effects_demo.be](examples/ambilight/effects_demo.be) | Cycle through all LED effects (AMBILIGHT) |
-| [examples/ambilight/color_cycle_on_button.be](examples/ambilight/color_cycle_on_button.be) | Zigbee button cycles LED colors (AMBILIGHT + ZHB) |
-| [examples/ir_transmitter/send_nec_command.be](examples/ir_transmitter/send_nec_command.be) | Send an NEC IR command |
-| [examples/ir_transmitter/zigbee_button_sends_ir.be](examples/ir_transmitter/zigbee_button_sends_ir.be) | Zigbee button sends IR to TV (IR + ZHB) |
-| [examples/ir_receiver/log_ir_codes.be](examples/ir_receiver/log_ir_codes.be) | Log all received IR codes (discovery) |
-| [examples/ir_receiver/ir_to_zigbee_bridge.be](examples/ir_receiver/ir_to_zigbee_bridge.be) | Control Zigbee devices with IR remote (IR + ZHB) |
-
-## Quick reference: common patterns
-
-### Minimal script template
-```berry
-#META {"start":1}
-# your code here
-SLZB.log("Hello from Berry!")
+## SLZB — Core (auto-loaded, no import needed)
 ```
-
-### Event-based script template
-```berry
-#META {"start":1}
-import ZHB
-
-ZHB.waitForStart(0xff)
-
-def on_action(action, dev)
-  SLZB.log("[" .. dev.getName() .. "] " .. action)
-end
-
-ZHB.on_action(on_action)
+SLZB.delay(ms)          # pause execution, max ~1193 hours
+SLZB.log(text)          # print to debug console (max 1024 chars!)
+SLZB.reboot()           # reboot device
+SLZB.millis() → int     # ms since boot
+SLZB.freeHeap() → int   # free RAM bytes
+SLZB.deviceModel() → str  # e.g. "SLZB-06P7" (since v2.8.2.dev1)
 ```
+Details: [docs/modules/slzb.md](docs/modules/slzb.md)
 
-### Control a device
-```berry
-var dev = ZHB.getDevice("Device Name")  # by name
-var dev = ZHB.getDevice("0x00158d...")   # by IEEE
-var dev = ZHB.getDevice(0x1234)          # by network address
-dev.sendOnOff(1)                         # turn on
-dev.getVal(1, 0x0402, 0)                 # read temperature
+## ZB — Zigbee Chip (v2.8.0) `import ZB`
 ```
-
-### HTTP request
-```berry
-import HTTP
-if HTTP.open(url, "get", 1024)
-  if HTTP.perform() == 200
-    var resp = HTTP.getResponse()
-  end
-  HTTP.close()
-end
+ZB.reboot()                    # reboot zigbee chip
+ZB.writeBytes(bytes) → int     # send raw bytes, returns count
+ZB.readBytes() → bytes         # read bytes (call ZB.suspend(true) first!)
+ZB.availableBytes() → int      # bytes available to read
+ZB.getZbClients() → int        # connected socket clients
+ZB.suspend(bool)               # stop/resume socket processing
+ZB.flashMode()                 # enter firmware mode
+ZB.routerPairMode()            # start pairing (router firmware)
+# Events (since v2.8.2.dev0):
+ZB.on_pkt(def(id, buf) end)           # packet received; return true to block (CC2652x only)
+ZB.on_connect(def(ip, id) end)        # client connected; return true to reject
+ZB.on_disconnect(def(id) end)         # client disconnected
 ```
+Details: [docs/modules/zb.md](docs/modules/zb.md)
 
-### MQTT publish/subscribe
-```berry
-import MQTT
-MQTT.waitConnect(0xff)
-MQTT.subscribe("topic")
-MQTT.on_message(def (topic, data) SLZB.log(data) end)
-MQTT.publish("topic", "payload")
+## ZHB — Zigbee Hub (v2.9.6) `import ZHB`
 ```
+ZHB.waitForStart(timeout)                # wait for hub init, 255=forever
+ZHB.getDevice(name|nwk|ieee) → ZigbeeDevice  # get by name(str), addr(int), or IEEE(str "0x...")
+ZHB.permitJoin(time, addr?)              # open network (since v3.0.6)
+# ZigbeeDevice methods:
+dev.sendOnOff(state, ch?)       # 1=on, 0=off, ch defaults to 1
+dev.sendBri(1-254, ch?)         # brightness
+dev.sendColor("#rrggbb", ch?)   # or "r,g,b"
+dev.sendColorTemp(mireds, ch?)  # color temperature
+dev.sendCmd(ep, cluster, cmd, payload?)  # raw ZCL command
+dev.readAttr(ep, cluster, attr, ...) → int  # request attribute read, returns ZCL txn (since v3.0.6)
+dev.getVal(ep, cluster, attr) → value|nil  # last reported value
+dev.getName() → str             # user-set name
+dev.getModel() → str            # device model
+dev.getManuf() → str            # manufacturer
+dev.getNwk() → int              # network address
+dev.getLqi() → int               # link quality
+dev.getBattery() → int           # battery %
+dev.getLastSeen() → int          # last packet timestamp
+dev.matcher(manuf, model) → bool # match device type (case sensitive)
+dev.bindToHub(ep, cl) → bool               # (since v3.0.6)
+dev.bindToDevice(ep, cl, ieee, dstEp) → bool  # (since v3.0.6)
+dev.bindToGroup(ep, cl, groupAddr) → bool     # (since v3.0.6)
+# Event:
+ZHB.on_action(def(action, dev) end)  # button/encoder actions
+# action strings: "single","double","long","btn_single_1","rotate_right_1" etc.
+```
+Details: [docs/modules/zhb.md](docs/modules/zhb.md) | Button guide: [docs/guides/zigbee-button-actions.md](docs/guides/zigbee-button-actions.md)
 
----
+## HTTP — HTTP Client (v2.9.8) `import HTTP`
+```
+HTTP.open(url, "get"|"post", bufferSize) → bool  # HTTPS supported (no cert verify). buffer 0 = stream mode
+HTTP.perform() → int              # execute, returns status code
+HTTP.getResponse() → str          # response text (max buffer size)
+HTTP.setPostData(str) → bool      # set POST body
+HTTP.setHeader(name, value) → bool
+HTTP.setUrl(url) → bool           # reuse: change URL
+HTTP.setMethod(method) → bool     # reuse: change method
+HTTP.isOpened() → bool
+HTTP.close()                      # always close when done!
+# Stream mode (buffer=0, since v3.1.6.dev3):
+HTTP.streamReadBytes(count, bytesBuffer) → int
+HTTP.streamReadString(count) → str
+HTTP.streamFlush(count)
+HTTP.streamGetLen() → int
+```
+Details: [docs/modules/http.md](docs/modules/http.md)
 
-## How to use this prompt
+## WEBSERVER — Webhooks (v2.8.2.dev0) `import WEBSERVER`
+```
+# Webhook URL: http://<device-ip>/script/webhook
+WEBSERVER.getArg(index|name) → str   # get param value, "" if missing
+WEBSERVER.hasArg(name) → bool
+WEBSERVER.send(code, contentType, body)  # use only inside on_webhook!
+WEBSERVER.on_webhook(def(argCount) end)  # event: request received
+```
+Details: [docs/modules/webserver.md](docs/modules/webserver.md)
 
-Paste this file into your AI agent's context, then add your request. Examples:
+## TIME — Clock/NTP (v3.0.6) `import TIME`
+```
+TIME.waitSync(timeout) → bool    # wait for NTP, 255=forever
+TIME.getAll() → map|nil          # {year, month, day, hour, min, sec, weekday} weekday: 0=Sun
+TIME.getTime() → map             # {hour, min, sec}
+```
+Details: [docs/modules/time.md](docs/modules/time.md)
 
-> "Write a script that toggles a relay named 'Heater' when a button named 'Wall Switch' is single-clicked. Read docs/modules/zhb.md and docs/guides/zigbee-button-actions.md for details."
+## FS — File System (v3.0.6) `import FS`
+```
+FS.exists(path) → bool
+FS.open(path, mode) → File       # see Berry docs for File class
+FS.deleteFile(path) → bool       # files only, not folders
+FS.deleteDir(path)               # non-recursive, no subfolders
+```
+Details: [docs/modules/fs.md](docs/modules/fs.md)
 
-> "Create a script that checks temperature every 5 minutes and sends an MQTT alert if it exceeds 30 degrees. Read docs/modules/zhb.md and docs/modules/mqtt.md."
+## GPIO — Pin Control (v3.1.6.dev3) `import GPIO`
+```
+GPIO.MOD_OUTPUT, GPIO.MOD_INPUT  # constants
+GPIO.pinMode(pin, mode)          # must call before using pin!
+GPIO.digitalRead(pin) → bool
+GPIO.digitalWrite(pin, state)
+GPIO.analogRead(pin) → int       # 0-4096 (0-3.3V)
+GPIO.analogWrite(pin, dutycycle)  # PWM
+GPIO.tone(pin, freq)             # frequency generator
+GPIO.noTone(pin)                 # stop frequency
+```
+Details: [docs/modules/gpio.md](docs/modules/gpio.md)
 
-> "Write a script that changes the LED strip to red when an IR power button is received. Read docs/modules/ir.md and docs/modules/ambilight.md."
+## MQTT — Messaging (v3.2.4) `import MQTT`
+```
+# Requires MQTT enabled in device web UI
+MQTT.waitConnect(timeout) → bool         # 255=forever
+MQTT.isConnected() → bool
+MQTT.subscribe(topic) → bool             # → <base_topic>/topic
+MQTT.subscribeCustom(topic) → bool       # exact topic
+MQTT.publish(topic, payload) → bool      # → <base_topic>/topic
+MQTT.publishCustom(topic, payload) → bool  # exact topic
+MQTT.on_message(def(topic, data) end)    # event: message received
+```
+Details: [docs/modules/mqtt.md](docs/modules/mqtt.md)
 
-The agent should read only the documentation files relevant to your request, not all of them.
+## BUZZER — Melodies (v3.2.5.dev1, Ultima3 only) `import BUZZER`
+```
+BUZZER.play(rtttlString)   # e.g. "Name:d=4,o=5,b=140:8g6,16p,2a#6"
+```
+Details: [docs/modules/buzzer.md](docs/modules/buzzer.md)
+
+## BUTTON — Physical Button (v3.2.5.dev1) `import BUTTON`
+```
+BUTTON.on_press(0, def(type) end)  # type: 0=short, 1=long. Disables default button actions!
+```
+Details: [docs/modules/button.md](docs/modules/button.md)
+
+## AMBILIGHT — LED Strip (v3.2.5.dev1, Ultima only) `import AMBILIGHT`
+```
+AMBILIGHT.setEffect(effect)      AMBILIGHT.getEffect() → int
+AMBILIGHT.setBrightness(1-254)   AMBILIGHT.getBrightness() → int
+AMBILIGHT.setSpeed(speed)        AMBILIGHT.getSpeed() → int
+AMBILIGHT.setColor(0xRRGGBB)     AMBILIGHT.getColor() → int
+AMBILIGHT.setColor2(0xRRGGBB)    AMBILIGHT.getColor2() → int    # gradient only
+AMBILIGHT.setDirection(0|1)      AMBILIGHT.getDirection() → int  # 0=fwd, 1=rev
+# Effect constants:
+# SOLID=0 OFF=1 BLUR=2 RAINBOW=3 BREATHING=4 COLOR_WIPE=5 COMET=6
+# FIRE=7 TWINKLE=8 POLICE=9 CHASE=10 COLOR_CYCLE=11 GRADIENT=12
+# STROBE=13 SYS_WARNING=14 SYS_ERROR=15 SYS_OK=16 SYS_INFO=17
+# SYS_* effects blink 3x then revert. All set* save to config immediately.
+```
+Details: [docs/modules/ambilight.md](docs/modules/ambilight.md)
+
+## IR Transmitter (v3.2.5.dev1, Ultima only) `import IR`
+```
+IR.send(protocol, address, command)  # send by protocol
+IR.sendRaw(hexString) → bool        # raw 38kHz timing, each byte=50us tick
+# Protocols: APPLE=3 DENON=4 JVC=5 LG=6 NEC=8 NEC2=9 ONKYO=10
+# PANASONIC=11 RC5=17 RC6=18 SAMSUNG=20 SHARP=23 SONY=24
+```
+Details: [docs/modules/ir_transmitter.md](docs/modules/ir_transmitter.md)
+
+## IR Receiver (v3.2.5.dev1, Ultima only) `import IR`
+```
+IR.on_receive(def(protocol, address, command) end)  # event: IR received
+IR.getProtocol() → int    # 0=UNKNOWN
+IR.getAddress() → int
+IR.getCommand() → int
+IR.getRaw() → str          # raw timing hex, use with IR.sendRaw() to replay
+```
+Details: [docs/modules/ir_receiver.md](docs/modules/ir_receiver.md)

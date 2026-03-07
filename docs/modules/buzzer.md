@@ -15,7 +15,7 @@ BUZZER.play("Arkanoid:d=4,o=5,b=140:8g6,16p,16g.6,2a#6,32p,8a6,8g6,8f6,8a6,2g6")
 
 | Function | Description |
 |----------|-------------|
-| `BUZZER.play(melody)` | Play a melody string in [RTTTL format](https://en.wikipedia.org/wiki/Ring_Tone_Text_Transfer_Language). |
+| `BUZZER.play(melody:string)` | Play a melody string in [RTTTL format](https://en.wikipedia.org/wiki/Ring_Tone_Text_Transfer_Language). |
 
 You can find RTTTL melody strings online — search for "RTTTL ringtones" to find collections of ready-to-use melodies.
 
