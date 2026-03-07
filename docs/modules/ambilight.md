@@ -1,0 +1,116 @@
+# AMBILIGHT — LED Strip Control
+
+> Available since: v3.2.5.dev1 | **Ultima devices only**
+
+Control the WS2812B LED ambilight — set effects, colors, brightness, and speed.
+
+## Quick Example
+
+```berry
+AMBILIGHT.setColor(0xFF0000)          # red
+AMBILIGHT.setBrightness(254)          # full brightness
+AMBILIGHT.setEffect(AMBILIGHT.SOLID)  # static color
+```
+
+## API Reference
+
+### Effect Control
+
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `AMBILIGHT.setEffect(effect)` | Set LED effect (int or constant). | — |
+| `AMBILIGHT.getEffect()` | Get current effect. | `int` |
+
+### Brightness
+
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `AMBILIGHT.setBrightness(bri)` | Set brightness, 1–254. | — |
+| `AMBILIGHT.getBrightness()` | Get current brightness. | `int` |
+
+### Speed
+
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `AMBILIGHT.setSpeed(speed)` | Set effect animation speed. | — |
+| `AMBILIGHT.getSpeed()` | Get current speed. | `int` |
+
+### Colors
+
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `AMBILIGHT.setColor(color)` | Set primary color as `0xRRGGBB`. | — |
+| `AMBILIGHT.getColor()` | Get current primary color. | `int` |
+| `AMBILIGHT.setColor2(color)` | Set secondary color (used by Gradient effect). | — |
+| `AMBILIGHT.getColor2()` | Get current secondary color. | `int` |
+
+### Direction
+
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `AMBILIGHT.setDirection(dir)` | `0` = Forward, `1` = Reverse. | — |
+| `AMBILIGHT.getDirection()` | Get current direction. | `int` |
+
+## Effect Constants
+
+| Constant | Value | Description |
+|----------|-------|-------------|
+| `AMBILIGHT.SOLID` | 0 | Static solid color |
+| `AMBILIGHT.OFF` | 1 | LEDs off |
+| `AMBILIGHT.BLUR` | 2 | Moving dot with blur trail |
+| `AMBILIGHT.RAINBOW` | 3 | Rotating rainbow |
+| `AMBILIGHT.BREATHING` | 4 | Pulsing brightness |
+| `AMBILIGHT.COLOR_WIPE` | 5 | Fill LEDs one-by-one, then clear |
+| `AMBILIGHT.COMET` | 6 | Moving dot with fading tail |
+| `AMBILIGHT.FIRE` | 7 | Fire simulation |
+| `AMBILIGHT.TWINKLE` | 8 | Random sparkles |
+| `AMBILIGHT.POLICE` | 9 | Alternating red/blue halves |
+| `AMBILIGHT.CHASE` | 10 | Group of LEDs chasing |
+| `AMBILIGHT.COLOR_CYCLE` | 11 | All LEDs shift through hues |
+| `AMBILIGHT.GRADIENT` | 12 | Scrolling blend between color and color2 |
+| `AMBILIGHT.STROBE` | 13 | Fast on/off flash |
+| `AMBILIGHT.SYS_WARNING` | 14 | 3 yellow blinks, then reverts |
+| `AMBILIGHT.SYS_ERROR` | 15 | 3 red blinks, then reverts |
+| `AMBILIGHT.SYS_OK` | 16 | 3 green blinks, then reverts |
+| `AMBILIGHT.SYS_INFO` | 17 | 3 blue blinks, then reverts |
+
+## Notes
+
+- All `set*` functions apply immediately and save to config.
+- System effects (`SYS_*`) are one-shot: they blink 3 times and automatically revert to the previous effect.
+- Color values are 24-bit RGB packed as uint32: `0xRRGGBB`.
+- The `color2` field is only used by the Gradient effect.
+- Direction applies to: Blur, Rainbow, Color Wipe, Comet, Chase, Gradient.
+
+## Examples
+
+### Gradient between two colors
+
+```berry
+AMBILIGHT.setColor(0xFF0000)    # red
+AMBILIGHT.setColor2(0x0000FF)   # blue
+AMBILIGHT.setSpeed(30)
+AMBILIGHT.setEffect(AMBILIGHT.GRADIENT)
+```
+
+### Flash a success notification
+
+```berry
+AMBILIGHT.setEffect(AMBILIGHT.SYS_OK)
+# LEDs blink green 3 times, then return to previous effect
+```
+
+### Read current state
+
+```berry
+var effect = AMBILIGHT.getEffect()
+var bri = AMBILIGHT.getBrightness()
+var color = AMBILIGHT.getColor()
+SLZB.log("Effect: " .. effect .. " Brightness: " .. bri)
+```
+
+## See Also
+
+- [IR — Infrared control](ir.md) — Another Ultima-only module; combine: trigger LED effects from IR remote
+- [BUTTON — Physical button](button.md) — Combine: change LED effect on button press
+- [ZHB — Zigbee Hub](zhb.md) — Combine: change LED color based on Zigbee sensor data
