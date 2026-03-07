@@ -2,8 +2,7 @@
 # Play a doorbell sound when a Zigbee button is pressed
 # Ultima3 only! Requires a paired Zigbee button
 
-import BUZZER
-import ZHB
+import BUZZER, ZHB
 
 ZHB.waitForStart(0xff)
 

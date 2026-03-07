@@ -2,8 +2,7 @@
 # Read temperature from a Zigbee sensor and publish to MQTT every 60 seconds
 # Requires: MQTT enabled in web interface, a paired temperature sensor
 
-import MQTT
-import ZHB
+import MQTT, ZHB
 
 ZHB.waitForStart(0xff)
 MQTT.waitConnect(0xff)

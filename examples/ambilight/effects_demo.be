@@ -2,6 +2,8 @@
 # Cycle through all LED effects, showing each for 5 seconds
 # Ultima devices only!
 
+import AMBILIGHT
+
 var effects = [
   AMBILIGHT.SOLID, AMBILIGHT.BLUR, AMBILIGHT.RAINBOW,
   AMBILIGHT.BREATHING, AMBILIGHT.COLOR_WIPE, AMBILIGHT.COMET,

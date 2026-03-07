@@ -3,7 +3,7 @@
 # Single click = next color, Double click = LEDs off
 # Ultima devices only! Requires a paired Zigbee button
 
-import ZHB
+import AMBILIGHT, ZHB
 
 ZHB.waitForStart(0xff)
 

@@ -3,8 +3,7 @@
 # Short press = toggle on/off, Long press = turn off
 # Requires a paired Zigbee relay
 
-import BUTTON
-import ZHB
+import BUTTON, ZHB
 
 ZHB.waitForStart(0xff)
 

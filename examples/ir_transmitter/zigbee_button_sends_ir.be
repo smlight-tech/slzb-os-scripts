@@ -3,7 +3,7 @@
 # Single click = power, Double click = mute
 # Ultima devices with IR transmitter only!
 
-import ZHB
+import IR, ZHB
 
 ZHB.waitForStart(0xff)
 

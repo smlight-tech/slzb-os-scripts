@@ -1,7 +1,6 @@
 #META {"start":0}
 #insert your code below
-import HTTP
-import json
+import HTTP, json
 
 # req url: https://formatjsononline.com/api/users/usr_1
 # method: get

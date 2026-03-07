@@ -3,7 +3,7 @@
 # Example: use a TV remote to control a Zigbee lamp
 # Ultima devices with IR receiver only!
 
-import ZHB
+import IR, ZHB
 
 ZHB.waitForStart(0xff)
 

@@ -1,8 +1,5 @@
 #META {"start":0}
-import string
-import ZB
-import WEBSERVER
-import json
+import string, ZB, WEBSERVER, json
 
 var model = SLZB.deviceModel()
 var isEfr32 = model == "SLZB-06M" || model == "SLZB-06Mg24"
