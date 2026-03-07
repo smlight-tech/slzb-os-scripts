@@ -59,6 +59,7 @@ Below is every module with a one-line summary. **Read the linked file only for m
 | [examples/zigbee_hub/simple_thermostat.be](examples/zigbee_hub/simple_thermostat.be) | Thermostat with temp sensor + relay (ZHB) |
 | [examples/time/reboot_at_3am.be](examples/time/reboot_at_3am.be) | Reboot device at a specific time daily (TIME) |
 | [examples/time/log_datetime.be](examples/time/log_datetime.be) | Log current date and time (TIME) |
+| [examples/time/alarm.be](examples/time/alarm.be) | Wake-up alarm with LED + buzzer (TIME + AMBILIGHT + BUZZER) |
 | [examples/gpio/blink_led.be](examples/gpio/blink_led.be) | Blink an LED on/off (GPIO) |
 | [examples/gpio/read_analog.be](examples/gpio/read_analog.be) | Read analog voltage (GPIO) |
 | [examples/mqtt/mqtt_subscribe.be](examples/mqtt/mqtt_subscribe.be) | Subscribe to MQTT topic and log messages |

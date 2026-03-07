@@ -43,3 +43,4 @@ SLZB.log("Date: " .. t["year"] .. "-" .. t["month"] .. "-" .. t["day"])
 - [SLZB — Core Functions](slzb.md) — `SLZB.millis()` for relative timing (uptime)
 - [Example: Reboot at 3 AM](../../examples/time/reboot_at_3am.be)
 - [Example: Log date and time](../../examples/time/log_datetime.be)
+- [Example: Wake-up alarm](../../examples/time/alarm.be) — gradual LED brightness + buzzer on a schedule

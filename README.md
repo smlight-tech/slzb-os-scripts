@@ -124,6 +124,7 @@ Ready-to-use scripts in the [`examples/`](examples/) folder:
 | [simple_thermostat.be](examples/zigbee_hub/simple_thermostat.be) | Thermostat using Zigbee sensor + relay | ZHB |
 | [reboot_at_3am.be](examples/time/reboot_at_3am.be) | Reboot device daily at 3:00 AM | TIME |
 | [log_datetime.be](examples/time/log_datetime.be) | Log current date and time | TIME |
+| [alarm.be](examples/time/alarm.be) | Gentle wake-up alarm with gradual LED brightness and buzzer melodies | TIME, AMBILIGHT, BUZZER |
 | [blink_led.be](examples/gpio/blink_led.be) | Blink an LED on/off every second | GPIO |
 | [read_analog.be](examples/gpio/read_analog.be) | Read voltage on an analog pin | GPIO |
 | [mqtt_subscribe.be](examples/mqtt/mqtt_subscribe.be) | Subscribe to MQTT topic and log messages | MQTT |
