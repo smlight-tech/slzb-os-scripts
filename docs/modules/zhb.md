@@ -91,7 +91,7 @@ var state = relay.getVal(1, 6, 0)
 
 ### Events
 
-#### ZHB.on_action(callback:function)
+#### ZHB.on_action(callback:function) *(since v3.2.6.dev1)*
 
 Called when a Zigbee device sends an action — button click, double click, long press, rotary encoder rotation, etc.
 
