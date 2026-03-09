@@ -18,10 +18,10 @@ def on_action(action, dev)
   if action == "single"
     AMBILIGHT.setColor(colors[idx])
     AMBILIGHT.setBrightness(200)
-    AMBILIGHT.setEffect(AMBILIGHT.SOLID)
+    AMBILIGHT.setEffect(AMBILIGHT.Eff_Solid)
     idx = (idx + 1) % size(colors)
   elif action == "double"
-    AMBILIGHT.setEffect(AMBILIGHT.OFF)
+    AMBILIGHT.setEffect(AMBILIGHT.Eff_Off)
   end
 end
 

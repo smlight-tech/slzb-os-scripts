@@ -7,7 +7,7 @@ Send infrared commands to TVs, air conditioners, media players, and other IR-con
 ## Quick Example
 
 ```berry
-IR.send(IR.NEC, 0x04, 0x08)  # send NEC power command
+IR.send(IR.Proto_Nec, 0x04, 0x08)  # send NEC power command
 ```
 
 ## API Reference
@@ -19,28 +19,30 @@ IR.send(IR.NEC, 0x04, 0x08)  # send NEC power command
 
 ## Protocol Constants
 
+Type `IR.Proto` in the script editor to autocomplete all protocols.
+
 | Constant | Value | Description |
 |----------|-------|-------------|
-| `IR.APPLE` | 3 | Apple remote |
-| `IR.DENON` | 4 | Denon (includes Sharp) |
-| `IR.JVC` | 5 | JVC |
-| `IR.LG` | 6 | LG |
-| `IR.NEC` | 8 | NEC (most common, includes Apple and Onkyo) |
-| `IR.NEC2` | 9 | NEC with full frame repeat |
-| `IR.ONKYO` | 10 | Onkyo |
-| `IR.PANASONIC` | 11 | Panasonic (Kaseikyo) |
-| `IR.RC5` | 17 | RC5 |
-| `IR.RC6` | 18 | RC6 |
-| `IR.SAMSUNG` | 20 | Samsung |
-| `IR.SHARP` | 23 | Sharp |
-| `IR.SONY` | 24 | Sony |
+| `IR.Proto_Apple` | 3 | Apple remote |
+| `IR.Proto_Denon` | 4 | Denon (includes Sharp) |
+| `IR.Proto_Jvc` | 5 | JVC |
+| `IR.Proto_Lg` | 6 | LG |
+| `IR.Proto_Nec` | 8 | NEC (most common, includes Apple and Onkyo) |
+| `IR.Proto_Nec2` | 9 | NEC with full frame repeat |
+| `IR.Proto_Onkyo` | 10 | Onkyo |
+| `IR.Proto_Panasonic` | 11 | Panasonic (Kaseikyo) |
+| `IR.Proto_Rc5` | 17 | RC5 |
+| `IR.Proto_Rc6` | 18 | RC6 |
+| `IR.Proto_Samsung` | 20 | Samsung |
+| `IR.Proto_Sharp` | 23 | Sharp |
+| `IR.Proto_Sony` | 24 | Sony |
 
 ## Examples
 
 ### Send a Samsung TV command
 
 ```berry
-IR.send(IR.SAMSUNG, 0x0707, 0x02)
+IR.send(IR.Proto_Samsung, 0x0707, 0x02)
 ```
 
 ### Replay a previously captured raw code

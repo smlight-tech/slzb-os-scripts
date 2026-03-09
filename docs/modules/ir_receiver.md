@@ -31,24 +31,24 @@ end)
 
 ## Protocol Constants
 
-The `protocol` argument in `on_receive` and the return of `IR.getProtocol()` use these values:
+The `protocol` argument in `on_receive` and the return of `IR.getProtocol()` use these values. Type `IR.Proto` in the script editor to autocomplete all protocols.
 
 | Constant | Value | Description |
 |----------|-------|-------------|
-| `IR.UNKNOWN` | 0 | Unknown protocol — use `IR.getRaw()` to capture raw data |
-| `IR.APPLE` | 3 | Apple remote |
-| `IR.DENON` | 4 | Denon (includes Sharp) |
-| `IR.JVC` | 5 | JVC |
-| `IR.LG` | 6 | LG |
-| `IR.NEC` | 8 | NEC (most common) |
-| `IR.NEC2` | 9 | NEC with full frame repeat |
-| `IR.ONKYO` | 10 | Onkyo |
-| `IR.PANASONIC` | 11 | Panasonic (Kaseikyo) |
-| `IR.RC5` | 17 | RC5 |
-| `IR.RC6` | 18 | RC6 |
-| `IR.SAMSUNG` | 20 | Samsung |
-| `IR.SHARP` | 23 | Sharp |
-| `IR.SONY` | 24 | Sony |
+| `IR.Proto_Unknown` | 0 | Unknown protocol — use `IR.getRaw()` to capture raw data |
+| `IR.Proto_Apple` | 3 | Apple remote |
+| `IR.Proto_Denon` | 4 | Denon (includes Sharp) |
+| `IR.Proto_Jvc` | 5 | JVC |
+| `IR.Proto_Lg` | 6 | LG |
+| `IR.Proto_Nec` | 8 | NEC (most common) |
+| `IR.Proto_Nec2` | 9 | NEC with full frame repeat |
+| `IR.Proto_Onkyo` | 10 | Onkyo |
+| `IR.Proto_Panasonic` | 11 | Panasonic (Kaseikyo) |
+| `IR.Proto_Rc5` | 17 | RC5 |
+| `IR.Proto_Rc6` | 18 | RC6 |
+| `IR.Proto_Samsung` | 20 | Samsung |
+| `IR.Proto_Sharp` | 23 | Sharp |
+| `IR.Proto_Sony` | 24 | Sony |
 
 ## Examples
 
@@ -56,9 +56,9 @@ The `protocol` argument in `on_receive` and the return of `IR.getProtocol()` use
 
 ```berry
 IR.on_receive(def (proto, addr, cmd)
-  if proto == IR.NEC && addr == 0x04 && cmd == 0x08
+  if proto == IR.Proto_Nec && addr == 0x04 && cmd == 0x08
     SLZB.log("Power button pressed!")
-    AMBILIGHT.setEffect(AMBILIGHT.SYS_OK)
+    AMBILIGHT.setEffect(AMBILIGHT.Sys_Ok)
   end
 end)
 ```
@@ -91,7 +91,7 @@ ZHB.waitForStart(0xff)
 var lamp = ZHB.getDevice("Living Room Lamp")
 
 IR.on_receive(def (proto, addr, cmd)
-  if proto == IR.NEC && addr == 0x04
+  if proto == IR.Proto_Nec && addr == 0x04
     if cmd == 0x08
       lamp.sendOnOff(1)   # power button → lamp on
     elif cmd == 0x0A

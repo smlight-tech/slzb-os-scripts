@@ -33,7 +33,7 @@ def run_alarm()
   SLZB.log("Alarm started!")
 
   AMBILIGHT.setColor(alarm_color)
-  AMBILIGHT.setEffect(AMBILIGHT.BREATHING)
+  AMBILIGHT.setEffect(AMBILIGHT.Eff_Breathing)
 
   # Stage 1 — soft glow, gentle melody
   AMBILIGHT.setBrightness(30)
@@ -55,7 +55,7 @@ def run_alarm()
 
   # Stage 4 — full brightness, lively tune
   AMBILIGHT.setBrightness(254)
-  AMBILIGHT.setEffect(AMBILIGHT.RAINBOW)
+  AMBILIGHT.setEffect(AMBILIGHT.Eff_Rainbow)
   AMBILIGHT.setSpeed(60)
   BUZZER.play("s4:d=4,o=6,b=140:c,e,g,c7,e7,c7,g,e,c,e,g,c7,e7,g7")
   SLZB.delay(15000)

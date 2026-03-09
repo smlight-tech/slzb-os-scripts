@@ -12,7 +12,7 @@ var lamp = ZHB.getDevice("Living Room Lamp") # change to your device name
 # Change protocol, address, and command values to match your remote
 # Use the log_ir_codes.be example first to discover these values
 IR.on_receive(def (proto, addr, cmd)
-  if proto == IR.NEC && addr == 0x04
+  if proto == IR.Proto_Nec && addr == 0x04
     if cmd == 0x08 # power button
       lamp.sendOnOff(1)
       SLZB.log("Lamp ON")

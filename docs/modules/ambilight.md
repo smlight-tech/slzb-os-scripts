@@ -9,7 +9,7 @@ Control the WS2812B LED ambilight — set effects, colors, brightness, and speed
 ```berry
 AMBILIGHT.setColor(0xFF0000)          # red
 AMBILIGHT.setBrightness(254)          # full brightness
-AMBILIGHT.setEffect(AMBILIGHT.SOLID)  # static color
+AMBILIGHT.setEffect(AMBILIGHT.Eff_Solid)  # static color
 ```
 
 ## API Reference
@@ -53,31 +53,33 @@ AMBILIGHT.setEffect(AMBILIGHT.SOLID)  # static color
 
 ## Effect Constants
 
+Type `AMBILIGHT.Eff` in the script editor to autocomplete all visual effects, or `AMBILIGHT.Sys` for system notifications.
+
 | Constant | Value | Description |
 |----------|-------|-------------|
-| `AMBILIGHT.SOLID` | 0 | Static solid color |
-| `AMBILIGHT.OFF` | 1 | LEDs off |
-| `AMBILIGHT.BLUR` | 2 | Moving dot with blur trail |
-| `AMBILIGHT.RAINBOW` | 3 | Rotating rainbow |
-| `AMBILIGHT.BREATHING` | 4 | Pulsing brightness |
-| `AMBILIGHT.COLOR_WIPE` | 5 | Fill LEDs one-by-one, then clear |
-| `AMBILIGHT.COMET` | 6 | Moving dot with fading tail |
-| `AMBILIGHT.FIRE` | 7 | Fire simulation |
-| `AMBILIGHT.TWINKLE` | 8 | Random sparkles |
-| `AMBILIGHT.POLICE` | 9 | Alternating red/blue halves |
-| `AMBILIGHT.CHASE` | 10 | Group of LEDs chasing |
-| `AMBILIGHT.COLOR_CYCLE` | 11 | All LEDs shift through hues |
-| `AMBILIGHT.GRADIENT` | 12 | Scrolling blend between color and color2 |
-| `AMBILIGHT.STROBE` | 13 | Fast on/off flash |
-| `AMBILIGHT.SYS_WARNING` | 14 | 3 yellow blinks, then reverts |
-| `AMBILIGHT.SYS_ERROR` | 15 | 3 red blinks, then reverts |
-| `AMBILIGHT.SYS_OK` | 16 | 3 green blinks, then reverts |
-| `AMBILIGHT.SYS_INFO` | 17 | 3 blue blinks, then reverts |
+| `AMBILIGHT.Eff_Solid` | 0 | Static solid color |
+| `AMBILIGHT.Eff_Off` | 1 | LEDs off |
+| `AMBILIGHT.Eff_Blur` | 2 | Moving dot with blur trail |
+| `AMBILIGHT.Eff_Rainbow` | 3 | Rotating rainbow |
+| `AMBILIGHT.Eff_Breathing` | 4 | Pulsing brightness |
+| `AMBILIGHT.Eff_ColorWipe` | 5 | Fill LEDs one-by-one, then clear |
+| `AMBILIGHT.Eff_Comet` | 6 | Moving dot with fading tail |
+| `AMBILIGHT.Eff_Fire` | 7 | Fire simulation |
+| `AMBILIGHT.Eff_Twinkle` | 8 | Random sparkles |
+| `AMBILIGHT.Eff_Police` | 9 | Alternating red/blue halves |
+| `AMBILIGHT.Eff_Chase` | 10 | Group of LEDs chasing |
+| `AMBILIGHT.Eff_ColorCycle` | 11 | All LEDs shift through hues |
+| `AMBILIGHT.Eff_Gradient` | 12 | Scrolling blend between color and color2 |
+| `AMBILIGHT.Eff_Strobe` | 13 | Fast on/off flash |
+| `AMBILIGHT.Sys_Warning` | 14 | 3 yellow blinks, then reverts |
+| `AMBILIGHT.Sys_Error` | 15 | 3 red blinks, then reverts |
+| `AMBILIGHT.Sys_Ok` | 16 | 3 green blinks, then reverts |
+| `AMBILIGHT.Sys_Info` | 17 | 3 blue blinks, then reverts |
 
 ## Notes
 
 - All `set*` functions apply immediately and save to config.
-- System effects (`SYS_*`) are one-shot: they blink 3 times and automatically revert to the previous effect.
+- System effects (`Sys_*`) are one-shot: they blink 3 times and automatically revert to the previous effect.
 - Color values are 24-bit RGB packed as uint32: `0xRRGGBB`.
 - The `color2` field is only used by the Gradient effect.
 - Direction applies to: Blur, Rainbow, Color Wipe, Comet, Chase, Gradient.
@@ -90,13 +92,13 @@ AMBILIGHT.setEffect(AMBILIGHT.SOLID)  # static color
 AMBILIGHT.setColor(0xFF0000)    # red
 AMBILIGHT.setColor2(0x0000FF)   # blue
 AMBILIGHT.setSpeed(30)
-AMBILIGHT.setEffect(AMBILIGHT.GRADIENT)
+AMBILIGHT.setEffect(AMBILIGHT.Eff_Gradient)
 ```
 
 ### Flash a success notification
 
 ```berry
-AMBILIGHT.setEffect(AMBILIGHT.SYS_OK)
+AMBILIGHT.setEffect(AMBILIGHT.Sys_Ok)
 # LEDs blink green 3 times, then return to previous effect
 ```
 

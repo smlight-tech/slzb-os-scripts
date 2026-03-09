@@ -13,10 +13,10 @@ def on_action(action, dev)
   end
 
   if action == "single"
-    IR.send(IR.NEC, 0x04, 0x08) # power
+    IR.send(IR.Proto_Nec, 0x04, 0x08) # power
     SLZB.log("IR: Power sent")
   elif action == "double"
-    IR.send(IR.NEC, 0x04, 0x0A) # mute
+    IR.send(IR.Proto_Nec, 0x04, 0x0A) # mute
     SLZB.log("IR: Mute sent")
   end
 end

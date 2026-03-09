@@ -6,6 +6,6 @@ import IR
 
 # Send power on command
 # Change protocol, address, and command to match your device
-IR.send(IR.NEC, 0x04, 0x08)
+IR.send(IR.Proto_Nec, 0x04, 0x08)
 
 SLZB.log("IR command sent!")
