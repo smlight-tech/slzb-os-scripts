@@ -35,12 +35,17 @@ ZHB.on_action(on_action)
 ```
 
 ### Monitoring and Alerts
-Watch your Zigbee network and send notifications via HTTP or MQTT when something happens.
+Watch your Zigbee network and send notifications via Telegram, Discord, email, or any messaging service.
+
+```berry
+import TELEGRAM
+TELEGRAM.send("Zigbee coordinator is online!")
+```
 
 ```berry
 import MQTT
 MQTT.waitConnect(0xff)
-MQTT.publish("alerts", "Zigbee coordinator is online!")
+MQTT.publish("alerts", "Sensor triggered!")
 ```
 
 ### Scheduling
@@ -96,6 +101,31 @@ Each module is documented in its own file with API details, examples, and cross-
 | [AMBILIGHT](docs/modules/ambilight.md) | WS2812B LED strip effects and colors | v3.2.5.dev1 | Ultima |
 | [IR Transmitter](docs/modules/ir_transmitter.md) | Send infrared commands to TVs, ACs, and other IR devices | v3.2.5.dev1 | Ultima |
 | [IR Receiver](docs/modules/ir_receiver.md) | Receive IR signals from remote controls, learn and replay codes | v3.2.5.dev1 | Ultima |
+| [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
+| [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
+
+### Integrations
+
+Modules for connecting to external services. Configure credentials via the **Scripts Integrations** UI page or directly in scripts.
+
+| Module | Description |
+|--------|-------------|
+| [TELEGRAM](docs/modules/telegram.md) | Send and receive Telegram messages via Bot |
+| [WHATSAPP](docs/modules/whatsapp.md) | Send WhatsApp messages via CallMeBot |
+| [DISCORD](docs/modules/discord.md) | Send notifications to Discord via webhook |
+| [NTFY](docs/modules/ntfy.md) | Push notifications via ntfy.sh |
+| [EMAIL](docs/modules/email.md) | Send email alerts via SMTP |
+| [HA](docs/modules/ha.md) | Call Home Assistant services and read entity states |
+| [IFTTT](docs/modules/ifttt.md) | Trigger IFTTT applets via webhooks |
+| [WLED](docs/modules/wled.md) | Control WLED-powered LED strips |
+| [SLWF03](docs/modules/slwf03.md) | SMLIGHT SLWF-03 Sound WLED controller (WLED alias) |
+| [SLWF09](docs/modules/slwf09.md) | SMLIGHT SLWF-09 ETH POE WLED controller (WLED alias) |
+| [ESPHOME](docs/modules/esphome.md) | Control any ESPHome device via REST API |
+| [SLWF01](docs/modules/slwf01.md) | SMLIGHT SLWF-01 A/C Controller (ESPHome alias) |
+| [SLWF08](docs/modules/slwf08.md) | SMLIGHT SLWF-08 HDMI-CEC controller (ESPHome alias) |
+| [WEATHER](docs/modules/weather.md) | Get weather forecasts from OpenWeatherMap |
+| [SUN](docs/modules/sun.md) | Get sunrise and sunset times (no API key needed) |
+| [GSHEETS](docs/modules/gsheets.md) | Log data to Google Sheets via Apps Script |
 
 ---
 
