@@ -117,6 +117,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [EMAIL](docs/modules/email.md) | Send email alerts via SMTP |
 | [HA](docs/modules/ha.md) | Call Home Assistant services and read entity states |
 | [IFTTT](docs/modules/ifttt.md) | Trigger IFTTT applets via webhooks |
+| [HUE](docs/modules/hue.md) | Control Philips Hue lights via Bridge v1 API |
 | [WLED](docs/modules/wled.md) | Control WLED-powered LED strips |
 | [SLWF03](docs/modules/slwf03.md) | SMLIGHT SLWF-03 Sound WLED controller (WLED alias) |
 | [SLWF09](docs/modules/slwf09.md) | SMLIGHT SLWF-09 ETH POE WLED controller (WLED alias) |
