@@ -85,30 +85,36 @@ Berry language resources:
 
 Each module is documented in its own file with API details, examples, and cross-references.
 
+### Modules
+
 | Module | Description | Min Firmware | Devices |
 |--------|-------------|:------------:|---------|
 | [SLZB](docs/modules/slzb.md) | Core functions — delays, logging, reboot, device info | v2.8.0 | All |
 | [ZB](docs/modules/zb.md) | Low-level Zigbee chip access — read/write bytes, socket control | v2.8.0 | All |
 | [WEBSERVER](docs/modules/webserver.md) | Receive HTTP requests via webhook endpoint | v2.8.2.dev0 | All |
-| [ZHB](docs/modules/zhb.md) | Zigbee Hub — control relays, lamps, sensors, buttons | v2.9.6 | All |
+| [ZHB](docs/modules/zhb.md) | Zigbee Hub — control relays, lamps, sensors, buttons | v2.9.6 | All* |
 | [HTTP](docs/modules/http.md) | Make outgoing HTTP/HTTPS GET and POST requests | v2.9.8 | All |
 | [TIME](docs/modules/time.md) | Date, time, and NTP synchronization | v3.0.6 | All |
 | [FS](docs/modules/fs.md) | File system — read, check, delete files | v3.0.6 | All |
 | [GPIO](docs/modules/gpio.md) | Direct GPIO pin control, PWM, frequency generation | v3.1.6.dev3 | All |
 | [MQTT](docs/modules/mqtt.md) | Subscribe and publish MQTT messages | v3.2.4 | All |
-| [BUZZER](docs/modules/buzzer.md) | Play melodies on the built-in buzzer | v3.2.5.dev1 | Ultima3 |
+| [BUZZER](docs/modules/buzzer.md) | Play melodies on the built-in buzzer | v3.2.5.dev1 | Ultima only |
 | [BUTTON](docs/modules/button.md) | Override physical button actions | v3.2.5.dev1 | All |
-| [AMBILIGHT](docs/modules/ambilight.md) | WS2812B LED strip effects and colors | v3.2.5.dev1 | Ultima |
-| [IR Transmitter](docs/modules/ir_transmitter.md) | Send infrared commands to TVs, ACs, and other IR devices | v3.2.5.dev1 | Ultima |
-| [IR Receiver](docs/modules/ir_receiver.md) | Receive IR signals from remote controls, learn and replay codes | v3.2.5.dev1 | Ultima |
+| [AMBILIGHT](docs/modules/ambilight.md) | WS2812B LED strip effects and colors | v3.2.5.dev1 | Ultima only |
+| [IR Transmitter](docs/modules/ir_transmitter.md) | Send infrared commands to TVs, ACs, and other IR devices | v3.2.5.dev1 | Ultima only |
+| [IR Receiver](docs/modules/ir_receiver.md) | Receive IR signals from remote controls, learn and replay codes | v3.2.5.dev1 | Ultima only |
 | [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
+
+> **\*ZHB** is not available on SLZB-06MU, SLZB-06Mg24U, SLZB-06Mg26U (and their non-U variants) — these devices do not have a Zigbee Hub chip.
 
 ### Integrations
 
 Modules for connecting to external services. Configure credentials via the **Scripts Integrations** UI page or directly in scripts.
 
-| Module | Description |
+> Integrations are fully supported on **U-series devices** (SLZB-06xU, SLZB-MRxU, Ultima). Non-U devices have limited RAM and may experience slow downs when using integrations — avoid using them on non-U hardware.
+
+| Integration | Description |
 |--------|-------------|
 | [TELEGRAM](docs/modules/telegram.md) | Send and receive Telegram messages via Bot |
 | [WHATSAPP](docs/modules/whatsapp.md) | Send WhatsApp messages via CallMeBot |
