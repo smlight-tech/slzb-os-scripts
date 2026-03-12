@@ -145,6 +145,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [OpenHAB](docs/modules/openhab.md) | Control OpenHAB items and rules (uses HTTP) |
 | [Domoticz](docs/modules/domoticz.md) | Control Domoticz switches, scenes, and sensors (uses HTTP) |
 | [Jeedom](docs/modules/jeedom.md) | Execute Jeedom commands and scenarios (uses HTTP) |
+| [ioBroker](docs/modules/iobroker.md) | Read and set ioBroker states via Simple API (uses HTTP) |
 
 ---
 
