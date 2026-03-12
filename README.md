@@ -112,6 +112,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 |--------|-------------|
 | [TELEGRAM](docs/modules/telegram.md) | Send and receive Telegram messages via Bot |
 | [WHATSAPP](docs/modules/whatsapp.md) | Send WhatsApp messages via CallMeBot |
+| [SLACK](docs/modules/slack.md) | Send messages to Slack channels via webhook |
 | [DISCORD](docs/modules/discord.md) | Send notifications to Discord via webhook |
 | [NTFY](docs/modules/ntfy.md) | Push notifications via ntfy.sh |
 | [EMAIL](docs/modules/email.md) | Send email alerts via SMTP |
