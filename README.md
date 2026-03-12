@@ -139,6 +139,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [PING](docs/modules/ping.md) | ICMP ping — check if hosts are reachable on your network |
 | [WEBHOOK](docs/modules/webhook.md) | Generic HTTP client — connect any REST API |
 | [n8n](docs/modules/n8n.md) | Trigger n8n workflows from Zigbee events (uses WEBHOOK) |
+| [Node-RED](docs/modules/nodered.md) | Trigger Node-RED flows from Zigbee events (uses WEBHOOK) |
 | [OpenHAB](docs/modules/openhab.md) | Control OpenHAB items and rules (uses HTTP) |
 | [Domoticz](docs/modules/domoticz.md) | Control Domoticz switches, scenes, and sensors (uses HTTP) |
 | [Jeedom](docs/modules/jeedom.md) | Execute Jeedom commands and scenarios (uses HTTP) |
