@@ -137,6 +137,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [KODI](docs/modules/kodi.md) | Control Kodi media center — playback, volume, notifications |
 | [PING](docs/modules/ping.md) | ICMP ping — check if hosts are reachable on your network |
 | [WEBHOOK](docs/modules/webhook.md) | Generic HTTP client — connect any REST API |
+| [n8n](docs/modules/n8n.md) | Trigger n8n workflows from Zigbee events (uses WEBHOOK) |
 
 ---
 
