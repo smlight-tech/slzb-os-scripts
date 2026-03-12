@@ -106,7 +106,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
 
-> **\*ZHB** is not available on SLZB-06MU, SLZB-06Mg24U, SLZB-06Mg26U (and their non-U variants) — these devices do not have a Zigbee Hub chip.
+> **\*ZHB** is not available on SLZB-06MU, SLZB-06Mg24U, SLZB-06Mg26U (and their non-U variants), and SLZB-MR5U — Zigbee Hub Mode is available only on devices with CC26XX SoC from Texas Instruments.
 
 ### Integrations
 
