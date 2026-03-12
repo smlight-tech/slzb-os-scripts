@@ -121,6 +121,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [HA](docs/modules/ha.md) | Call Home Assistant services and read entity states |
 | [IFTTT](docs/modules/ifttt.md) | Trigger IFTTT applets via webhooks |
 | [OPENWRT](docs/modules/openwrt.md) | OpenWrt router — presence detection, clients, system info |
+| [WOL](docs/modules/wol.md) | Wake-on-LAN — wake computers and devices on your network |
 | [HUE](docs/modules/hue.md) | Control Philips Hue lights via Bridge v1 API |
 | [WLED](docs/modules/wled.md) | Control WLED-powered LED strips |
 | [SLWF03](docs/modules/slwf03.md) | SMLIGHT SLWF-03 Sound WLED controller (WLED alias) |
