@@ -1,33 +1,38 @@
 # WEBHOOK Module
 
-A generic HTTP client for connecting to any service with a REST API. Supports POST, GET, and PUT with custom headers and JSON bodies.
+A generic HTTP client for connecting to any service with a REST API. Supports multiple named webhooks, POST, GET, and PUT with custom headers and JSON bodies.
 
 Use this module when there is no dedicated integration module for the service you want to connect to.
 
 ## Setup
 
-### Option A — Configure via UI
+### Option A — Configure via UI (recommended)
 
 1. Go to **Scripts Integrations** page
 2. Click the **WEBHOOK** tile
-3. Fill in:
-   - **URL** — default target URL
-   - **Custom Headers** (optional) — JSON object with headers, e.g. `{"Authorization":"Bearer mytoken"}`
+3. Add one or more webhooks, each with:
+   - **Name** — a friendly name (e.g. "My API", "Health Check")
+   - **URL** — target URL
+   - **Custom Headers** (optional) — JSON object, e.g. `{"Authorization":"Bearer mytoken"}`
 4. Enable and save
+
+You can add as many webhooks as you need — just like WLED or ESPHome devices.
 
 ### Option B — Configure in script
 
 ```berry
 import WEBHOOK
-WEBHOOK.setup("https://example.com/api/data")
 
-# With custom headers:
-WEBHOOK.setup("https://example.com/api", '{"Authorization":"Bearer mytoken","X-Custom":"value"}')
+# Named webhook
+WEBHOOK.setup("My API", "https://api.example.com/data", '{"Authorization":"Bearer abc123"}')
+
+# Simple (unnamed) webhook
+WEBHOOK.setup("https://example.com/api/data")
 ```
 
 ### Option C — No setup, use ad-hoc URLs
 
-Every function accepts an explicit URL, so you can use WEBHOOK without any setup:
+Every function accepts a direct URL, so you can use WEBHOOK without any setup:
 
 ```berry
 import WEBHOOK
@@ -38,62 +43,75 @@ var r = WEBHOOK.post("https://example.com/api", '{"key":"value"}')
 
 ### WEBHOOK.setup(url [, headers_json])
 
-Set default URL and optional headers for this script session.
+Set a default (unnamed) webhook for this script session.
+
+### WEBHOOK.setup(name, url [, headers_json])
+
+Set a named webhook for this script session.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `url` | string | Default target URL |
+| `name` | string | Webhook name (must not contain `://`) |
+| `url` | string | Target URL |
 | `headers_json` | string | (optional) JSON object with custom headers |
 
-### WEBHOOK.post(body)
+### WEBHOOK.post(name_or_url, body)
 
-POST JSON body to the configured default URL.
+POST JSON body to a named webhook or direct URL.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
+| `name_or_url` | string | Webhook name or direct URL |
 | `body` | string | JSON body to send |
 
 **Returns:** `map` with `status` (int) and `body` (string)
 
-### WEBHOOK.post(url, body)
+### WEBHOOK.post(body)
 
-POST JSON body to a specific URL (no setup required).
+POST JSON body to the default (unnamed) webhook.
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `url` | string | Target URL |
-| `body` | string | JSON body to send |
+### WEBHOOK.get(name_or_url)
+
+GET request to a named webhook or direct URL.
 
 **Returns:** `map` with `status` (int) and `body` (string)
 
 ### WEBHOOK.get()
 
-GET the configured default URL.
+GET the default (unnamed) webhook.
 
-**Returns:** `map` with `status` (int) and `body` (string)
-
-### WEBHOOK.get(url)
-
-GET a specific URL (no setup required).
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `url` | string | Target URL |
-
-**Returns:** `map` with `status` (int) and `body` (string)
-
-### WEBHOOK.put(body) / WEBHOOK.put(url, body)
+### WEBHOOK.put(name_or_url, body) / WEBHOOK.put(body)
 
 PUT request — same signature as `post()`.
 
 **Returns:** `map` with `status` (int) and `body` (string)
+
+### WEBHOOK.list()
+
+List all configured webhooks.
+
+**Returns:** `map` — keys are webhook names, values are URLs.
+
+```berry
+import WEBHOOK
+var all = WEBHOOK.list()
+for name : all.keys()
+    print(name .. " -> " .. all[name])
+end
+```
+
+## Name vs URL Detection
+
+The module auto-detects whether the first argument is a name or a URL:
+- Contains `://` → treated as a **direct URL** (e.g. `"https://example.com"`)
+- No `://` → treated as a **webhook name** (e.g. `"My API"`)
 
 ## Response Format
 
 All functions return a map:
 
 ```berry
-var r = WEBHOOK.get("https://api.example.com/data")
+var r = WEBHOOK.get("My API")
 print(r["status"])  # HTTP status code, e.g. 200
 print(r["body"])    # Response body as string
 ```
@@ -102,12 +120,23 @@ To parse a JSON response:
 
 ```berry
 import json
-var r = WEBHOOK.get("https://api.example.com/data")
+var r = WEBHOOK.get("My API")
 var data = json.load(r["body"])
 print(data["temperature"])
 ```
 
 ## Examples
+
+### Multiple webhooks for different services
+
+```berry
+import WEBHOOK
+
+# POST to named webhooks (configured via UI)
+WEBHOOK.post("Sensor API", '{"temp": 23.5}')
+WEBHOOK.post("Health Check", '{"status": "ok"}')
+WEBHOOK.get("Config Server")
+```
 
 ### Send sensor data to a custom API
 
@@ -120,21 +149,8 @@ var sensor = ZHB.getDevice("Temperature Sensor")
 var temp = sensor.getAttr("temperature")
 
 var body = '{"sensor":"temperature","value":' .. str(temp) .. '}'
-var r = WEBHOOK.post("https://myapi.example.com/data", body)
+var r = WEBHOOK.post("My API", body)
 print("Status: " .. str(r["status"]))
-```
-
-### Read data from an external API
-
-```berry
-import WEBHOOK
-import json
-
-var r = WEBHOOK.get("https://api.example.com/config")
-if r["status"] == 200
-    var cfg = json.load(r["body"])
-    print("Setting: " .. cfg["mode"])
-end
 ```
 
 ### Authenticated API call
@@ -142,11 +158,10 @@ end
 ```berry
 import WEBHOOK
 
-# Setup with Bearer token
-WEBHOOK.setup("https://api.example.com/devices", '{"Authorization":"Bearer abc123"}')
+# Setup with Bearer token (in script)
+WEBHOOK.setup("My API", "https://api.example.com/devices", '{"Authorization":"Bearer abc123"}')
 
-# All subsequent calls use the token
-var r = WEBHOOK.post('{"action":"toggle","device":"relay1"}')
+var r = WEBHOOK.post("My API", '{"action":"toggle","device":"relay1"}')
 print(r["status"])
 ```
 
@@ -164,7 +179,7 @@ ZHB.on_action(def (action, dev)
         "action": action,
         "ieee": dev.getIeee()
     })
-    WEBHOOK.post("https://myserver.com/zigbee-events", body)
+    WEBHOOK.post("Event Server", body)
 end)
 ```
 
@@ -176,28 +191,26 @@ import TIMER
 
 # Send heartbeat every 5 minutes
 TIMER.every(300000, def ()
-    WEBHOOK.get("https://hc-ping.com/your-uuid-here")
+    WEBHOOK.get("Health Check")
 end)
 ```
 
-### Integration with services not covered by other modules
+### Ad-hoc URL (no setup needed)
 
 ```berry
 import WEBHOOK
 
-# PushBullet notification
-WEBHOOK.setup("https://api.pushbullet.com/v2/pushes", '{"Access-Token":"your-token","Content-Type":"application/json"}')
-WEBHOOK.post('{"type":"note","title":"SLZB Alert","body":"Motion detected!"}')
-
-# Twilio SMS (via their REST API)
-# Any REST API can be called this way
+# Direct URL — works without any configuration
+var r = WEBHOOK.post("https://api.pushbullet.com/v2/pushes", '{"type":"note","title":"SLZB","body":"Alert!"}')
 ```
 
 ## Notes
 
+- Supports **multiple named webhooks** — configure via UI or `setup()`
+- Direct URLs (containing `://`) always work without configuration
 - Supports HTTP and HTTPS URLs
-- `Content-Type: application/json` is set automatically for POST and PUT requests
-- Custom headers from `setup()` are applied only when using the configured default URL; ad-hoc URLs use no custom headers
+- `Content-Type: application/json` is set automatically for POST and PUT
+- Custom headers from UI config are applied per webhook
 - Response buffer is 2 KB — larger responses will be truncated
 - Each call makes one HTTP request, memory is freed immediately after
-- Unlike the built-in `HTTP` module, WEBHOOK returns both the status code and response body as a map, making it easier to work with REST APIs
+- Unlike the built-in `HTTP` module, WEBHOOK returns both the status code and response body as a map
