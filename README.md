@@ -134,6 +134,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [SUN](docs/modules/sun.md) | Get sunrise and sunset times (no API key needed) |
 | [GSHEETS](docs/modules/gsheets.md) | Log data to Google Sheets via Apps Script |
 | [INFLUXDB](docs/modules/influxdb.md) | Write time-series data to InfluxDB v2 for Grafana |
+| [KODI](docs/modules/kodi.md) | Control Kodi media center — playback, volume, notifications |
 | [PING](docs/modules/ping.md) | ICMP ping — check if hosts are reachable on your network |
 | [WEBHOOK](docs/modules/webhook.md) | Generic HTTP client — connect any REST API |
 
