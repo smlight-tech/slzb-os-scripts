@@ -2,7 +2,7 @@
 
 Control Philips Hue lights via the Hue Bridge **v1 API** over your local network.
 
-> **Note:** This module uses the Hue Bridge v1 REST API (HTTP, not HTTPS). The Bridge must be on the same local network as the SLZB device.
+> **API notice:** Uses the publicly documented [Philips Hue Bridge v1 API](https://developers.meethue.com/) (HTTP, local network). Requires a Hue Bridge. SMLIGHT is not affiliated with Signify N.V. (Philips Hue).
 
 ## Setup
 
