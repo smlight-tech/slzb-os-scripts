@@ -128,6 +128,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [WEATHER](docs/modules/weather.md) | Get weather forecasts from OpenWeatherMap |
 | [SUN](docs/modules/sun.md) | Get sunrise and sunset times (no API key needed) |
 | [GSHEETS](docs/modules/gsheets.md) | Log data to Google Sheets via Apps Script |
+| [WEBHOOK](docs/modules/webhook.md) | Generic HTTP client — connect any REST API |
 
 ---
 
