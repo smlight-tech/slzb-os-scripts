@@ -177,7 +177,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     HUE.toggle(1)
-end)
+end, 60000)
 ```
 
 ### Set warm white at sunset
@@ -187,12 +187,12 @@ import HUE
 import SUN
 import TIMER
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var s = SUN.get()
     # Set warm color temperature at sunset
     HUE.set_ct(1, 400)
     HUE.set_brightness(1, 180)
-end)
+end, 3000)
 ```
 
 ### Flash light on Zigbee sensor alert
@@ -229,7 +229,7 @@ import HUE
 import TIMER
 
 var hueVal = 0
-TIMER.every(3000, def ()
+TIMER.setInterval(def()
     HUE.set_color(1, hueVal, 254)
     hueVal = (hueVal + 5000) % 65536
 end)

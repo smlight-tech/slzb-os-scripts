@@ -111,14 +111,14 @@ import TIMER
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Temperature Sensor")
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var temp = sensor.getAttr("temperature")
     var hum = sensor.getAttr("humidity")
     INFLUXDB.write_point("zigbee_sensor",
         {"device": "Temperature Sensor", "ieee": sensor.getIeee()},
         {"temperature": temp, "humidity": hum}
     )
-end)
+end, 60000)
 ```
 
 ### Log weather data hourly
@@ -128,14 +128,14 @@ import INFLUXDB
 import WEATHER
 import TIMER
 
-TIMER.every(3600000, def ()
+TIMER.setInterval(def()
     var w = WEATHER.get()
     INFLUXDB.write_point("weather",
         {"city": w["city"]},
         {"temp": w["temp"], "humidity": w["humidity"],
          "pressure": w["pressure"], "wind": w["wind_speed"]}
     )
-end)
+end, 3600000)
 ```
 
 ### Track daylight hours
@@ -145,13 +145,13 @@ import INFLUXDB
 import SUN
 import TIMER
 
-TIMER.every(86400000, def ()
+TIMER.setInterval(def()
     var s = SUN.get()
     INFLUXDB.write_point("daylight",
         {},
         {"day_length": s["day_length"]}
     )
-end)
+end, 86400000)
 ```
 
 ### Monitor device health
@@ -161,12 +161,12 @@ import INFLUXDB
 import SLZB
 import TIMER
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     INFLUXDB.write_point("device_health",
         {"device": "slzb-06"},
         {"uptime": SLZB.getUptime(), "free_heap": SLZB.getFreeHeap()}
     )
-end)
+end, 300000)
 ```
 
 ## Grafana Dashboard

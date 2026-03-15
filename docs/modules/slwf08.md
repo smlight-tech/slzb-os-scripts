@@ -96,7 +96,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     SLWF08.turn_on("Living Room TV", "switch", "cec_power")
-end)
+end, 60000)
 ```
 
 ### Turn off TV at night
@@ -106,12 +106,12 @@ import SLWF08
 import TIMER
 import TIME
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var t = TIME.getAll()
     if t["hour"] == 23 && t["min"] == 0
         SLWF08.turn_off("Living Room TV", "switch", "cec_power")
     end
-end)
+end, 30000)
 ```
 
 ### Switch input on Zigbee button
@@ -137,7 +137,7 @@ import SLWF08
 import TELEGRAM
 import TIMER
 
-TIMER.every(30000, def ()
+TIMER.setInterval(def()
     var s = SLWF08.get_state("Living Room TV", "switch", "cec_power")
     if s && s["state"] == "ON"
         TELEGRAM.send("TV is on!")

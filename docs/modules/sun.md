@@ -82,13 +82,13 @@ import SUN
 import HA
 import TIMER
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var s = SUN.get()
     var now = TIME.getTime()
     # Compare current time with sunset and turn on lights
     # (times are in UTC ISO format)
     print("Sunset today: " .. s["sunset"])
-end)
+end, 60000)
 ```
 
 ### Log daylight hours

@@ -45,7 +45,7 @@ MQTT.subscribe("frigate/events", def (topic, payload)
             print("Person detected on " .. camera)
         end
     end
-end)
+end, 30000)
 ```
 
 ### Turn on lights when person detected
@@ -175,7 +175,7 @@ import HTTP
 import json
 import TIMER
 
-TIMER.every(30000, def ()
+TIMER.setInterval(def()
     var h = HTTP.open("http://192.168.1.100:5000/api/events?cameras=front_door&limit=1&min_score=0.7", "GET", 2048, false)
     HTTP.perform()
     var resp = HTTP.getResponse()

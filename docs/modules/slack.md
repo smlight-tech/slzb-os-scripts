@@ -96,7 +96,7 @@ import ZHB
 ZHB.waitForStart(0xff)
 ZHB.on_join(def (dev)
     SLACK.send("New Zigbee device joined: " .. dev.getName())
-end)
+end, 3600000)
 ```
 
 ### Temperature alert
@@ -121,7 +121,7 @@ import TIMER
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Temperature Sensor")
 
-TIMER.every(3600000, def ()
+TIMER.setInterval(def()
     var temp = sensor.getAttr("temperature")
     SLACK.send("Hourly temp: " .. str(temp) .. " C")
 end)

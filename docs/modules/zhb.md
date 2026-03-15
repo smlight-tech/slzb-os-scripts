@@ -46,7 +46,7 @@ relay.sendOnOff(1)  # turn on
 
 | Function | Description |
 |----------|-------------|
-| `sendOnOff(state:int, channel:int?)` | Turn on (`1`) or off (`0`). `channel` optional, defaults to 1. |
+| `sendOnOff(state:int, channel:int?)` | Turn on (`1`), off (`0`), or toggle (`2`). `channel` optional, defaults to 1. |
 | `sendBri(brightness:int, channel:int?)` | Set brightness (1–254). `channel` optional. |
 | `sendColor(color:string, channel:int?)` | Set color. Format: `"#rrggbb"` or `"r,g,b"`. `channel` optional. |
 | `sendColorTemp(mireds:int, channel:int?)` | Set color temperature in [mireds](https://en.wikipedia.org/wiki/Mired). `channel` optional. |
@@ -56,6 +56,7 @@ relay.sendOnOff(1)  # turn on
 ```berry
 dev.sendOnOff(1)         # turn on relay
 dev.sendOnOff(0)         # turn off relay
+dev.sendOnOff(2)         # toggle relay (on→off or off→on)
 dev.sendOnOff(1, 2)      # turn on relay channel 2
 dev.sendColor("#0062ff") # send hex color
 dev.sendColor("0,0,255") # send RGB color
@@ -89,6 +90,39 @@ var state = relay.getVal(1, 6, 0)
 | `bindToDevice(srcEp:int, srcCl:int, dstIeee:string, dstEp:int)` | Bind to another device. `dstIeee` in hex string format. | `bool` |
 | `bindToGroup(srcEp:int, srcCl:int, dstGroupAddr:int)` | Bind to a group address. | `bool` |
 
+### Identifying Devices in Callbacks
+
+ZigbeeDevice has **no `getIeee()` method**. To identify which device triggered an `on_action` callback, look up the device by IEEE once at startup, then compare by network address (`getNwk()`) inside the callback:
+
+```berry
+# Look up once at startup
+var btn = ZHB.getDevice("0xe456acfffe603d1e")
+
+def on_action(action, dev)
+  # Compare by network address — works even if device has no name
+  if dev.getNwk() == btn.getNwk() && action == "single"
+    SLZB.log("Button pressed!")
+  end
+end
+ZHB.on_action(on_action)
+```
+
+If the device has a **custom name** set, you can also match by name:
+
+```berry
+var btn = ZHB.getDevice("My Button")
+var btnName = btn.getName()
+
+def on_action(action, dev)
+  if dev.getName() == btnName && action == "single"
+    SLZB.log("Button pressed!")
+  end
+end
+ZHB.on_action(on_action)
+```
+
+> **Important:** Many devices have **no custom name** — `getName()` returns `""`. In that case, always use the IEEE/NWK matching pattern above.
+
 ### Events
 
 #### ZHB.on_action(callback:function) *(since v3.2.6.dev1)*
@@ -100,8 +134,12 @@ Callback receives two arguments:
 - `dev` (`ZigbeeDevice`) — the device that triggered the action
 
 ```berry
+var btn = ZHB.getDevice("0xe456acfffe603d1e")
+
 def on_action(action, dev)
-  SLZB.log("[" .. dev.getName() .. "] " .. action)
+  if dev.getNwk() == btn.getNwk()
+    SLZB.log("[" .. action .. "] from button")
+  end
 end
 
 ZHB.on_action(on_action)

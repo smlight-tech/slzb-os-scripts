@@ -269,7 +269,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     ESPHOME.toggle("My Device", "switch", "relay_1")
-end)
+end, 60000)
 ```
 
 ### A/C control based on Zigbee temperature
@@ -287,7 +287,7 @@ ZB.on_message(def (msg)
             ESPHOME.set_climate("My AC", "climate_1", 22, "heat")
         end
     end
-end)
+end, 300000)
 ```
 
 ### Read sensor and log
@@ -297,7 +297,7 @@ import ESPHOME
 import TIMER
 import SLZB
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var s = ESPHOME.get_sensor("My Device", "temperature")
     if s
         SLZB.log("ESPHome temp: " .. s["state"])
@@ -312,7 +312,7 @@ import ESPHOME
 import WEATHER
 import TIMER
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var w = WEATHER.get()
     if w
         var t = w["temp"]

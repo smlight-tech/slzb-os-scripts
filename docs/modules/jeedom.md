@@ -101,7 +101,7 @@ ZHB.on_action(def (action, dev)
             jd_cmd(60)  # activate scene
         end
     end
-end)
+end, 60000)
 ```
 
 ### Trigger a scenario
@@ -143,7 +143,7 @@ end
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Kitchen Sensor")
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     jd_set_virtual(100, sensor.getTemperature())
     jd_set_virtual(101, sensor.getHumidity())
 end)

@@ -53,7 +53,7 @@ ZHB.on_action(def (action, dev)
     if dev.getName() == "Desk Button"
         WEBHOOK.post("Node-RED Button", '{"device": "Desk Button", "action": "' .. action .. '"}')
     end
-end)
+end, 30000)
 ```
 
 ### Forward all Zigbee actions to Node-RED
@@ -68,7 +68,7 @@ ZHB.waitForStart(0xff)
 ZHB.on_action(def (action, dev)
     var body = '{"device": "' .. dev.getName() .. '", "action": "' .. action .. '"}'
     WEBHOOK.post("http://192.168.1.100:1880/slzb/action", body)
-end)
+end, 300000)
 ```
 
 ### Send sensor data for Node-RED dashboards
@@ -83,7 +83,7 @@ import TIMER
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Living Room Sensor")
 
-TIMER.every(30000, def ()
+TIMER.setInterval(def()
     var temp = sensor.getTemperature()
     var hum = sensor.getHumidity()
     WEBHOOK.post("Node-RED Sensors", '{"temperature": ' .. str(temp) .. ', "humidity": ' .. str(hum) .. ', "room": "living_room"}')
@@ -116,7 +116,7 @@ import ZB
 import SLZB
 import TIMER
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var body = '{"clients": ' .. str(ZB.getZbClients()) .. ', "free_heap": ' .. str(SLZB.freeHeap()) .. '}'
     WEBHOOK.post("Node-RED Stats", body)
 end)

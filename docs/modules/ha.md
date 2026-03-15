@@ -163,7 +163,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     HA.call("light", "toggle", "light.living_room")
-end)
+end, 300000)
 ```
 
 ### Set thermostat based on Zigbee sensor
@@ -181,7 +181,7 @@ ZB.on_message(def (msg)
             HA.call("climate", "set_temperature", "climate.thermostat", '{"temperature": 22}')
         end
     end
-end)
+end, 5000)
 ```
 
 ### Monitor HA sensor and alert
@@ -191,7 +191,7 @@ import HA
 import TELEGRAM
 import TIMER
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var s = HA.get_state("sensor.front_door")
     if s && s["state"] == "on"
         TELEGRAM.send("Front door is open!")
@@ -206,7 +206,7 @@ import HA
 import WLED
 import TIMER
 
-TIMER.every(5000, def ()
+TIMER.setInterval(def()
     var s = HA.get_state("light.living_room")
     if s
         if s["state"] == "on"

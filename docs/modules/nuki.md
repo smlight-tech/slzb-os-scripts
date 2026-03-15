@@ -158,7 +158,7 @@ ZHB.on_action(def (action, dev)
             NUKI.lock_n_go()
         end
     end
-end)
+end, 60000)
 ```
 
 ### Auto-lock at night
@@ -168,7 +168,7 @@ import NUKI
 import TIME
 import TIMER
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var t = TIME.getAll()
     if t["hour"] == 23 && t["min"] == 0
         var s = NUKI.state()
@@ -178,7 +178,7 @@ TIMER.every(60000, def ()
             TELEGRAM.send("Front door auto-locked for the night")
         end
     end
-end)
+end, 60000)
 ```
 
 ### Lock when everyone leaves (presence detection)
@@ -191,7 +191,7 @@ import TIMER
 # MAC addresses of family phones
 var phones = ["AA:BB:CC:DD:EE:01", "AA:BB:CC:DD:EE:02"]
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var anyone_home = false
     for mac : phones
         if OPENWRT.is_connected(mac)
@@ -208,7 +208,7 @@ TIMER.every(60000, def ()
             TELEGRAM.send("Nobody home — front door locked automatically")
         end
     end
-end)
+end, 3600000)
 ```
 
 ### Battery monitoring
@@ -218,7 +218,7 @@ import NUKI
 import TELEGRAM
 import TIMER
 
-TIMER.every(3600000, def ()
+TIMER.setInterval(def()
     var s = NUKI.state()
     if s["battery_critical"]
         TELEGRAM.send("Nuki lock battery is critically low! Replace soon.")

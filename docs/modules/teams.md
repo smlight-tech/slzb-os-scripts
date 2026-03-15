@@ -93,14 +93,14 @@ import TIMER
 
 ZHB.waitForStart(0xff)
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var devices = ZHB.getDevices()
     for dev : devices
         if !dev.isOnline()
             TEAMS.send_card("Device Offline", dev.getName() .. " is not responding", "FF0000")
         end
     end
-end)
+end, 300000)
 ```
 
 ### Temperature monitoring
@@ -126,10 +126,10 @@ import TEAMS
 import TIME
 import TIMER
 
-TIMER.every(86400000, def ()
+TIMER.setInterval(def()
     var t = TIME.getAll()
     TEAMS.send_card("Daily Report", "SLZB is online. Date: " .. str(t["day"]) .. "/" .. str(t["month"]) .. "/" .. str(t["year"]), "00FF00")
-end)
+end, 86400000)
 ```
 
 ## Notes

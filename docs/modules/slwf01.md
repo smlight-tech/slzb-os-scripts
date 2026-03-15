@@ -89,7 +89,7 @@ ZB.on_message(def (msg)
             SLWF01.set_climate("Bedroom AC", "climate_1", 0, "off")
         end
     end
-end)
+end, 600000)
 ```
 
 ### Turn on A/C on button press
@@ -110,7 +110,7 @@ import SLWF01
 import GSHEETS
 import TIMER
 
-TIMER.every(600000, def ()
+TIMER.setInterval(def()
     var s = SLWF01.get_sensor("Bedroom AC", "temperature")
     if s
         GSHEETS.append("bedroom_temp", s["value"])

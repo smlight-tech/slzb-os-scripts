@@ -162,7 +162,7 @@ ZHB.on_action(def (action, dev)
     if dev.getName() == "Wall Switch" && action == "single"
         TASMOTA.toggle("Kitchen Plug")
     end
-end)
+end, 60000)
 ```
 
 ### Zigbee sensor controls WiFi light color
@@ -175,7 +175,7 @@ import TIMER
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Temp Sensor")
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var temp = sensor.getTemperature()
     if temp > 28
         TASMOTA.color("Status Light", "FF0000")
@@ -184,7 +184,7 @@ TIMER.every(60000, def ()
     else
         TASMOTA.color("Status Light", "00FF00")
     end
-end)
+end, 60000)
 ```
 
 ### Motion sensor turns on WiFi lights
@@ -199,7 +199,7 @@ ZHB.on_action(def (action, dev)
         TASMOTA.on("Hallway Light")
         TASMOTA.dimmer("Hallway Light", 80)
     end
-end)
+end, 60000)
 ```
 
 ### Power monitoring with alerts
@@ -209,7 +209,7 @@ import TASMOTA
 import TELEGRAM
 import TIMER
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var r = TASMOTA.cmd("Washing Machine", "Status 8")
     if r["ok"]
         import json
@@ -233,7 +233,7 @@ import TIMER
 
 var phone_mac = "AA:BB:CC:DD:EE:FF"
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     if !OPENWRT.is_connected(phone_mac)
         var devs = TASMOTA.devices()
         for name : devs.keys()

@@ -97,7 +97,7 @@ ZHB.on_action(def (action, dev)
             iob_set("hm-rpc.0.ABC123.1.STATE", "false")
         end
     end
-end)
+end, 60000)
 ```
 
 ### Toggle a state
@@ -137,10 +137,10 @@ end
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Living Room Sensor")
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     iob_set("javascript.0.zigbee_temp", sensor.getTemperature())
     iob_set("javascript.0.zigbee_humidity", sensor.getHumidity())
-end)
+end, 300000)
 ```
 
 ### Read ioBroker sensor and react locally
@@ -169,7 +169,7 @@ end
 ZHB.waitForStart(0xff)
 var relay = ZHB.getDevice("Heater Relay")
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var target = iob_get("javascript.0.target_temp")
     var current = iob_get("hm-rpc.0.ABC123.1.TEMPERATURE")
     if target && current

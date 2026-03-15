@@ -85,6 +85,18 @@ Berry language resources:
 
 Each module is documented in its own file with API details, examples, and cross-references.
 
+> **AI Skills:** Every doc in `docs/modules/` — both modules and integrations — serves as a **skill** for the built-in AI Assistant in your SLZB device. The content is automatically extracted and loaded on-demand when the AI needs to write scripts. To keep this working correctly, **all pages must follow this structure:**
+>
+> - `# Title` — module/integration name (first line, used as skill summary)
+> - `## Setup` — configuration instructions (stripped from AI skill — setup is handled separately)
+> - `## Functions` — API reference with parameter tables and inline code examples (**included in AI skill**)
+> - `## Common Patterns` — useful code templates (**included in AI skill**)
+> - `## Notes` — constraints, memory usage, edge cases (**included in AI skill**)
+> - `## Examples` — verbose standalone examples (stripped from AI skill — AI generates its own)
+> - `## See Also` — cross-references to related pages (stripped from AI skill)
+>
+> The build script (`gulpfile.js → buildSkills`) strips `## Setup`, `## Examples`, and `## See Also` to keep AI skills concise. Everything else is included. This applies to all `.md` files in `docs/modules/`.
+
 ### Modules
 
 | Module | Description | Min Firmware | Devices |
@@ -203,7 +215,9 @@ Community examples:
 
 ## AI-Assisted Scripting
 
-Use **[AI_PROMPT.md](AI_PROMPT.md)** as a context file for AI agents (ChatGPT, Claude, etc.) when writing Berry scripts. It contains a compact summary of all modules, script rules, and quick-reference patterns — designed so the AI reads only the detailed docs it needs for your specific task.
+SLZB-OS includes a built-in **AI Assistant** that can create Berry scripts, control the device, and configure integrations via natural language.
+
+The AI uses a **skills system**: instead of loading all module docs at once, it loads only the specific modules needed for each task (e.g., `telegram` + `zhb` for "notify me on Telegram when button pressed"). Each module doc in `docs/modules/` is automatically converted to a skill at build time.
 
 ---
 

@@ -180,7 +180,7 @@ ZHB.on_action(def (action, dev)
         "ieee": dev.getIeee()
     })
     WEBHOOK.post("Event Server", body)
-end)
+end, 300000)
 ```
 
 ### Ping a health-check service
@@ -190,7 +190,7 @@ import WEBHOOK
 import TIMER
 
 # Send heartbeat every 5 minutes
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     WEBHOOK.get("Health Check")
 end)
 ```

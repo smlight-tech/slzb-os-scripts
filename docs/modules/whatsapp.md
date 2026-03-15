@@ -69,7 +69,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     WHATSAPP.send("Button pressed on SLZB!")
-end)
+end, 3600000)
 ```
 
 ### Temperature alert
@@ -95,7 +95,7 @@ import WHATSAPP
 import TIMER
 import SLZB
 
-TIMER.every(3600000, def ()
+TIMER.setInterval(def()
     WHATSAPP.send("SLZB device is online. Uptime: " .. str(SLZB.uptime()) .. "s")
 end)
 ```

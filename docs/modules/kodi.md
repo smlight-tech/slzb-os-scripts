@@ -183,7 +183,7 @@ ZHB.on_action(def (action, dev)
             KODI.mute()
         end
     end
-end)
+end, 10000)
 ```
 
 ### Show sensor alerts on TV
@@ -209,7 +209,7 @@ import TIMER
 
 var was_playing = false
 
-TIMER.every(10000, def ()
+TIMER.setInterval(def()
     var p = KODI.get_playing()
     if p["playing"] && !was_playing
         HUE.set_brightness(1, 20)

@@ -138,7 +138,7 @@ ZHB.on_action(def (action, dev)
     elif action == "double"
         PUSHOVER.send("Double press: " .. dev.getName(), "SLZB", 1, "siren")
     end
-end)
+end, 300000)
 ```
 
 ### Temperature alert with link
@@ -167,7 +167,7 @@ import TIMER
 
 ZHB.waitForStart(0xff)
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var devices = ZHB.getDevices()
     for dev : devices
         if !dev.isOnline()

@@ -65,11 +65,11 @@ import PING
 import TELEGRAM
 import TIMER
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     if !PING.alive("192.168.1.1")
         TELEGRAM.send("Gateway is unreachable!")
     end
-end)
+end, 60000)
 ```
 
 ### Check multiple hosts
@@ -110,7 +110,7 @@ import TIMER
 
 var fail_count = 0
 
-TIMER.every(30000, def ()
+TIMER.setInterval(def()
     if PING.alive("8.8.8.8")
         fail_count = 0
     else
@@ -120,7 +120,7 @@ TIMER.every(30000, def ()
             fail_count = 0
         end
     end
-end)
+end, 30000)
 ```
 
 ## Notes

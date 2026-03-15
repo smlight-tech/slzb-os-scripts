@@ -55,7 +55,7 @@ ZHB.on_action(def (action, dev)
     elif action == "double"
         WEBHOOK.post("n8n Desk Button", '{"action": "double"}')
     end
-end)
+end, 300000)
 ```
 
 ### Send sensor data to n8n for processing
@@ -70,11 +70,11 @@ import TIMER
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Living Room Sensor")
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var temp = sensor.getTemperature()
     var hum = sensor.getHumidity()
     WEBHOOK.post("n8n Sensor Log", '{"temperature": ' .. str(temp) .. ', "humidity": ' .. str(hum) .. '}')
-end)
+end, 3600000)
 ```
 
 ### Door open alert with context
@@ -102,7 +102,7 @@ import WEBHOOK
 import ZB
 import TIMER
 
-TIMER.every(3600000, def ()
+TIMER.setInterval(def()
     var clients = ZB.getZbClients()
     WEBHOOK.post("n8n Network Report", '{"zigbee_clients": ' .. str(clients) .. '}')
 end)

@@ -91,12 +91,12 @@ import WEATHER
 import TIMER
 import SLZB
 
-TIMER.every(1800000, def ()
+TIMER.setInterval(def()
     var w = WEATHER.get()
     if w
         SLZB.log("Weather: " .. str(w["temp"]) .. "C, " .. w["description"])
     end
-end)
+end, 1800000)
 ```
 
 ### Temperature alert via Telegram
@@ -106,12 +106,12 @@ import WEATHER
 import TELEGRAM
 import TIMER
 
-TIMER.every(600000, def ()
+TIMER.setInterval(def()
     var w = WEATHER.get()
     if w && w["temp"] > 35
         TELEGRAM.send("Heat alert! " .. w["city"] .. ": " .. str(w["temp"]) .. " C")
     end
-end)
+end, 600000)
 ```
 
 ### Change LED color based on temperature
@@ -121,7 +121,7 @@ import WEATHER
 import WLED
 import TIMER
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var w = WEATHER.get()
     if w
         var t = w["temp"]
@@ -135,7 +135,7 @@ TIMER.every(300000, def ()
         end
         WLED.set_color("Status Strip", color)
     end
-end)
+end, 300000)
 ```
 
 ### Rain alert
@@ -145,7 +145,7 @@ import WEATHER
 import TELEGRAM
 import TIMER
 
-TIMER.every(1800000, def ()
+TIMER.setInterval(def()
     var w = WEATHER.get()
     if w
         var id = w["weather_id"]
@@ -153,7 +153,7 @@ TIMER.every(1800000, def ()
             TELEGRAM.send("Rain alert in " .. w["city"] .. ": " .. w["description"])
         end
     end
-end)
+end, 1800000)
 ```
 
 ## Notes

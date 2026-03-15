@@ -74,7 +74,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     IFTTT.trigger("slzb_button_pressed")
-end)
+end, 3600000)
 ```
 
 ### Temperature alert
@@ -100,7 +100,7 @@ import IFTTT
 import TIMER
 import SLZB
 
-TIMER.every(3600000, def ()
+TIMER.setInterval(def()
     IFTTT.trigger("slzb_heartbeat", str(SLZB.uptime()))
 end)
 ```

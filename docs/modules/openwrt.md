@@ -155,14 +155,14 @@ import HA
 import TIMER
 
 # Check every 5 minutes if phone is on WiFi
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var home = OPENWRT.is_connected("AA:BB:CC:DD:EE:FF")
     if home
         HA.call("climate", "set_temperature", "climate.living_room", '{"temperature": 22}')
     else
         HA.call("climate", "set_temperature", "climate.living_room", '{"temperature": 16}')
     end
-end)
+end, 300000)
 ```
 
 ### Alert when new device joins network
@@ -174,7 +174,7 @@ import TIMER
 
 var known_macs = ["AA:BB:CC:DD:EE:FF", "11:22:33:44:55:66"]
 
-TIMER.every(600000, def ()
+TIMER.setInterval(def()
     var clients = OPENWRT.clients()
     for c : clients
         var mac = c.find("mac", "")
@@ -182,7 +182,7 @@ TIMER.every(600000, def ()
             TELEGRAM.send("Unknown device on network: " .. mac .. " (" .. c.find("hostname", "unknown") .. ")")
         end
     end
-end)
+end, 600000)
 ```
 
 ### Monitor router health
@@ -192,14 +192,14 @@ import OPENWRT
 import INFLUXDB
 import TIMER
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     var info = OPENWRT.info()
     INFLUXDB.write_point("router",
         {"host": "openwrt"},
         {"uptime": info["uptime"], "mem_free": info["mem_free"],
          "load_1m": info["load_1m"]}
     )
-end)
+end, 300000)
 ```
 
 ### Turn on lights when arriving home
@@ -211,7 +211,7 @@ import TIMER
 
 var was_home = false
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var home = OPENWRT.is_connected("AA:BB:CC:DD:EE:FF")
     if home && !was_home
         # Just arrived — turn on lights
@@ -219,7 +219,7 @@ TIMER.every(60000, def ()
         HUE.set_brightness(1, 200)
     end
     was_home = home
-end)
+end, 60000)
 ```
 
 ## Finding MAC Addresses

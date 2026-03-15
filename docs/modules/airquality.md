@@ -93,14 +93,14 @@ import AIRQUALITY
 import INFLUXDB
 import TIMER
 
-TIMER.every(1800000, def ()
+TIMER.setInterval(def()
     var a = AIRQUALITY.get()
     INFLUXDB.write_point("air_quality",
         {},
         {"aqi": a["aqi"], "pm2_5": a["pm2_5"], "pm10": a["pm10"],
          "o3": a["o3"], "no2": a["no2"], "co": a["co"]}
     )
-end)
+end, 1800000)
 ```
 
 ### Close ventilation on bad air
@@ -110,14 +110,14 @@ import AIRQUALITY
 import HA
 import TIMER
 
-TIMER.every(600000, def ()
+TIMER.setInterval(def()
     var a = AIRQUALITY.get()
     if a["aqi"] >= 4
         HA.call("switch", "turn_off", "switch.ventilation")
     else
         HA.call("switch", "turn_on", "switch.ventilation")
     end
-end)
+end, 600000)
 ```
 
 ### Combined weather + air quality report

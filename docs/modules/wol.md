@@ -84,7 +84,7 @@ ZHB.on_action(def (action, dev)
     if dev.getName() == "Desk Button" && action == "single"
         WOL.wake_name("Gaming PC")
     end
-end)
+end, 60000)
 ```
 
 ### Wake NAS at scheduled time
@@ -94,7 +94,7 @@ import WOL
 import TIME
 import TIMER
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     var t = TIME.getAll()
     if t["hour"] == 7 && t["min"] == 0
         WOL.wake_name("NAS")

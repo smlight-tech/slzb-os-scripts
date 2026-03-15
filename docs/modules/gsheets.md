@@ -125,10 +125,10 @@ import GSHEETS
 import ZB
 import TIMER
 
-TIMER.every(300000, def ()
+TIMER.setInterval(def()
     # Assuming a Zigbee temperature sensor
     GSHEETS.append("living_room", 22.5)
-end)
+end, 300000)
 ```
 
 ### Log Zigbee sensor data
@@ -145,7 +145,7 @@ ZB.on_message(def (msg)
         var hum = msg["value"] / 100.0
         GSHEETS.append("humidity", hum, msg["src_addr"])
     end
-end)
+end, 3600000)
 ```
 
 ### Log button presses
@@ -156,7 +156,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     GSHEETS.append("button_press", "main_button")
-end)
+end, 86400000)
 ```
 
 ### Log weather data hourly
@@ -166,7 +166,7 @@ import GSHEETS
 import WEATHER
 import TIMER
 
-TIMER.every(3600000, def ()
+TIMER.setInterval(def()
     var w = WEATHER.get()
     if w
         GSHEETS.append(w["city"], w["temp"], w["humidity"], w["description"])
@@ -181,7 +181,7 @@ import GSHEETS
 import TIMER
 import SLZB
 
-TIMER.every(86400000, def ()
+TIMER.setInterval(def()
     GSHEETS.append("daily_report", SLZB.uptime(), "seconds")
 end)
 ```

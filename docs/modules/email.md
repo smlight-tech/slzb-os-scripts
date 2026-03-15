@@ -84,7 +84,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     EMAIL.send("Button Alert", "The button on your SLZB device was pressed.")
-end)
+end, 86400000)
 ```
 
 ### Temperature alert
@@ -110,7 +110,7 @@ import EMAIL
 import TIMER
 import SLZB
 
-TIMER.every(86400000, def ()
+TIMER.setInterval(def()
     EMAIL.send("SLZB Daily Report", "Device is online. Uptime: " .. str(SLZB.uptime()) .. " seconds.")
 end)
 ```

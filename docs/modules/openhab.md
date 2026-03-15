@@ -116,7 +116,7 @@ ZHB.on_action(def (action, dev)
             oh_command("Scene_MovieMode", "ON")
         end
     end
-end)
+end, 60000)
 ```
 
 ### Sensor data to OpenHAB
@@ -141,7 +141,7 @@ end
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Kitchen Sensor")
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     oh_update("Zigbee_Kitchen_Temp", sensor.getTemperature())
     oh_update("Zigbee_Kitchen_Humidity", sensor.getHumidity())
 end)

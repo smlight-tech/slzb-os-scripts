@@ -103,7 +103,7 @@ import BUTTON
 
 BUTTON.on_press(def ()
     TELEGRAM.send("Button pressed!")
-end)
+end, 10000)
 ```
 
 ### Send alert on Zigbee sensor event
@@ -119,7 +119,7 @@ ZB.on_message(def (msg)
             TELEGRAM.send("High temperature alert: " .. str(temp) .. "°C")
         end
     end
-end)
+end, 5000)
 ```
 
 ### Poll for commands
@@ -129,7 +129,7 @@ import TELEGRAM
 import TIMER
 import SLZB
 
-TIMER.every(10000, def ()
+TIMER.setInterval(def()
     var msgs = TELEGRAM.getUpdates()
     if msgs
         for msg : msgs
@@ -151,7 +151,7 @@ import TELEGRAM
 import TIMER
 import AMBILIGHT
 
-TIMER.every(5000, def ()
+TIMER.setInterval(def()
     var msgs = TELEGRAM.getUpdates()
     if msgs
         for msg : msgs

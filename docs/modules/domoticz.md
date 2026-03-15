@@ -100,7 +100,7 @@ ZHB.on_action(def (action, dev)
             dz_switch(2, "Toggle")
         end
     end
-end)
+end, 60000)
 ```
 
 ### Activate a scene
@@ -140,7 +140,7 @@ end
 ZHB.waitForStart(0xff)
 var sensor = ZHB.getDevice("Kitchen Sensor")
 
-TIMER.every(60000, def ()
+TIMER.setInterval(def()
     dz_update_temp_hum(10, sensor.getTemperature(), sensor.getHumidity())
 end)
 ```
