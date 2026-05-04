@@ -26,12 +26,17 @@ BUTTON.on_press(0, press_handler)
 
 | Function | Description |
 |----------|-------------|
-| `BUTTON.on_press(button_id:int, callback:function)` | Override button actions. Currently only button `0` is supported. |
+| `BUTTON.on_press(button_id:int, callback:function)` | Override button actions.<br>`button_id` - button number(id) starting from zero. All devices except SLZB-Ultima have only button `0`. |
 
 Callback receives one argument:
 - `press_type` (`int`) — `0` for short press, `1` for long press
 
-**Important:** Registering this callback disables the standard button actions (like toggling the Zigbee chip or entering pairing mode). All press events are redirected to your script instead.
+SLZB-Ultima specifics:
+- you can use two buttons: `0` and `1`. The third button on the case always reboots the coordinator, you cannot use it.
+- button `0` supports `short` and `long` presses
+- button `1` supports `short` presses only!
+
+**Important:** Registering this callback disables the standard button actions. All press events are redirected to your script instead!
 
 ## See Also
 
