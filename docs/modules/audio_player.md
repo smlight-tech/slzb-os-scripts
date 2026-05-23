@@ -2,8 +2,9 @@
 
 > Available since: v3.3.3.dev0
 
-Play mp3 files from HTTP stream or from internal memory.<br>
-It is recommended to use a bitrate of no more than 128.
+SLZB Ultima has a built-in 24-Bit digital sound processor that can play mp3 files from HTTP stream or from internal memory.<br>
+It is recommended to use a bitrate of no more than 128.<br>
+You can find a 3.5 audio output on the back of the device.<br>
 
 ## Quick Example
 
