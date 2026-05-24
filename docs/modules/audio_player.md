@@ -16,6 +16,19 @@ AUDIO_PLAYER.play("https://online.kissfm.ua/KissFM_Deep") # play good Ukrainian 
 AUDIO_PLAYER.play("my_song.mp3") # or play your file (file must first be uploaded into memory on the /audio page)
 ```
 
+## Looping an audio file
+
+```berry
+import AUDIO_PLAYER
+import TIMER
+
+TIMER.setInterval(def()
+  if (AUDIO_PLAYER.getStatus() != AUDIO_PLAYER.STATUS_PLAYING)
+    AUDIO_PLAYER.play("test.mp3")
+  end 
+end, 100)
+```
+
 ## API Reference
 
 | Function | Description |
