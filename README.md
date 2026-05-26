@@ -150,7 +150,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [SLWF08](docs/modules/slwf08.md) | SMLIGHT SLWF-08 HDMI-CEC controller (ESPHome alias) |
 | [WEATHER](docs/modules/weather.md) | Get weather forecasts from OpenWeatherMap |
 | [AIRQUALITY](docs/modules/airquality.md) | Get air quality index and pollutant data |
-| [SUN](docs/modules/sun.md) | Get sunrise and sunset times (no API key needed) |
+| [SUN](docs/modules/sun.md) | Get sunrise and sunset times (v3.3.3.dev0) |
 | [GSHEETS](docs/modules/gsheets.md) | Log data to Google Sheets via Apps Script |
 | [INFLUXDB](docs/modules/influxdb.md) | Write time-series data to InfluxDB v2 for Grafana |
 | [KODI](docs/modules/kodi.md) | Control Kodi media center — playback, volume, notifications |
