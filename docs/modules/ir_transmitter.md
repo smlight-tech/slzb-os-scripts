@@ -8,13 +8,15 @@ Send infrared commands to TVs, air conditioners, media players, and other IR-con
 
 ```berry
 IR.send(IR.Proto_Nec, 0x04, 0x08)  # send NEC power command
+
+IR.send(IR.Proto_Nec, 0x04, 0x08, 2)  # optional: set repeat count to 2
 ```
 
 ## API Reference
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `IR.send(protocol:int, address:int, command:int)` | Send an IR code using a known protocol (see [Protocol Constants](#protocol-constants)). | — |
+| `IR.send(protocol:int, address:int, command:int, repeat:int)` | Send an IR code using a known protocol (see [Protocol Constants](#protocol-constants)). `repeat` - optional argument to specify the number of times the code is repeated when sending | — |
 | `IR.sendRaw(hexString:string)` | Send raw IR timing data at 38 kHz. Each byte = 50us tick, alternating mark/space. Use for unsupported protocols or replaying captured codes. | `bool` |
 
 ## Protocol Constants
