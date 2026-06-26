@@ -118,6 +118,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [Audio Player](docs/modules/audio_player.md) | Play mp3 files from HTTP stream or from internal memory | v3.3.3.dev0 | Ultima only |
 | [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
+| [BLE](docs/modules/ble.md) | Receiving BLE advertisements | v3.3.3.dev7 | U series and Ultima |
 
 > **\*ZHB** is not available on SLZB-06MU, SLZB-06Mg24U, SLZB-06Mg26U (and their non-U variants), and SLZB-MR5U — Zigbee Hub Mode is available only on devices with CC26XX SoC from Texas Instruments.
 
