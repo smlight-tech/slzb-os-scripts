@@ -59,9 +59,9 @@ You can add optional parameters to the metadata JSON:
 | Parameter | Description |
 |-----------|-------------|
 | `stack` | Override the default stack size (5120). Increase this if your script crashes due to out-of-memory errors. |
-| `psram` | Set to `true` to place the script task entirely in PSRAM. **U-series devices only.** |
+| ~~`psram`~~ | ~~Set to `true` to place the script task entirely in PSRAM.~~<br>**U-series and Ultima devices only.**<br>Starting with v3.3.3.dev7 all scripts running in PSRAM by default. |
 
-**Warning:** When `psram` is `true`, the script **cannot access the file system**. Any attempt will crash the script.
+~~**Warning:** When `psram` is `true`, the script **cannot access the file system**. Any attempt will crash the script.~~ Starting with v3.3.3.dev7 this no longer has filesystem access restrictions.
 
 ---
 
