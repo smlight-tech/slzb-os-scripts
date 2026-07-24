@@ -42,7 +42,7 @@ end
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `HTTP.open(url:string, method:string, buffer:int, streamMode:bool)` | Open the HTTP client. `method`: `"get"` or `"post"` (**case sensitive**). `buffer`: response buffer size in bytes (recommended max ~4096; U-series can use more). `streamMode`: set client to stream mode | `bool` |
+| `HTTP.open(url:string, method:string, buffer:int, streamMode:bool)` | Open the HTTP client. `method`: `"get"` or `"post"` (**case sensitive**). `buffer`: response buffer size in bytes (recommended max ~4096; U-series can use more). `streamMode`: set client to stream mode, optional | `bool` |
 | `HTTP.perform()` | Execute the request. | `int` (HTTP status code, 200 = OK) |
 | `HTTP.getResponse()` | Get the response text, up to `buffer` size. **Do not log responses longer than 1024 characters — this will crash!** | `string` |
 | `HTTP.setPostData(data:string)` | Set POST request body. | `bool` |
