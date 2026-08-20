@@ -135,6 +135,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [SLACK](docs/modules/slack.md) | Send messages to Slack channels via webhook |
 | [DISCORD](docs/modules/discord.md) | Send notifications to Discord via webhook |
 | [PUSHOVER](docs/modules/pushover.md) | Push notifications with priority levels and sounds |
+| [PROWL](docs/modules/prowl.md) | Push notifications to iOS via Prowl with priority levels and links |
 | [NTFY](docs/modules/ntfy.md) | Push notifications via ntfy.sh |
 | [EMAIL](docs/modules/email.md) | Send email alerts via SMTP |
 | [HA](docs/modules/ha.md) | Call Home Assistant services and read entity states |
