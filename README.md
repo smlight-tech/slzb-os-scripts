@@ -121,8 +121,6 @@ Each module is documented in its own file with API details, examples, and cross-
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
 | [BLE](docs/modules/ble.md) | Receiving BLE advertisements | v3.3.3.dev7 | U series and Ultima |
 
-> **\*ZHB** is not available on SLZB-06MU, SLZB-06Mg24U, SLZB-06Mg26U (and their non-U variants), and SLZB-MR5U — Zigbee Hub Mode is available only on devices with CC26XX SoC from Texas Instruments.
-
 ### Integrations
 
 Modules for connecting to external services. Configure credentials via the **Scripts Integrations** UI page or directly in scripts.
