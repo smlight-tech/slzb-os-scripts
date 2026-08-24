@@ -11,8 +11,8 @@ Low-level access to the Zigbee chip — read/write bytes, reboot, flash mode, an
 ```berry
 import ZB
 
-SLZB.log("Zigbee clients: " .. ZB.getZbClients())
-ZB.reboot()  # reboot the Zigbee chip
+SLZB.log("Zigbee clients: " .. ZB.getZbClients(1))
+ZB.reboot(1)  # reboot the Zigbee chip 1
 ```
 
 ## Zigbee Socket Coexistence
@@ -21,9 +21,9 @@ ZB.reboot()  # reboot the Zigbee chip
 
 SLZB-OS uses parallel task execution. When you want to access the Zigbee chip directly, you must first "lock" access using `ZB.suspend()`.
 
-Most functions do this automatically, but **`ZB.readBytes()` requires manual locking** — call `ZB.suspend(true)` before reading, otherwise the parallel socket processing task may capture the Zigbee chip's response.
+Most functions do this automatically, but **`ZB.readBytes(), readByte(), readString(), available(), writeBytes(), writeString()` requires manual locking** — call `ZB.suspend(chip_id, true)` before reading, otherwise the parallel socket processing task may capture the Zigbee chip's response.
 
-After executing `ZB.suspend(true)`, the following events will **not** be generated:
+After executing `ZB.suspend(chip_id, true)`, the following events will **not** be generated:
 - `ZB.on_pkt`
 - `ZB.on_connect`
 - `ZB.on_disconnect`
@@ -32,14 +32,14 @@ After executing `ZB.suspend(true)`, the following events will **not** be generat
 
 | Function | Description | Returns |
 |----------|-------------|---------|
-| `ZB.reboot()` | Reboot the Zigbee chip immediately. | — |
-| `ZB.flashMode()` | Put Zigbee chip into firmware mode. Restart the chip or send the bootloader command to return to normal mode. | — |
-| `ZB.routerPairMode()` | Start network search for pairing (when chip is flashed as a router). | — |
-| `ZB.writeBytes(data:bytes)` | Send bytes directly to the Zigbee chip. | `int` (bytes sent) |
-| `ZB.readBytes()` | Read bytes from the Zigbee chip. **Requires `ZB.suspend(true)` first!** | `bytes` |
-| `ZB.availableBytes()` | Number of bytes available for reading from the Zigbee chip. | `int` |
-| `ZB.getZbClients()` | Number of clients connected to the Zigbee socket. | `int` |
-| `ZB.suspend(state:bool)` | Stop (`true`) or resume (`false`) Zigbee socket processing. | — |
+| `ZB.reboot(chip_id:int)` | Reboot the Zigbee chip immediately.<br>`chip_id` - the number of the radio module for which this command will be executed. MR series coordinators have 2 radio modules and Ultima can have 3 if the Zwave addon is installed | — |
+| `ZB.flashMode(chip_id:int)` | Put Zigbee chip into firmware mode. Restart the chip or send the bootloader command to return to normal mode.<br>`chip_id` - radio module number. | — |
+| `ZB.routerPairMode(chip_id:int)` | Start network search for pairing (when chip is flashed as a router). | — |
+| `ZB.writeBytes(chip_id:int, data:bytes)` | Send bytes directly to the Zigbee chip. | `int` (bytes sent) |
+| `ZB.readBytes(chip_id:int)` | Read bytes from the Zigbee chip. **Requires `ZB.suspend(true)` first!** | `bytes` |
+| `ZB.available(chip_id:int)` | Number of bytes available for reading from the Zigbee chip. | `int` |
+| `ZB.getZbClients(chip_id:int)` | Number of clients connected to the Zigbee socket. | `int` |
+| `ZB.suspend(chip_id:int, state:bool)` | Stop (`true`) or resume (`false`) Zigbee socket processing. | — |
 
 ## Events
 
@@ -51,15 +51,16 @@ Called when a new data packet is received from the Zigbee chip in network coordi
 
 **Only generated if "Zigbee Socket packet processing" is enabled.**
 
-Callback receives two arguments:
+Callback receives:
+- `chip_id` (`int`) — number of the radio module for which this event occurred
 - `id` (`int`) — the received packet command ID
 - `buf` (`bytes`) — the full packet buffer
 
 If you return `true`, the packet will not be sent to the Zigbee socket. **(CC2652x only — does not work for EFR32x.)**
 
 ```berry
-def zb_pkt_handler(id, buf)
-  SLZB.log("Packet ID: " .. id)
+def zb_pkt_handler(chip_id, cmd_id, buf)
+  SLZB.log("Radio module: " .. chip_id .. " Packet ID: " .. cmd_id)
   return false  # pass packet through
 end
 
@@ -70,15 +71,16 @@ ZB.on_pkt(zb_pkt_handler)
 
 Called when a new socket client connects in network coordinator mode.
 
-Callback receives two arguments:
+Callback receives:
+- `chip_id` (`int`) — number of the radio module for which this event occurred
 - `ip` (`string`) — the client's IP address
 - `id` (`int`) — the client's position in the client array
 
 Return `true` to reject the connection.
 
 ```berry
-def conn_cb(ip, id)
-  SLZB.log("New client: " .. ip .. " id: " .. id)
+def conn_cb(chip_id, ip, id)
+  SLZB.log("[" .. chip_id .. "] New client: " .. ip .. " id: " .. id)
 end
 
 ZB.on_connect(conn_cb)
@@ -88,7 +90,8 @@ ZB.on_connect(conn_cb)
 
 Called when a socket client disconnects in network coordinator mode.
 
-Callback receives one argument:
+Callback receives:
+- `chip_id` (`int`) — number of the radio module for which this event occurred
 - `id` (`int`) — the client's position in the client array
 
 ## See Also
