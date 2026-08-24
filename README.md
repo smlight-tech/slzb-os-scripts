@@ -115,6 +115,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [AMBILIGHT](docs/modules/ambilight.md) | WS2812B LED strip effects and colors | v3.2.5.dev1 | Ultima only |
 | [IR Transmitter](docs/modules/ir_transmitter.md) | Send infrared commands to TVs, ACs, and other IR devices | v3.2.5.dev1 | Ultima only |
 | [IR Receiver](docs/modules/ir_receiver.md) | Receive IR signals from remote controls, learn and replay codes | v3.2.5.dev1 | Ultima only |
+| [RF](docs/modules/rf.md) | Sub-1 GHz RF transceiver add-on (CC1101): sniff, replay and store 315/433/868/915 MHz OOK commands | v3.3.5 | Ultima + RF add-on |
 | [Audio Player](docs/modules/audio_player.md) | Play mp3 files from HTTP stream or from internal memory | v3.3.3.dev0 | Ultima only |
 | [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
@@ -136,6 +137,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [SLACK](docs/modules/slack.md) | Send messages to Slack channels via webhook |
 | [DISCORD](docs/modules/discord.md) | Send notifications to Discord via webhook |
 | [PUSHOVER](docs/modules/pushover.md) | Push notifications with priority levels and sounds |
+| [PROWL](docs/modules/prowl.md) | Push notifications to iOS via Prowl with priority levels and links |
 | [NTFY](docs/modules/ntfy.md) | Push notifications via ntfy.sh |
 | [EMAIL](docs/modules/email.md) | Send email alerts via SMTP |
 | [HA](docs/modules/ha.md) | Call Home Assistant services and read entity states |
