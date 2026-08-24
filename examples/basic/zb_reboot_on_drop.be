@@ -1,14 +1,16 @@
 import ZB # import zb module
+
+var zb_id = 1 # radio module to use
 var lastSocketClients = 0 # variable to remember the number of connected clients
 
 #An infinite loop is needed to keep the script running forever.
 #If execution reaches the end of the file, the script will terminate.
 while true
-  var curClients = ZB.getZbClients() # store current clients
+  var curClients = ZB.getZbClients(zb_id) # store current clients
 
   if curClients == 0 && lastSocketClients > 0 # if there are no current clients and there were in the last cycle, it means that the clients has disconnected
-    SLZB.log("socket client dissconnected!" ) # log some text
-    ZB.reboot() # reboot zigbee chip
+    SLZB.log("socket client dissconnected!") # log some text
+    ZB.reboot(zb_id) # reboot zigbee chip
   end
 
   lastSocketClients = curClients # store current clients

@@ -1,6 +1,6 @@
 # TELEGRAM Module
 
-Send and receive Telegram messages from Berry scripts via the Telegram Bot API.
+Send and receive Telegram messages from Berry scripts via the Telegram Bot API.<br>
 
 ## Setup
 
@@ -45,13 +45,14 @@ import TELEGRAM
 TELEGRAM.setup("123456:ABC-DEF...", "987654321")
 ```
 
-### TELEGRAM.send(text)
+### TELEGRAM.send(text, chat_id)
 
 Send a text message to the configured chat. Returns the HTTP status code (200 = success).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `text` | string | Message text to send |
+| `chat_id` | string | Optional. if specified, the message will be sent to this chat |
 
 **Returns:** `int` — HTTP status code
 
@@ -68,7 +69,9 @@ TELEGRAM.send("Temperature: " .. str(temp) .. "°C")
 
 ### TELEGRAM.getUpdates()
 
-Poll Telegram for new incoming messages. Returns a list of message objects, or `nil` if there are no new messages. Automatically tracks the last seen message to avoid duplicates.
+Poll Telegram for new incoming messages. Returns a list of message objects, or `nil` if there are no new messages. Automatically tracks the last seen message to avoid duplicates.<br>
+Will throw an error if the internet is unavailable.<br>
+
 
 **Returns:** `list` of `map` objects, or `nil`
 
@@ -106,30 +109,13 @@ BUTTON.on_press(def ()
 end, 10000)
 ```
 
-### Send alert on Zigbee sensor event
-
-```berry
-import TELEGRAM
-import ZB
-
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0402
-        var temp = msg["value"] / 100.0
-        if temp > 30
-            TELEGRAM.send("High temperature alert: " .. str(temp) .. "°C")
-        end
-    end
-end, 5000)
-```
-
 ### Poll for commands
 
 ```berry
 import TELEGRAM
-import TIMER
 import SLZB
 
-TIMER.setInterval(def()
+while (1)
     var msgs = TELEGRAM.getUpdates()
     if msgs
         for msg : msgs
@@ -141,17 +127,18 @@ TIMER.setInterval(def()
             end
         end
     end
-end)
+
+    SLZB.delay(1000)
+end
 ```
 
 ### Interactive light control
 
 ```berry
 import TELEGRAM
-import TIMER
 import AMBILIGHT
 
-TIMER.setInterval(def()
+while (1)
     var msgs = TELEGRAM.getUpdates()
     if msgs
         for msg : msgs
@@ -168,13 +155,130 @@ TIMER.setInterval(def()
             end
         end
     end
-end)
+
+    SLZB.delay(1000)
+end
+```
+
+### Big example of a bot using the ZHB module to control Zigbee devices paired to a coordinator and WLED module to controll A1-SLWF-09 (or any other WLED controller).<br>
+*Written for our demo-stand on Home Assistant Community Day 07/25/2026 in Kyiv*
+
+```berry
+#META {"start":0}
+import TELEGRAM, ZHB, AMBILIGHT, BUZZER, NETWORK, WLED
+
+TELEGRAM.setup("xxxxxxx")
+
+NETWORK.waitReady(0xff)
+ZHB.waitForStart(0xff)
+
+var socket1 = ZHB.getDevice("Розетка")
+var socket2 = ZHB.getDevice("Розетка 2")
+var temperature = ZHB.getDevice("temperature")
+
+AMBILIGHT.setColor(0x7bff00)
+BUZZER.playPreset(BUZZER.Snd_Success)
+AMBILIGHT.setEffect(AMBILIGHT.Eff_Blur)
+
+def sendWlControll(state, chat)
+  var wl_dev = "192.168.31.134"
+  
+  try
+    state = state == 1 ? WLED.on(wl_dev) : WLED.off(wl_dev)
+    if (state != 200)
+      raise "wled_offline"
+    end
+    
+    var res = state == 1 ? "увімкнено" : "вимкнено"
+    TELEGRAM.send("WLED " .. res, chat)
+  except ..
+    TELEGRAM.send("Помилка: WLED пристрій не знайдено!", chat)
+  end
+end
+
+def sendZbCotroll(dev, state, chat)
+  try
+    dev.sendOnOff(state)
+    TELEGRAM.send(dev.getName() .. state == 1 ? " увімкнено" : " вимкнено", chat)
+
+  except ..
+    TELEGRAM.send("Помилка: цей зігбі пристрій не знайдено! Перевірте чи правильно вказано його назву", chat)
+  end
+end
+
+while (1)
+  var msgs = nil
+  try
+    msgs = TELEGRAM.getUpdates()
+  except ..
+    # девайс оффлайн
+  end
+  
+  if msgs
+    for msg : msgs
+        var cmd = msg["text"]
+        var chat_id = str(msg["chat_id"])
+        var user = msg["from"]
+        
+        if (cmd == "/start")
+          TELEGRAM.send("Привіт " .. user .. "!\n" ..
+          "Це демонстраційний бот який виконується на SLZB-Ultima3 за допомогою скриптової мови Berry.\n" ..
+          "Ви можете знайти файл цього бота підключившись до точки доступу 'SLZB-AP' і перейшовши на 192.168.31.165, файл знаходиться за адресою 'Scripts & Automation'-> 'Script Engine & Editor'\n\n" ..
+          "Цей бот може напряму управляти підключеними до координатора пристроями завдяки режиму Zigbee Hub, ми підготували декілька команд щоб ви перевірили це особисто:\n" ..
+          "/socket1_on\n" ..
+          "/socket1_off\n" ..
+          "/socket2_on\n" ..
+          "/socket2_off\n" ..
+          "/led_on\n" ..
+          "/led_off\n" ..
+          "/temperature", chat_id)
+          
+        elif (cmd == "/socket1_on")
+          sendZbCotroll(socket1, 1, chat_id)
+          
+        elif (cmd == "/socket1_off")
+          sendZbCotroll(socket1, 0, chat_id)
+          
+        elif (cmd == "/socket2_on")
+          sendZbCotroll(socket2, 1, chat_id)
+          
+        elif (cmd == "/socket2_off")
+          sendZbCotroll(socket2, 0, chat_id)
+          
+        elif (cmd == "/led_on")
+          sendWlControll(1, chat_id)
+          
+        elif (cmd == "/led_off")
+          sendWlControll(0, chat_id)
+          
+        elif (cmd == "/temperature")
+          try
+            var value = temperature.getVal(1, 0x0402, 0x0000)
+            
+            if (value != nil)
+              TELEGRAM.send("Температура: " .. value, chat_id)
+              
+            else
+              TELEGRAM.send("Пристрій ще не надсилав температуру. Будь ласка спробуйте пізніше", chat_id)
+            end
+          except
+            TELEGRAM.send("Помилка: пристрій не знайдено", chat_id)
+          end
+        else
+          TELEGRAM.send("Схоже, що таких вказівок мені не давали.\nПеревірте /start щоб побачити список доступних дій", chat_id)
+        end
+        #SLZB.log("Chat ID: " .. msg["chat_id"] .. " From: " .. msg["from"] .. " Text: " .. msg["text"])
+    end
+  end
+  
+  SLZB.delay(1000)
+end
 ```
 
 ## Notes
 
+- It is not recommended to call TELEGRAM module functions in TIMER callbacks because HTTP requests take a long time and can cause delays
 - Messages are sent via HTTPS to `api.telegram.org` — the device needs internet access
 - `getUpdates()` uses short polling (no long-polling) to avoid blocking the script
-- Each `getUpdates()` call uses ~4 KB of temporary RAM, freed immediately after
-- `send()` uses ~2 KB of temporary RAM, freed immediately after
+- Each `getUpdates()` and `send()` calls uses ~40 KB of temporary RAM, freed immediately after. On U-series devices PSRAM is used instead of RAM.
 - The bot can only receive messages from users who have started a conversation with it first (Telegram requirement)

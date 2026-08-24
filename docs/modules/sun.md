@@ -1,6 +1,19 @@
 # SUN Module
 
-Get sunrise and sunset times using the [Sunrise-Sunset.org](https://sunrise-sunset.org/) API — no API key required.
+**This module has been completely reworked in firmware `v3.3.3.dev0`!
+You are currently viewing the description for firmware `v3.3.3.dev0` or higher!**
+
+Calculates sunrise and sunset times using the provided coordinates and a special algorithm. Possible error in calculations +-10 minutes.<br>
+<br>
+Astronomical twilight:	almost completely dark.<br>
+Nautical twilight:	horizon becomes visible.<br>
+Civil twilight:	enough light for most outdoor activity.<br>
+Sunrise/Sunset:	Sun crosses horizon.<br>
+<br>
+Definitions:<br>
+Civil dawn → morning civil twilight begins.<br>
+Civil dusk → evening civil twilight ends.<br>
+Same idea for nautical and astronomical twilight.<br>
 
 ## Setup
 
@@ -15,129 +28,78 @@ Get sunrise and sunset times using the [Sunrise-Sunset.org](https://sunrise-suns
 
 ```berry
 import SUN
-SUN.setup("48.8566", "2.3522")
+SUN.setup(48.8566, 2.3522)
 ```
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### SUN.setup(lat, lng)
-
-Override coordinates for this script session.
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `lat` | string | Latitude (e.g. `"48.8566"`) |
-| `lng` | string | Longitude (e.g. `"2.3522"`) |
-
-```berry
-import SUN
-SUN.setup("48.8566", "2.3522")
-```
-
-### SUN.get([date])
-
-Get sunrise/sunset data for today or a specific date.
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `date` | string | (optional) Date in `YYYY-MM-DD` format. Defaults to `"today"` |
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `SUN.setup(lat:real, lng:real)` | Override coordinates for this script session. There should be no more than seven digits after the dot. |
+| `SUN.sunrize(y:int, m:int, d:int)` | Calculates sunrise time for the specified 'YYYY, MM, DD' date. If no date is specified, it calculates for today. | `map` |
+| `SUN.sunset(y:int, m:int, d:int)` | Calculates sunset time. | `map` |
+| `SUN.civilDawn(y:int, m:int, d:int)` | Calculates civil dawn time. | `map` |
+| `SUN.civilDusk(y:int, m:int, d:int)` | Calculates civil dusk time. | `map` |
+| `SUN.astronomicalDawn(y:int, m:int, d:int)` | Calculates astronomical dawn time. | `map` |
+| `SUN.astronomicalDusk(y:int, m:int, d:int)` | Calculates astronomical dusk time. | `map` |
+| `SUN.nauticalDawn(y:int, m:int, d:int)` | Calculates nautical dawn time. | `map` |
+| `SUN.nauticalDusk(y:int, m:int, d:int)` | Calculates nautical dusk time. | `map` |
 
 **Returns:** `map` with keys:
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `sunrise` | string | Sunrise time (ISO 8601 UTC) |
-| `sunset` | string | Sunset time (ISO 8601 UTC) |
-| `solar_noon` | string | Solar noon time (ISO 8601 UTC) |
-| `day_length` | int | Day length in seconds |
-| `civil_twilight_begin` | string | Civil twilight begin (ISO 8601 UTC) |
-| `civil_twilight_end` | string | Civil twilight end (ISO 8601 UTC) |
-| `nautical_twilight_begin` | string | Nautical twilight begin (ISO 8601 UTC) |
-| `nautical_twilight_end` | string | Nautical twilight end (ISO 8601 UTC) |
-| `astronomical_twilight_begin` | string | Astronomical twilight begin (ISO 8601 UTC) |
-| `astronomical_twilight_end` | string | Astronomical twilight end (ISO 8601 UTC) |
+| `hour` | int | result hour |
+| `min` | int | result minute | 
 
+## Examples
+
+### Today's sunrise/sunset
 ```berry
 import SUN
 
 # Today's sunrise/sunset
-var s = SUN.get()
-print("Sunrise: " .. s["sunrise"])
-print("Sunset: " .. s["sunset"])
-print("Day length: " .. str(s["day_length"]) .. " seconds")
+var rise = SUN.sunrize()
+var set = SUN.sunset()
+print("Sunrise: " .. rise["hour"] .. ":" .. rise["min"])
+print("Sunrise: " .. set["hour"] .. ":" .. set["min"])
 
 # Specific date
-var s2 = SUN.get("2025-06-21")
-print("Summer solstice sunrise: " .. s2["sunrise"])
+var rise = SUN.sunrize(2025, 06, 21)
 ```
 
-## Examples
-
-### Turn on lights at sunset
+### Turn on lights at sunset in Zigbee Hub mode
 
 ```berry
 import SUN
-import HA
 import TIMER
+import ZHB
+
+ZHB.waitForStart(0xff)
+var dev = ZHB.getDevice("0xa4c138e1494c3145") # replece to your device IEEE
+var light_status = false
 
 TIMER.setInterval(def()
-    var s = SUN.get()
+    var sunset = SUN.sunset()
+    var sunrize = SUN.sunrize()
     var now = TIME.getTime()
-    # Compare current time with sunset and turn on lights
-    # (times are in UTC ISO format)
-    print("Sunset today: " .. s["sunset"])
+    
+    if (!light_status && (now["hour"] >= sunset["hour"] && now["min"] >= sunset["min"]))
+        light_status = true
+        dev.sendOnOff(1)
+
+    elif (light_status && (now["hour"] >= sunrize["hour"] && now["min"] >= sunrize["min"]))
+        light_status = false
+        dev.sendOnOff(0)
+    end
 end, 60000)
-```
-
-### Log daylight hours
-
-```berry
-import SUN
-import GSHEETS
-
-var s = SUN.get()
-var hours = s["day_length"] / 3600
-GSHEETS.append("daylight", hours, s["sunrise"], s["sunset"])
-```
-
-### Adjust LED brightness based on time of day
-
-```berry
-import SUN
-import WLED
-
-var s = SUN.get()
-var dayLen = s["day_length"]
-if dayLen > 50000
-    WLED.set_brightness("Strip", 128)
-else
-    WLED.set_brightness("Strip", 255)
-end
-```
-
-### Button press shows sunrise info
-
-```berry
-import SUN
-import BUTTON
-import TELEGRAM
-
-BUTTON.on_press(def ()
-    var s = SUN.get()
-    var hrs = s["day_length"] / 3600
-    var mins = (s["day_length"] % 3600) / 60
-    TELEGRAM.send("Sunrise: " .. s["sunrise"] .. "\nSunset: " .. s["sunset"] .. "\nDay: " .. str(hrs) .. "h " .. str(mins) .. "m")
-end)
 ```
 
 ## Notes
 
-- Uses the free [Sunrise-Sunset.org](https://sunrise-sunset.org/) API — **no API key required**
-- All times are returned in **UTC** (ISO 8601 format)
-- The `date` parameter accepts `YYYY-MM-DD` format or `"today"` (default)
-- Each call makes one HTTP request (~1-2 KB temporary RAM, freed immediately)
-- The API has no rate limit for reasonable use
+- Uses local calculation. The calculation itself does not require internet access, but the **coordinator's NTP clock must be synchronized!**
+- All times are returned taking into account the time zone set on the coordinator and taking into account summer/winter time. Even for future dates
 - Latitude range: -90 to 90; Longitude range: -180 to 180
 - Use the **Detect location** button in the UI to auto-fill coordinates from your browser

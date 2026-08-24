@@ -36,6 +36,7 @@ relay.sendOnOff(1)  # turn on
 | Function | Description | Returns |
 |----------|-------------|---------|
 | `getName()` | User-set device name | `string` |
+| `getIeee()` | Device IEEE as HEX string | `string` |
 | `getModel()` | Device model | `string` |
 | `getManuf()` | Device manufacturer | `string` |
 | `getNwk()` | Network address | `int` |

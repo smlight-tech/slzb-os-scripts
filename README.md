@@ -116,8 +116,10 @@ Each module is documented in its own file with API details, examples, and cross-
 | [IR Transmitter](docs/modules/ir_transmitter.md) | Send infrared commands to TVs, ACs, and other IR devices | v3.2.5.dev1 | Ultima only |
 | [IR Receiver](docs/modules/ir_receiver.md) | Receive IR signals from remote controls, learn and replay codes | v3.2.5.dev1 | Ultima only |
 | [RF](docs/modules/rf.md) | Sub-1 GHz RF transceiver add-on (CC1101): sniff, replay and store 315/433/868/915 MHz OOK commands | v3.3.5 | Ultima + RF add-on |
+| [Audio Player](docs/modules/audio_player.md) | Play mp3 files from HTTP stream or from internal memory | v3.3.3.dev0 | Ultima only |
 | [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
+| [BLE](docs/modules/ble.md) | Receiving BLE advertisements | v3.3.3.dev7 | U series and Ultima |
 
 > **\*ZHB** is not available on SLZB-06MU, SLZB-06Mg24U, SLZB-06Mg26U (and their non-U variants), and SLZB-MR5U — Zigbee Hub Mode is available only on devices with CC26XX SoC from Texas Instruments.
 
@@ -151,7 +153,7 @@ Modules for connecting to external services. Configure credentials via the **Scr
 | [SLWF08](docs/modules/slwf08.md) | SMLIGHT SLWF-08 HDMI-CEC controller (ESPHome alias) |
 | [WEATHER](docs/modules/weather.md) | Get weather forecasts from OpenWeatherMap |
 | [AIRQUALITY](docs/modules/airquality.md) | Get air quality index and pollutant data |
-| [SUN](docs/modules/sun.md) | Get sunrise and sunset times (no API key needed) |
+| [SUN](docs/modules/sun.md) | Get sunrise and sunset times (v3.3.3.dev0) |
 | [GSHEETS](docs/modules/gsheets.md) | Log data to Google Sheets via Apps Script |
 | [INFLUXDB](docs/modules/influxdb.md) | Write time-series data to InfluxDB v2 for Grafana |
 | [KODI](docs/modules/kodi.md) | Control Kodi media center — playback, volume, notifications |
