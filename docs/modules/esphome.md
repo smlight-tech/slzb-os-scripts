@@ -45,9 +45,23 @@ switch:
 
 This creates the entity `relay_1` accessible at `/switch/relay_1`. You can also browse all entities by opening `http://<device-ip>/` in a browser.
 
-## Functions
+## API Reference
 
-### ESPHOME.turn_on(device, domain, id)
+| Function | Description |
+|----------|-------------|
+| `ESPHOME.turn_on(device:string, domain:string, id:string) -> int` | Turn on an entity. |
+| `ESPHOME.turn_off(device:string, domain:string, id:string) -> int` | Turn off an entity. |
+| `ESPHOME.toggle(device:string, domain:string, id:string) -> int` | Toggle an entity on/off. |
+| `ESPHOME.press(device:string, id:string) -> int` | Press a button entity. |
+| `ESPHOME.set_number(device:string, id:string, value:int\|real) -> int` | Set a number entity to a specific value. |
+| `ESPHOME.set_select(device:string, id:string, option:string) -> int` | Set a select entity to a specific option. |
+| `ESPHOME.set_climate(device:string, id:string, target_temp:int\|real, mode:string?) -> int` | Control a climate entity (A/C, thermostat). |
+| `ESPHOME.set_light(device:string, id:string, on:bool, brightness:int?, r:int?, g:int?, b:int?) -> int` | Control a light entity with optional brightness and RGB color. |
+| `ESPHOME.get_sensor(device:string, id:string) -> map` | Read a sensor entity's current value. |
+| `ESPHOME.get_state(device:string, domain:string, id:string) -> map` | Read any entity's state. |
+| `ESPHOME.devices() -> list<string>` | List all configured ESPHome device names (from UI config). |
+
+### ESPHOME.turn_on(device:string, domain:string, id:string) -> int
 
 Turn on an entity.
 
@@ -66,7 +80,7 @@ ESPHOME.turn_on("My Device", "switch", "relay_1")
 ESPHOME.turn_on("192.168.1.60", "light", "ceiling")
 ```
 
-### ESPHOME.turn_off(device, domain, id)
+### ESPHOME.turn_off(device:string, domain:string, id:string) -> int
 
 Turn off an entity.
 
@@ -76,7 +90,7 @@ import ESPHOME
 ESPHOME.turn_off("My Device", "switch", "relay_1")
 ```
 
-### ESPHOME.toggle(device, domain, id)
+### ESPHOME.toggle(device:string, domain:string, id:string) -> int
 
 Toggle an entity on/off.
 
@@ -86,7 +100,7 @@ import ESPHOME
 ESPHOME.toggle("My Device", "switch", "relay_1")
 ```
 
-### ESPHOME.press(device, id)
+### ESPHOME.press(device:string, id:string) -> int
 
 Press a button entity.
 
@@ -101,7 +115,7 @@ import ESPHOME
 ESPHOME.press("My Device", "restart_button")
 ```
 
-### ESPHOME.set_number(device, id, value)
+### ESPHOME.set_number(device:string, id:string, value:int|real) -> int
 
 Set a number entity to a specific value.
 
@@ -109,7 +123,7 @@ Set a number entity to a specific value.
 |-----------|------|-------------|
 | `device` | string | Device name or IP |
 | `id` | string | Number entity ID |
-| `value` | int / real | Target value |
+| `value` | int|real | Target value |
 
 ```berry
 import ESPHOME
@@ -118,7 +132,7 @@ ESPHOME.set_number("My Device", "target_temp", 22)
 ESPHOME.set_number("My Device", "fan_speed", 75.5)
 ```
 
-### ESPHOME.set_select(device, id, option)
+### ESPHOME.set_select(device:string, id:string, option:string) -> int
 
 Set a select entity to a specific option.
 
@@ -135,7 +149,7 @@ ESPHOME.set_select("My Device", "mode", "cool")
 ESPHOME.set_select("My Device", "fan_mode", "auto")
 ```
 
-### ESPHOME.set_climate(device, id, target_temp [, mode])
+### ESPHOME.set_climate(device:string, id:string, target_temp:int|real, mode:string?) -> int
 
 Control a climate entity (A/C, thermostat).
 
@@ -143,7 +157,7 @@ Control a climate entity (A/C, thermostat).
 |-----------|------|-------------|
 | `device` | string | Device name or IP |
 | `id` | string | Climate entity ID |
-| `target_temp` | int / real | Target temperature |
+| `target_temp` | int|real | Target temperature |
 | `mode` | string | (optional) Climate mode: `"heat"`, `"cool"`, `"auto"`, `"off"`, etc. |
 
 ```berry
@@ -156,7 +170,7 @@ ESPHOME.set_climate("My AC", "climate_1", 22)
 ESPHOME.set_climate("My AC", "climate_1", 24, "cool")
 ```
 
-### ESPHOME.set_light(device, id, on [, brightness [, r, g, b]])
+### ESPHOME.set_light(device:string, id:string, on:bool, brightness:int?, r:int?, g:int?, b:int?) -> int
 
 Control a light entity with optional brightness and RGB color.
 
@@ -186,7 +200,7 @@ ESPHOME.set_light("My Device", "led_strip", true, 255, 255, 0, 0)
 ESPHOME.set_light("My Device", "ceiling", false)
 ```
 
-### ESPHOME.get_sensor(device, id)
+### ESPHOME.get_sensor(device:string, id:string) -> map
 
 Read a sensor entity's current value.
 
@@ -201,7 +215,7 @@ Read a sensor entity's current value.
 |-----|------|-------------|
 | `id` | string | Entity ID |
 | `state` | string | Human-readable state (e.g. "23.5 °C") |
-| `value` | int / string | Numeric value (int) or string if not numeric |
+| `value` | int|string | Numeric value (int) or string if not numeric |
 
 ```berry
 import ESPHOME
@@ -211,7 +225,7 @@ print("Temp: " .. str(s["value"]))
 print("State: " .. s["state"])
 ```
 
-### ESPHOME.get_state(device, domain, id)
+### ESPHOME.get_state(device:string, domain:string, id:string) -> map
 
 Read any entity's state.
 
@@ -230,7 +244,7 @@ var s = ESPHOME.get_state("My Device", "switch", "relay_1")
 print("Relay is: " .. s["state"])   # "ON" or "OFF"
 ```
 
-### ESPHOME.devices()
+### ESPHOME.devices() -> list<string>
 
 List all configured ESPHome device names (from UI config).
 

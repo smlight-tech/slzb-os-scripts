@@ -35,17 +35,17 @@ This overrides the UI config for the current script session only.
 
 ## API Reference
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `SUN.setup(lat:real, lng:real)` | Override coordinates for this script session. There should be no more than seven digits after the dot. |
-| `SUN.sunrize(y:int, m:int, d:int)` | Calculates sunrise time for the specified 'YYYY, MM, DD' date. If no date is specified, it calculates for today. | `map` |
-| `SUN.sunset(y:int, m:int, d:int)` | Calculates sunset time. | `map` |
-| `SUN.civilDawn(y:int, m:int, d:int)` | Calculates civil dawn time. | `map` |
-| `SUN.civilDusk(y:int, m:int, d:int)` | Calculates civil dusk time. | `map` |
-| `SUN.astronomicalDawn(y:int, m:int, d:int)` | Calculates astronomical dawn time. | `map` |
-| `SUN.astronomicalDusk(y:int, m:int, d:int)` | Calculates astronomical dusk time. | `map` |
-| `SUN.nauticalDawn(y:int, m:int, d:int)` | Calculates nautical dawn time. | `map` |
-| `SUN.nauticalDusk(y:int, m:int, d:int)` | Calculates nautical dusk time. | `map` |
+| Function | Description |
+|----------|-------------|
+| `SUN.setup(lat:real, lng:real) -> nil` | Override coordinates for this script session. There should be no more than seven digits after the dot. |
+| `SUN.sunrize(y:int, m:int, d:int) -> map` | Calculates sunrise time for the specified 'YYYY, MM, DD' date. If no date is specified, it calculates for today. |
+| `SUN.sunset(y:int, m:int, d:int) -> map` | Calculates sunset time. |
+| `SUN.civilDawn(y:int, m:int, d:int) -> map` | Calculates civil dawn time. |
+| `SUN.civilDusk(y:int, m:int, d:int) -> map` | Calculates civil dusk time. |
+| `SUN.astronomicalDawn(y:int, m:int, d:int) -> map` | Calculates astronomical dawn time. |
+| `SUN.astronomicalDusk(y:int, m:int, d:int) -> map` | Calculates astronomical dusk time. |
+| `SUN.nauticalDawn(y:int, m:int, d:int) -> map` | Calculates nautical dawn time. |
+| `SUN.nauticalDusk(y:int, m:int, d:int) -> map` | Calculates nautical dusk time. |
 
 **Returns:** `map` with keys:
 

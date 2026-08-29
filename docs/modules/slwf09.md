@@ -21,9 +21,23 @@ import SLWF09
 SLWF09.on("192.168.1.50")
 ```
 
-## Functions
+## API Reference
 
-### SLWF09.on(device)
+| Function | Description |
+|----------|-------------|
+| `SLWF09.on(device:string) -> int` | Turn the device on. |
+| `SLWF09.off(device:string) -> int` | Turn the device off. |
+| `SLWF09.toggle(device:string) -> int` | Toggle the device on/off. |
+| `SLWF09.set_brightness(device:string, brightness:int) -> int` | Set brightness level. |
+| `SLWF09.set_color(device:string, color:int) -> int` | Set the color of the first segment. |
+| `SLWF09.set_effect(device:string, effect_id:int) -> int` | Set the LED effect by ID. |
+| `SLWF09.set_palette(device:string, palette_id:int) -> int` | Set the color palette for the current effect. |
+| `SLWF09.set_speed(device:string, speed:int) -> int` | Set the effect speed. |
+| `SLWF09.set_state(device:string, json_string:string) -> int` | Send a raw JSON state to the WLED API for full control. |
+| `SLWF09.get_state(device:string) -> map` | Read the current state from the device. |
+| `SLWF09.devices() -> list<string>` | List all configured device names (from UI config). |
+
+### SLWF09.on(device:string) -> int
 
 Turn the device on.
 
@@ -40,7 +54,7 @@ SLWF09.on("Living Room")
 SLWF09.on("192.168.1.50")
 ```
 
-### SLWF09.off(device)
+### SLWF09.off(device:string) -> int
 
 Turn the device off.
 
@@ -50,7 +64,7 @@ import SLWF09
 SLWF09.off("Living Room")
 ```
 
-### SLWF09.toggle(device)
+### SLWF09.toggle(device:string) -> int
 
 Toggle the device on/off.
 
@@ -60,7 +74,7 @@ import SLWF09
 SLWF09.toggle("Living Room")
 ```
 
-### SLWF09.set_brightness(device, brightness)
+### SLWF09.set_brightness(device:string, brightness:int) -> int
 
 Set brightness level.
 
@@ -75,7 +89,7 @@ import SLWF09
 SLWF09.set_brightness("Living Room", 128)
 ```
 
-### SLWF09.set_color(device, color)
+### SLWF09.set_color(device:string, color:int) -> int
 
 Set the color of the first segment.
 
@@ -93,7 +107,7 @@ SLWF09.set_color("Living Room", 0x0000FF)   # blue
 SLWF09.set_color("Living Room", 0xFFFFFF)   # white
 ```
 
-### SLWF09.set_effect(device, effect_id)
+### SLWF09.set_effect(device:string, effect_id:int) -> int
 
 Set the LED effect by ID.
 
@@ -110,7 +124,7 @@ SLWF09.set_effect("Living Room", 38)   # Rainbow
 SLWF09.set_effect("Living Room", 9)    # Chase
 ```
 
-### SLWF09.set_palette(device, palette_id)
+### SLWF09.set_palette(device:string, palette_id:int) -> int
 
 Set the color palette for the current effect.
 
@@ -125,7 +139,7 @@ import SLWF09
 SLWF09.set_palette("Living Room", 6)   # Party palette
 ```
 
-### SLWF09.set_speed(device, speed)
+### SLWF09.set_speed(device:string, speed:int) -> int
 
 Set the effect speed.
 
@@ -140,7 +154,7 @@ import SLWF09
 SLWF09.set_speed("Living Room", 200)
 ```
 
-### SLWF09.set_state(device, json_string)
+### SLWF09.set_state(device:string, json_string:string) -> int
 
 Send a raw JSON state to the WLED API for full control. See [WLED JSON API](https://kno.wled.ge/interfaces/json-api/) for all available fields.
 
@@ -156,7 +170,7 @@ import SLWF09
 SLWF09.set_state("Living Room", '{"on":true,"bri":200,"seg":[{"col":[[255,0,0]]}]}')
 ```
 
-### SLWF09.get_state(device)
+### SLWF09.get_state(device:string) -> map
 
 Read the current state from the device.
 
@@ -183,7 +197,7 @@ print(state["bri"])    # 0-255
 print(state["color"])  # e.g. 16711680 (0xFF0000)
 ```
 
-### SLWF09.devices()
+### SLWF09.devices() -> list<string>
 
 List all configured device names (from UI config).
 

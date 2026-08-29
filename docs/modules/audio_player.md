@@ -33,10 +33,10 @@ end, 100)
 
 | Function | Description |
 |----------|-------------|
-| `AUDIO_PLAYER.play(url:str)` | Starts playback of an HTTP stream or local file. If playback is already running, it will be stopped and restarted with the new URL. |
-| `AUDIO_PLAYER.stop()` | Stops playback. |
-| `AUDIO_PLAYER.getStatus()` | Returns the current status of the player (see `STATUS_*` constants). Resets to `STATUS_IDLE` immediately after playback ends (even if it ends with an error). |
-| `AUDIO_PLAYER.getLastError()` | Returns the last result of the player call. Unlike `getStatus()`, this parameter is not reset to `STATUS_IDLE` after playback ends, so can tell you if an error occurred (see `STATUS_*` constants). |
+| `AUDIO_PLAYER.play(url:string) -> nil` | Starts playback of an HTTP stream or local file. If playback is already running, it will be stopped and restarted with the new URL. |
+| `AUDIO_PLAYER.stop() -> nil` | Stops playback. |
+| `AUDIO_PLAYER.getStatus() -> int` | Returns the current status of the player (see `STATUS_*` constants). Resets to `STATUS_IDLE` immediately after playback ends (even if it ends with an error). |
+| `AUDIO_PLAYER.getLastError() -> int` | Returns the last result of the player call. Unlike `getStatus()`, this parameter is not reset to `STATUS_IDLE` after playback ends, so can tell you if an error occurred (see `STATUS_*` constants). |
 
 ## Player State Constants
 

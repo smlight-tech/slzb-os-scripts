@@ -29,9 +29,15 @@ PROWL.setup("your-40-char-api-key", "My Home")   # with a custom application nam
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### PROWL.setup(api_key [, application])
+| Function | Description |
+|----------|-------------|
+| `PROWL.setup(api_key:string, application:string?) -> nil` | Override credentials for this script session. |
+| `PROWL.send(event:string, description:string?, priority:int=0, url:string?) -> int` | Send a push notification. |
+| `PROWL.verify() -> int` | Check that the configured API key is valid. |
+
+### PROWL.setup(api_key:string, application:string?) -> nil
 
 Override credentials for this script session.
 
@@ -40,7 +46,7 @@ Override credentials for this script session.
 | `api_key` | string | Prowl API key (40-char hex); several keys comma-separated |
 | `application` | string | (optional) Application name shown in the notification, default `SLZB-OS` |
 
-### PROWL.send(event [, description [, priority [, url]]])
+### PROWL.send(event:string, description:string?, priority:int=0, url:string?) -> int
 
 Send a push notification.
 
@@ -79,7 +85,7 @@ PROWL.send("FIRE ALARM!", "Smoke detected in kitchen", 2)
 PROWL.send("Temperature is 35 C", "Tap to open dashboard", 0, "https://my-grafana.local/dashboard")
 ```
 
-### PROWL.verify()
+### PROWL.verify() -> int
 
 Check that the configured API key is valid. Useful for debugging setup.
 

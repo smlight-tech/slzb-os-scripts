@@ -31,9 +31,14 @@ NTFY.setup("https://ntfy.sh", "slzb-my-home-alerts")
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### NTFY.setup(server, topic)
+| Function | Description |
+|----------|-------------|
+| `NTFY.setup(server:string, topic:string) -> nil` | Override server and topic for this script session. |
+| `NTFY.send(text:string) -> int` | Send a push notification. |
+
+### NTFY.setup(server:string, topic:string) -> nil
 
 Override server and topic for this script session.
 
@@ -47,7 +52,7 @@ import NTFY
 NTFY.setup("https://ntfy.sh", "slzb-my-home-alerts")
 ```
 
-### NTFY.send(text)
+### NTFY.send(text:string) -> int
 
 Send a push notification. Returns the HTTP status code (200 = success).
 

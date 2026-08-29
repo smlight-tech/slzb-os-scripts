@@ -30,22 +30,28 @@ After executing `ZB.suspend(chip_id, true)`, the following events will **not** b
 
 ## API Reference
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `ZB.reboot(chip_id:int)` | Reboot the Zigbee chip immediately.<br>`chip_id` - the number of the radio module for which this command will be executed. MR series coordinators have 2 radio modules and Ultima can have 3 if the Zwave addon is installed | — |
-| `ZB.flashMode(chip_id:int)` | Put Zigbee chip into firmware mode. Restart the chip or send the bootloader command to return to normal mode.<br>`chip_id` - radio module number. | — |
-| `ZB.routerPairMode(chip_id:int)` | Start network search for pairing (when chip is flashed as a router). | — |
-| `ZB.writeBytes(chip_id:int, data:bytes)` | Send bytes directly to the Zigbee chip. | `int` (bytes sent) |
-| `ZB.readBytes(chip_id:int)` | Read bytes from the Zigbee chip. **Requires `ZB.suspend(true)` first!** | `bytes` |
-| `ZB.available(chip_id:int)` | Number of bytes available for reading from the Zigbee chip. | `int` |
-| `ZB.getZbClients(chip_id:int)` | Number of clients connected to the Zigbee socket. | `int` |
-| `ZB.suspend(chip_id:int, state:bool)` | Stop (`true`) or resume (`false`) Zigbee socket processing. | — |
+| Function | Description |
+|----------|-------------|
+| `ZB.reboot(chip_id:int) -> nil` | Reboot the Zigbee chip immediately.<br>`chip_id` - the number of the radio module for which this command will be executed. MR series coordinators have 2 radio modules and Ultima can have 3 if the Zwave addon is installed |
+| `ZB.flashMode(chip_id:int) -> nil` | Put Zigbee chip into firmware mode. Restart the chip or send the bootloader command to return to normal mode.<br>`chip_id` - radio module number. |
+| `ZB.routerPairMode(chip_id:int) -> nil` | Start network search for pairing (when chip is flashed as a router). |
+| `ZB.writeBytes(chip_id:int, data:bytes) -> int` | Send bytes directly to the Zigbee chip. Returns: `int` (bytes sent). |
+| `ZB.readBytes(chip_id:int) -> bytes` | Read bytes from the Zigbee chip. **Requires `ZB.suspend(true)` first!** |
+| `ZB.available(chip_id:int) -> int` | Number of bytes available for reading from the Zigbee chip. |
+| `ZB.getZbClients(chip_id:int) -> int` | Number of clients connected to the Zigbee socket. |
+| `ZB.suspend(chip_id:int, state:bool) -> nil` | Stop (`true`) or resume (`false`) Zigbee socket processing. |
 
 ## Events
 
 > Available since v2.8.2.dev0
 
-### ZB.on_pkt(callback:`function`)
+| Function | Description |
+|----------|-------------|
+| `ZB.on_pkt(callback:function(chip_id:int, id:int, buf:bytes) -> bool) -> nil` | Called when a new data packet is received from the Zigbee chip in network coordinator mode. |
+| `ZB.on_connect(callback:function(chip_id:int, ip:string, id:int) -> bool) -> nil` | Called when a new socket client connects in network coordinator mode. |
+| `ZB.on_disconnect(callback:function(chip_id:int, id:int) -> nil) -> nil` | Called when a socket client disconnects in network coordinator mode. |
+
+### ZB.on_pkt(callback:function(chip_id:int, id:int, buf:bytes) -> bool) -> nil
 
 Called when a new data packet is received from the Zigbee chip in network coordinator mode.
 
@@ -67,7 +73,7 @@ end
 ZB.on_pkt(zb_pkt_handler)
 ```
 
-### ZB.on_connect(callback:`function`)
+### ZB.on_connect(callback:function(chip_id:int, ip:string, id:int) -> bool) -> nil
 
 Called when a new socket client connects in network coordinator mode.
 
@@ -86,7 +92,7 @@ end
 ZB.on_connect(conn_cb)
 ```
 
-### ZB.on_disconnect(callback:`function`)
+### ZB.on_disconnect(callback:function(chip_id:int, id:int) -> nil) -> nil
 
 Called when a socket client disconnects in network coordinator mode.
 

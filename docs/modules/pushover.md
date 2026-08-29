@@ -27,9 +27,15 @@ import PUSHOVER
 PUSHOVER.setup("your-app-token", "your-user-key")
 ```
 
-## Functions
+## API Reference
 
-### PUSHOVER.setup(app_token, user_key)
+| Function | Description |
+|----------|-------------|
+| `PUSHOVER.setup(app_token:string, user_key:string) -> nil` | Override credentials for this script session. |
+| `PUSHOVER.send(message:string, title:string?, priority:int?, sound:string?) -> int` | Send a push notification. |
+| `PUSHOVER.send_url(message:string, title:string, url:string, url_title:string) -> int` | Send a notification with a supplementary URL. |
+
+### PUSHOVER.setup(app_token:string, user_key:string) -> nil
 
 Override credentials for this script session.
 
@@ -38,7 +44,7 @@ Override credentials for this script session.
 | `app_token` | string | Application API token |
 | `user_key` | string | User/group key |
 
-### PUSHOVER.send(message [, title [, priority [, sound]]])
+### PUSHOVER.send(message:string, title:string?, priority:int?, sound:string?) -> int
 
 Send a push notification.
 
@@ -77,7 +83,7 @@ PUSHOVER.send("Daily report ready", "SLZB", -1)
 PUSHOVER.send("Water leak detected!", "CRITICAL", 2, "alien")
 ```
 
-### PUSHOVER.send_url(message, title, url, url_title)
+### PUSHOVER.send_url(message:string, title:string, url:string, url_title:string) -> int
 
 Send a notification with a supplementary URL.
 

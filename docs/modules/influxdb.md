@@ -22,9 +22,15 @@ import INFLUXDB
 INFLUXDB.setup("http://192.168.1.100:8086", "my-api-token", "my-org", "my-bucket")
 ```
 
-## Functions
+## API Reference
 
-### INFLUXDB.setup(url, token, org, bucket)
+| Function | Description |
+|----------|-------------|
+| `INFLUXDB.setup(url:string, token:string, org:string, bucket:string) -> nil` | Override InfluxDB connection for this script session. |
+| `INFLUXDB.write(measurement:string, tags:string, fields:string) -> int` | Write a data point using [line protocol](https://docs.influxdata.com/influxdb/v2/reference/syntax/line-protocol/) strings. |
+| `INFLUXDB.write_point(measurement:string, tags_map:map, fields_map:map) -> int` | Write a data point using Berry maps — more convenient than raw line protocol. |
+
+### INFLUXDB.setup(url:string, token:string, org:string, bucket:string) -> nil
 
 Override InfluxDB connection for this script session.
 
@@ -35,7 +41,7 @@ Override InfluxDB connection for this script session.
 | `org` | string | Organization name |
 | `bucket` | string | Bucket name |
 
-### INFLUXDB.write(measurement, tags, fields)
+### INFLUXDB.write(measurement:string, tags:string, fields:string) -> int
 
 Write a data point using [line protocol](https://docs.influxdata.com/influxdb/v2/reference/syntax/line-protocol/) strings.
 
@@ -69,7 +75,7 @@ INFLUXDB.write("weather", "city=Kyiv", "temp=22.3,humidity=65i,pressure=1013i")
 | `"..."` | String | `status="ok"` |
 | `true`/`false` | Boolean | `active=true` |
 
-### INFLUXDB.write_point(measurement, tags_map, fields_map)
+### INFLUXDB.write_point(measurement:string, tags_map:map, fields_map:map) -> int
 
 Write a data point using Berry maps — more convenient than raw line protocol.
 

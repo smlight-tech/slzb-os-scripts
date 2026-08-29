@@ -16,40 +16,40 @@ AMBILIGHT.setEffect(AMBILIGHT.Eff_Solid)  # static color
 
 ### Effect Control
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `AMBILIGHT.setEffect(effect:int)` | Set LED effect (use effect constants below). | — |
-| `AMBILIGHT.getEffect()` | Get current effect. | `int` |
+| Function | Description |
+|----------|-------------|
+| `AMBILIGHT.setEffect(effect:int) -> nil` | Set LED effect (use effect constants below). |
+| `AMBILIGHT.getEffect() -> int` | Get current effect. |
 
 ### Brightness
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `AMBILIGHT.setBrightness(bri:int)` | Set brightness, 1–254. | — |
-| `AMBILIGHT.getBrightness()` | Get current brightness. | `int` |
+| Function | Description |
+|----------|-------------|
+| `AMBILIGHT.setBrightness(bri:int) -> nil` | Set brightness, 1–254. |
+| `AMBILIGHT.getBrightness() -> int` | Get current brightness. |
 
 ### Speed
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `AMBILIGHT.setSpeed(speed:int)` | Set effect animation speed. | — |
-| `AMBILIGHT.getSpeed()` | Get current speed. | `int` |
+| Function | Description |
+|----------|-------------|
+| `AMBILIGHT.setSpeed(speed:int) -> nil` | Set effect animation speed. |
+| `AMBILIGHT.getSpeed() -> int` | Get current speed. |
 
 ### Colors
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `AMBILIGHT.setColor(color:int)` | Set primary color as `0xRRGGBB`. | — |
-| `AMBILIGHT.getColor()` | Get current primary color. | `int` |
-| `AMBILIGHT.setColor2(color:int)` | Set secondary color (used by Gradient effect). | — |
-| `AMBILIGHT.getColor2()` | Get current secondary color. | `int` |
+| Function | Description |
+|----------|-------------|
+| `AMBILIGHT.setColor(color:int) -> nil` | Set primary color as `0xRRGGBB`. |
+| `AMBILIGHT.getColor() -> int` | Get current primary color. |
+| `AMBILIGHT.setColor2(color:int) -> nil` | Set secondary color (used by Gradient effect). |
+| `AMBILIGHT.getColor2() -> int` | Get current secondary color. |
 
 ### Direction
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `AMBILIGHT.setDirection(dir:int)` | `0` = Forward, `1` = Reverse. | — |
-| `AMBILIGHT.getDirection()` | Get current direction. | `int` |
+| Function | Description |
+|----------|-------------|
+| `AMBILIGHT.setDirection(dir:int) -> nil` | `0` = Forward, `1` = Reverse. |
+| `AMBILIGHT.getDirection() -> int` | Get current direction. |
 
 ## Effect Constants
 

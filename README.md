@@ -89,13 +89,27 @@ Each module is documented in its own file with API details, examples, and cross-
 >
 > - `# Title` — module/integration name (first line, used as skill summary)
 > - `## Setup` — configuration instructions (stripped from AI skill — setup is handled separately)
-> - `## Functions` — API reference with parameter tables and inline code examples (**included in AI skill**)
+> - `## API Reference` — **summary table first** (one row per function, event and class method, in the signature format below), then optional `### MOD.fn(...) -> ret` detail sections with parameter tables, `**Returns:**` notes and inline code examples (**included in AI skill**)
 > - `## Common Patterns` — useful code templates (**included in AI skill**)
 > - `## Notes` — constraints, memory usage, edge cases (**included in AI skill**)
 > - `## Examples` — verbose standalone examples (stripped from AI skill — AI generates its own)
 > - `## See Also` — cross-references to related pages (stripped from AI skill)
 >
 > The build script (`gulpfile.js → buildSkills`) strips `## Setup`, `## Examples`, and `## See Also` to keep AI skills concise. Everything else is included. This applies to all `.md` files in `docs/modules/`.
+
+> **Signature format.** Every function, event and class method has a row in the `## API Reference` table — that table is the single machine-readable source for the script editor (completions, argument hints, hover docs). A function may additionally get a `### ` detail section; its heading must repeat the table signature verbatim. Both use one form:
+>
+> ```
+> MOD.fn(name:type, opt:type?, other:int=1, ...rest:int) -> ret
+> MOD.on_event(callback:function(arg:type, dev:ZigbeeDevice) -> nil) -> nil
+> ```
+>
+> - Types: `int`, `real`, `string`, `bool`, `nil`, `bytes`, `list`, `map`, `function`, a class name (`ZigbeeDevice`, `File`); unions as `string|int`, element types as `list<string>`. Inside a table cell escape the union bar: `` `string\|int` ``.
+> - `?` marks an optional parameter, `=value` an optional parameter with a known default, `...name:type` a variadic tail.
+> - `-> ret` is mandatory; use `-> nil` when nothing is returned. A `**Returns:**` line or a `| Key | Type | Description |` table may follow to describe the value in more detail (e.g. the keys of a returned `map`).
+> - Class methods are written with the class name as prefix under a `### Class Name` heading: `ZigbeeDevice.getName() -> string`.
+> - A callback parameter carries its own shape inline — `callback:function(action:string, dev:ZigbeeDevice) -> nil` — so events are self-describing (the editor uses it to type the callback's arguments); `function` without a shape means "any function".
+> - A `| Parameter | Type | Description |` table after a heading is optional and only adds descriptions — the signature stays the single source of truth for names, types, optionality and defaults.
 
 ### Modules
 

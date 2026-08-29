@@ -21,9 +21,23 @@ import SLWF03
 SLWF03.on("192.168.1.50")
 ```
 
-## Functions
+## API Reference
 
-### SLWF03.on(device)
+| Function | Description |
+|----------|-------------|
+| `SLWF03.on(device:string) -> int` | Turn the device on. |
+| `SLWF03.off(device:string) -> int` | Turn the device off. |
+| `SLWF03.toggle(device:string) -> int` | Toggle the device on/off. |
+| `SLWF03.set_brightness(device:string, brightness:int) -> int` | Set brightness level. |
+| `SLWF03.set_color(device:string, color:int) -> int` | Set the color of the first segment. |
+| `SLWF03.set_effect(device:string, effect_id:int) -> int` | Set the LED effect by ID. |
+| `SLWF03.set_palette(device:string, palette_id:int) -> int` | Set the color palette for the current effect. |
+| `SLWF03.set_speed(device:string, speed:int) -> int` | Set the effect speed. |
+| `SLWF03.set_state(device:string, json_string:string) -> int` | Send a raw JSON state to the WLED API for full control. |
+| `SLWF03.get_state(device:string) -> map` | Read the current state from the device. |
+| `SLWF03.devices() -> list<string>` | List all configured device names (from UI config). |
+
+### SLWF03.on(device:string) -> int
 
 Turn the device on.
 
@@ -40,7 +54,7 @@ SLWF03.on("Kitchen Strip")
 SLWF03.on("192.168.1.50")
 ```
 
-### SLWF03.off(device)
+### SLWF03.off(device:string) -> int
 
 Turn the device off.
 
@@ -50,7 +64,7 @@ import SLWF03
 SLWF03.off("Kitchen Strip")
 ```
 
-### SLWF03.toggle(device)
+### SLWF03.toggle(device:string) -> int
 
 Toggle the device on/off.
 
@@ -60,7 +74,7 @@ import SLWF03
 SLWF03.toggle("Kitchen Strip")
 ```
 
-### SLWF03.set_brightness(device, brightness)
+### SLWF03.set_brightness(device:string, brightness:int) -> int
 
 Set brightness level.
 
@@ -75,7 +89,7 @@ import SLWF03
 SLWF03.set_brightness("Kitchen Strip", 128)
 ```
 
-### SLWF03.set_color(device, color)
+### SLWF03.set_color(device:string, color:int) -> int
 
 Set the color of the first segment.
 
@@ -93,7 +107,7 @@ SLWF03.set_color("Kitchen Strip", 0x0000FF)   # blue
 SLWF03.set_color("Kitchen Strip", 0xFFFFFF)   # white
 ```
 
-### SLWF03.set_effect(device, effect_id)
+### SLWF03.set_effect(device:string, effect_id:int) -> int
 
 Set the LED effect by ID.
 
@@ -110,7 +124,7 @@ SLWF03.set_effect("Kitchen Strip", 38)   # Rainbow
 SLWF03.set_effect("Kitchen Strip", 9)    # Chase
 ```
 
-### SLWF03.set_palette(device, palette_id)
+### SLWF03.set_palette(device:string, palette_id:int) -> int
 
 Set the color palette for the current effect.
 
@@ -125,7 +139,7 @@ import SLWF03
 SLWF03.set_palette("Kitchen Strip", 6)   # Party palette
 ```
 
-### SLWF03.set_speed(device, speed)
+### SLWF03.set_speed(device:string, speed:int) -> int
 
 Set the effect speed.
 
@@ -140,7 +154,7 @@ import SLWF03
 SLWF03.set_speed("Kitchen Strip", 200)
 ```
 
-### SLWF03.set_state(device, json_string)
+### SLWF03.set_state(device:string, json_string:string) -> int
 
 Send a raw JSON state to the WLED API for full control. See [WLED JSON API](https://kno.wled.ge/interfaces/json-api/) for all available fields.
 
@@ -156,7 +170,7 @@ import SLWF03
 SLWF03.set_state("Kitchen Strip", '{"on":true,"bri":200,"seg":[{"col":[[255,0,0]]}]}')
 ```
 
-### SLWF03.get_state(device)
+### SLWF03.get_state(device:string) -> map
 
 Read the current state from the device.
 
@@ -183,7 +197,7 @@ print(state["bri"])    # 0-255
 print(state["color"])  # e.g. 16711680 (0xFF0000)
 ```
 
-### SLWF03.devices()
+### SLWF03.devices() -> list<string>
 
 List all configured device names (from UI config).
 

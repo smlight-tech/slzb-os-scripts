@@ -39,13 +39,25 @@ import WEBHOOK
 var r = WEBHOOK.post("https://example.com/api", '{"key":"value"}')
 ```
 
-## Functions
+## API Reference
 
-### WEBHOOK.setup(url [, headers_json])
+| Function | Description |
+|----------|-------------|
+| `WEBHOOK.setup(url:string, headers_json:string?) -> nil` | Set a default (unnamed) webhook for this script session. |
+| `WEBHOOK.setup(name:string, url:string, headers_json:string?) -> nil` | Set a named webhook for this script session. |
+| `WEBHOOK.post(name_or_url:string, body:string) -> map` | POST JSON body to a named webhook or direct URL. |
+| `WEBHOOK.post(body:string) -> map` | POST JSON body to the default (unnamed) webhook. |
+| `WEBHOOK.get(name_or_url:string) -> map` | GET request to a named webhook or direct URL. |
+| `WEBHOOK.get() -> map` | GET the default (unnamed) webhook. |
+| `WEBHOOK.put(name_or_url:string, body:string) -> map` | PUT request — same signature as `post()`. |
+| `WEBHOOK.put(body:string) -> map` | PUT request — same signature as `post()`. |
+| `WEBHOOK.list() -> map` | List all configured webhooks. |
+
+### WEBHOOK.setup(url:string, headers_json:string?) -> nil
 
 Set a default (unnamed) webhook for this script session.
 
-### WEBHOOK.setup(name, url [, headers_json])
+### WEBHOOK.setup(name:string, url:string, headers_json:string?) -> nil
 
 Set a named webhook for this script session.
 
@@ -55,7 +67,7 @@ Set a named webhook for this script session.
 | `url` | string | Target URL |
 | `headers_json` | string | (optional) JSON object with custom headers |
 
-### WEBHOOK.post(name_or_url, body)
+### WEBHOOK.post(name_or_url:string, body:string) -> map
 
 POST JSON body to a named webhook or direct URL.
 
@@ -66,27 +78,29 @@ POST JSON body to a named webhook or direct URL.
 
 **Returns:** `map` with `status` (int) and `body` (string)
 
-### WEBHOOK.post(body)
+### WEBHOOK.post(body:string) -> map
 
 POST JSON body to the default (unnamed) webhook.
 
-### WEBHOOK.get(name_or_url)
+### WEBHOOK.get(name_or_url:string) -> map
 
 GET request to a named webhook or direct URL.
 
 **Returns:** `map` with `status` (int) and `body` (string)
 
-### WEBHOOK.get()
+### WEBHOOK.get() -> map
 
 GET the default (unnamed) webhook.
 
-### WEBHOOK.put(name_or_url, body) / WEBHOOK.put(body)
+### WEBHOOK.put(name_or_url:string, body:string) -> map
+
+Alternative form: `WEBHOOK.put(body:string) -> map`
 
 PUT request — same signature as `post()`.
 
 **Returns:** `map` with `status` (int) and `body` (string)
 
-### WEBHOOK.list()
+### WEBHOOK.list() -> map
 
 List all configured webhooks.
 

@@ -28,9 +28,15 @@ import TEAMS
 TEAMS.setup("https://prod-XX.westus.logic.azure.com:443/workflows/...")
 ```
 
-## Functions
+## API Reference
 
-### TEAMS.setup(webhook_url)
+| Function | Description |
+|----------|-------------|
+| `TEAMS.setup(webhook_url:string) -> nil` | Override the webhook URL for this script session. |
+| `TEAMS.send(text:string) -> int` | Send a simple text message as an Adaptive Card. |
+| `TEAMS.send_card(title:string, message:string, color:string="0078D7") -> int` | Send a styled Adaptive Card with a title and colored header. |
+
+### TEAMS.setup(webhook_url:string) -> nil
 
 Override the webhook URL for this script session.
 
@@ -38,7 +44,7 @@ Override the webhook URL for this script session.
 |-----------|------|-------------|
 | `webhook_url` | string | Teams Workflows webhook URL |
 
-### TEAMS.send(text)
+### TEAMS.send(text:string) -> int
 
 Send a simple text message as an Adaptive Card.
 
@@ -53,7 +59,7 @@ import TEAMS
 TEAMS.send("Hello from SLZB!")
 ```
 
-### TEAMS.send_card(title, message [, color])
+### TEAMS.send_card(title:string, message:string, color:string="0078D7") -> int
 
 Send a styled Adaptive Card with a title and colored header.
 

@@ -14,9 +14,15 @@ TIMER.setInterval(def()
 end, 5000)
 ```
 
-## Functions
+## API Reference
 
-### TIMER.setInterval(callback, ms) → int
+| Function | Description |
+|----------|-------------|
+| `TIMER.setInterval(callback:function() -> nil, ms:int) -> int` | Create a repeating timer. |
+| `TIMER.setTimeout(callback:function() -> nil, ms:int) -> int` | Create a one-shot timer that fires the callback once after `ms` milliseconds. |
+| `TIMER.clear(timerId:int) -> nil` | Cancel a previously created timer (repeating or one-shot). |
+
+### TIMER.setInterval(callback:function() -> nil, ms:int) -> int
 
 Create a repeating timer. Returns a timer ID for later cancellation.
 
@@ -36,7 +42,7 @@ var id = TIMER.setInterval(def()
 end, 60000)
 ```
 
-### TIMER.setTimeout(callback, ms) → int
+### TIMER.setTimeout(callback:function() -> nil, ms:int) -> int
 
 Create a one-shot timer that fires the callback once after `ms` milliseconds.
 
@@ -55,7 +61,7 @@ TIMER.setTimeout(def()
 end, 10000)
 ```
 
-### TIMER.clear(timerId)
+### TIMER.clear(timerId:int) -> nil
 
 Cancel a previously created timer (repeating or one-shot).
 

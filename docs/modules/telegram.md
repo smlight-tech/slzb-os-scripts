@@ -29,9 +29,15 @@ This overrides the UI config for the current script session only.
 3. Copy the **Bot Token** (looks like `123456:ABC-DEF...`)
 4. To get your **Chat ID**: send a message to your bot, then open `https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates` in a browser — your chat ID is in the `chat.id` field
 
-## Functions
+## API Reference
 
-### TELEGRAM.setup(token, chat_id)
+| Function | Description |
+|----------|-------------|
+| `TELEGRAM.setup(token:string, chat_id:string) -> nil` | Override credentials for this script session. |
+| `TELEGRAM.send(text:string, chat_id:string?) -> int` | Send a text message to the configured chat. |
+| `TELEGRAM.getUpdates() -> list<map>` | Poll Telegram for new incoming messages. |
+
+### TELEGRAM.setup(token:string, chat_id:string) -> nil
 
 Override credentials for this script session.
 
@@ -45,7 +51,7 @@ import TELEGRAM
 TELEGRAM.setup("123456:ABC-DEF...", "987654321")
 ```
 
-### TELEGRAM.send(text, chat_id)
+### TELEGRAM.send(text:string, chat_id:string?) -> int
 
 Send a text message to the configured chat. Returns the HTTP status code (200 = success).
 
@@ -67,7 +73,7 @@ var temp = 23.5
 TELEGRAM.send("Temperature: " .. str(temp) .. "°C")
 ```
 
-### TELEGRAM.getUpdates()
+### TELEGRAM.getUpdates() -> list<map>
 
 Poll Telegram for new incoming messages. Returns a list of message objects, or `nil` if there are no new messages. Automatically tracks the last seen message to avoid duplicates.<br>
 Will throw an error if the internet is unavailable.<br>

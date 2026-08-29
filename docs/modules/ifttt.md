@@ -26,9 +26,14 @@ IFTTT.setup("your_webhook_key")
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### IFTTT.setup(webhook_key)
+| Function | Description |
+|----------|-------------|
+| `IFTTT.setup(webhook_key:string) -> nil` | Override the Webhook Key for this script session. |
+| `IFTTT.trigger(event:string, value1:string?, value2:string?, value3:string?) -> int` | Trigger an IFTTT Webhook event with up to 3 optional string values. |
+
+### IFTTT.setup(webhook_key:string) -> nil
 
 Override the Webhook Key for this script session.
 
@@ -41,7 +46,7 @@ import IFTTT
 IFTTT.setup("dGhpcyBpcyBhIHRlc3Q")
 ```
 
-### IFTTT.trigger(event [, value1 [, value2 [, value3]]])
+### IFTTT.trigger(event:string, value1:string?, value2:string?, value3:string?) -> int
 
 Trigger an IFTTT Webhook event with up to 3 optional string values.
 

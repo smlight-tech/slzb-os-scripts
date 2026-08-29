@@ -24,15 +24,15 @@ MQTT.publish("status", "online")
 
 ## API Reference
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `MQTT.waitConnect(timeout:int)` | Wait for broker connection. 1–254 seconds, `255` = wait forever. | `bool` |
-| `MQTT.isConnected()` | Check if connected to the MQTT broker. | `bool` |
-| `MQTT.subscribe(topic:string)` | Subscribe to `<base_topic>/<topic>`. Use `#` to subscribe to all subtopics. | `bool` |
-| `MQTT.subscribeCustom(topic:string)` | Subscribe to an exact topic (no base topic prefix). Use `/#` for all subtopics. | `bool` |
-| `MQTT.publish(topic:string, payload:string)` | Publish a message to `<base_topic>/<topic>`. | `bool` |
-| `MQTT.publishCustom(topic:string, payload:string)` | Publish to an exact `/<topic>` (no base topic prefix). | `bool` |
-| `MQTT.on_message(callback:function)` | Register a handler for incoming messages. Callback: `def (topic:string, data:string)`. | — |
+| Function | Description |
+|----------|-------------|
+| `MQTT.waitConnect(timeout:int) -> bool` | Wait for broker connection. 1–254 seconds, `255` = wait forever. |
+| `MQTT.isConnected() -> bool` | Check if connected to the MQTT broker. |
+| `MQTT.subscribe(topic:string) -> bool` | Subscribe to `<base_topic>/<topic>`. Use `#` to subscribe to all subtopics. |
+| `MQTT.subscribeCustom(topic:string) -> bool` | Subscribe to an exact topic (no base topic prefix). Use `/#` for all subtopics. |
+| `MQTT.publish(topic:string, payload:string) -> bool` | Publish a message to `<base_topic>/<topic>`. |
+| `MQTT.publishCustom(topic:string, payload:string) -> bool` | Publish to an exact `/<topic>` (no base topic prefix). |
+| `MQTT.on_message(callback:function(topic:string, data:string) -> nil) -> nil` | Register a handler for incoming messages. |
 
 **Note:** `<base_topic>` is configured on the MQTT settings page of your device's web interface.
 

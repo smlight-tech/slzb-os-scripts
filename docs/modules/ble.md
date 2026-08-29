@@ -11,11 +11,11 @@ Interface for receiving BLE advertisements.<br>
 
 ## API Reference
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `BLE.on_packet(callback:function(bytes:addr, int:addr_type, int:rssi, int:adv_type, bytes:adv_data))` | Sets the callback that will be called when a BLE advertisement is received.<br>`addr` - 6 bytes of sender MAC<br>`addr_type` - BLE Device address type, can be:<br>(0) - public,<br>(1) - radnom,<br>(255) - anonymous<br>`rssi` - signal quality of the received packet<br>`adv_type` - advertising PDU type. Can be one of following constants:<br>(0) - indirect advertising - connectable and scannable,<br>(1) - direct advertising - connectable,<br>(2) - indirect scan response - not connectable - scannable,<br>(3) - beacon only - not connectable - not scannable,<br>(4) - scan response<br>`adv_data` - raw advertising data |
-| `BLE.getStatus()` | Returns the current status of the BLE controller. See "BLE controller status enum". | `int` |
-| `BLE.waitStart(int:timeout)` | Waits for the BLE controller to start. Returns `true` when the controller is started, otherwise returns `false`.<br>`timeout` - Specifies the wait time in milliseconds. The script will be paused during the wait time, so you should not call this function with a timeout in timer or event callbacks.<br>minimum wait time: 0ms<br>maximum wait time: 254ms<br>for values ​​greater than 254ms the wait time will be **forever** | `bool` |
+| Function | Description |
+|----------|-------------|
+| `BLE.on_packet(callback:function(addr:bytes, addr_type:int, rssi:int, adv_type:int, adv_data:bytes) -> nil) -> nil` | Sets the callback that will be called when a BLE advertisement is received.<br>`addr` - 6 bytes of sender MAC<br>`addr_type` - BLE Device address type, can be:<br>(0) - public,<br>(1) - radnom,<br>(255) - anonymous<br>`rssi` - signal quality of the received packet<br>`adv_type` - advertising PDU type. Can be one of following constants:<br>(0) - indirect advertising - connectable and scannable,<br>(1) - direct advertising - connectable,<br>(2) - indirect scan response - not connectable - scannable,<br>(3) - beacon only - not connectable - not scannable,<br>(4) - scan response<br>`adv_data` - raw advertising data |
+| `BLE.getStatus() -> int` | Returns the current status of the BLE controller. See "BLE controller status enum". |
+| `BLE.waitStart(timeout:int) -> bool` | Waits for the BLE controller to start. Returns `true` when the controller is started, otherwise returns `false`.<br>`timeout` - Specifies the wait time in milliseconds. The script will be paused during the wait time, so you should not call this function with a timeout in timer or event callbacks.<br>minimum wait time: 0ms<br>maximum wait time: 254ms<br>for values ​​greater than 254ms the wait time will be **forever** |
 
 BLE controller status enum:
 

@@ -52,23 +52,23 @@ var s = SLWF01.get_sensor("Bedroom AC", "temperature")
 print("Current temp: " .. s["state"])
 ```
 
-## All Available Functions
+## API Reference
 
 Since SLWF01 is an alias for ESPHOME, all functions are available:
 
 | Function | Description |
 |----------|-------------|
-| `turn_on(device, domain, id)` | Turn on an entity |
-| `turn_off(device, domain, id)` | Turn off an entity |
-| `toggle(device, domain, id)` | Toggle an entity |
-| `press(device, id)` | Press a button |
-| `set_number(device, id, value)` | Set a number value |
-| `set_select(device, id, option)` | Set a select option |
-| `set_climate(device, id, temp [, mode])` | Control climate/A/C |
-| `set_light(device, id, on [, bri [, r, g, b]])` | Control a light |
-| `get_sensor(device, id)` | Read a sensor |
-| `get_state(device, domain, id)` | Read any entity state |
-| `devices()` | List configured devices |
+| `SLWF01.turn_on(device:string, domain:string, id:string) -> int` | Turn on an entity |
+| `SLWF01.turn_off(device:string, domain:string, id:string) -> int` | Turn off an entity |
+| `SLWF01.toggle(device:string, domain:string, id:string) -> int` | Toggle an entity |
+| `SLWF01.press(device:string, id:string) -> int` | Press a button |
+| `SLWF01.set_number(device:string, id:string, value:int\|real) -> int` | Set a number value |
+| `SLWF01.set_select(device:string, id:string, option:string) -> int` | Set a select option |
+| `SLWF01.set_climate(device:string, id:string, target_temp:int\|real, mode:string?) -> int` | Control climate/A/C |
+| `SLWF01.set_light(device:string, id:string, on:bool, brightness:int?, r:int?, g:int?, b:int?) -> int` | Control a light |
+| `SLWF01.get_sensor(device:string, id:string) -> map` | Read a sensor |
+| `SLWF01.get_state(device:string, domain:string, id:string) -> map` | Read any entity state |
+| `SLWF01.devices() -> list<string>` | List configured devices |
 
 See the [ESPHOME module documentation](esphome.md) for full details on each function.
 

@@ -32,9 +32,16 @@ HA.setup("192.168.1.100", 8123, "eyJhbGciOi...")
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### HA.setup(host, port, token)
+| Function | Description |
+|----------|-------------|
+| `HA.setup(host:string, port:int, token:string) -> nil` | Override Home Assistant credentials for this script session. |
+| `HA.call(domain:string, service:string, entity_id:string, data_json:string?) -> int` | Call a Home Assistant service on an entity. |
+| `HA.get_state(entity_id:string) -> map` | Read the current state of an entity. |
+| `HA.fire_event(event_type:string, data_json:string?) -> int` | Fire a custom event on the Home Assistant event bus. |
+
+### HA.setup(host:string, port:int, token:string) -> nil
 
 Override Home Assistant credentials for this script session.
 
@@ -49,7 +56,7 @@ import HA
 HA.setup("192.168.1.100", 8123, "eyJhbGciOi...")
 ```
 
-### HA.call(domain, service, entity_id [, data_json])
+### HA.call(domain:string, service:string, entity_id:string, data_json:string?) -> int
 
 Call a Home Assistant service on an entity.
 
@@ -77,7 +84,7 @@ HA.call("climate", "set_temperature", "climate.thermostat", '{"temperature": 22}
 HA.call("media_player", "play_media", "media_player.speaker", '{"media_content_id": "https://example.com/song.mp3", "media_content_type": "music"}')
 ```
 
-### HA.get_state(entity_id)
+### HA.get_state(entity_id:string) -> map
 
 Read the current state of an entity.
 
@@ -118,7 +125,7 @@ var l = HA.get_state("light.living_room")
 print("Brightness: " .. str(l["brightness"]))
 ```
 
-### HA.fire_event(event_type [, data_json])
+### HA.fire_event(event_type:string, data_json:string?) -> int
 
 Fire a custom event on the Home Assistant event bus.
 

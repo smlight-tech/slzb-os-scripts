@@ -26,9 +26,15 @@ import SLACK
 SLACK.setup("https://hooks.slack.com/services/T.../B.../xxx...")
 ```
 
-## Functions
+## API Reference
 
-### SLACK.setup(webhook_url)
+| Function | Description |
+|----------|-------------|
+| `SLACK.setup(webhook_url:string) -> nil` | Override the webhook URL for this script session. |
+| `SLACK.send(text:string) -> int` | Send a simple text message to the default channel. |
+| `SLACK.send_rich(text:string, channel:string?, username:string?, icon_emoji:string?) -> int` | Send a message with optional channel override, custom username, and emoji icon. |
+
+### SLACK.setup(webhook_url:string) -> nil
 
 Override the webhook URL for this script session.
 
@@ -36,7 +42,7 @@ Override the webhook URL for this script session.
 |-----------|------|-------------|
 | `webhook_url` | string | Slack Incoming Webhook URL |
 
-### SLACK.send(text)
+### SLACK.send(text:string) -> int
 
 Send a simple text message to the default channel.
 
@@ -51,7 +57,7 @@ import SLACK
 SLACK.send("Hello from SLZB!")
 ```
 
-### SLACK.send_rich(text [, channel [, username [, icon_emoji]]])
+### SLACK.send_rich(text:string, channel:string?, username:string?, icon_emoji:string?) -> int
 
 Send a message with optional channel override, custom username, and emoji icon.
 

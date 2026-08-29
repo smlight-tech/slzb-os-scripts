@@ -21,9 +21,23 @@ import WLED
 WLED.on("192.168.1.50")
 ```
 
-## Functions
+## API Reference
 
-### WLED.on(device)
+| Function | Description |
+|----------|-------------|
+| `WLED.on(device:string) -> int` | Turn the device on. |
+| `WLED.off(device:string) -> int` | Turn the device off. |
+| `WLED.toggle(device:string) -> int` | Toggle the device on/off. |
+| `WLED.set_brightness(device:string, brightness:int) -> int` | Set brightness level. |
+| `WLED.set_color(device:string, color:int) -> int` | Set the color of the first segment. |
+| `WLED.set_effect(device:string, effect_id:int) -> int` | Set the LED effect by ID. |
+| `WLED.set_palette(device:string, palette_id:int) -> int` | Set the color palette for the current effect. |
+| `WLED.set_speed(device:string, speed:int) -> int` | Set the effect speed. |
+| `WLED.set_state(device:string, json_string:string) -> int` | Send a raw JSON state to the WLED API for full control. |
+| `WLED.get_state(device:string) -> map` | Read the current state from the device. |
+| `WLED.devices() -> list<string>` | List all configured WLED device names (from UI config). |
+
+### WLED.on(device:string) -> int
 
 Turn the device on.
 
@@ -40,7 +54,7 @@ WLED.on("Kitchen Strip")
 WLED.on("192.168.1.50")
 ```
 
-### WLED.off(device)
+### WLED.off(device:string) -> int
 
 Turn the device off.
 
@@ -50,7 +64,7 @@ import WLED
 WLED.off("Kitchen Strip")
 ```
 
-### WLED.toggle(device)
+### WLED.toggle(device:string) -> int
 
 Toggle the device on/off.
 
@@ -60,7 +74,7 @@ import WLED
 WLED.toggle("Kitchen Strip")
 ```
 
-### WLED.set_brightness(device, brightness)
+### WLED.set_brightness(device:string, brightness:int) -> int
 
 Set brightness level.
 
@@ -75,7 +89,7 @@ import WLED
 WLED.set_brightness("Kitchen Strip", 128)
 ```
 
-### WLED.set_color(device, color)
+### WLED.set_color(device:string, color:int) -> int
 
 Set the color of the first segment.
 
@@ -93,7 +107,7 @@ WLED.set_color("Kitchen Strip", 0x0000FF)   # blue
 WLED.set_color("Kitchen Strip", 0xFFFFFF)   # white
 ```
 
-### WLED.set_effect(device, effect_id)
+### WLED.set_effect(device:string, effect_id:int) -> int
 
 Set the LED effect by ID.
 
@@ -112,7 +126,7 @@ WLED.set_effect("Kitchen Strip", 9)    # Chase
 
 See the full list of effects in your WLED web interface or at [WLED Effects List](https://kno.wทled.ge/features/effects/).
 
-### WLED.set_palette(device, palette_id)
+### WLED.set_palette(device:string, palette_id:int) -> int
 
 Set the color palette for the current effect.
 
@@ -127,7 +141,7 @@ import WLED
 WLED.set_palette("Kitchen Strip", 6)   # Party palette
 ```
 
-### WLED.set_speed(device, speed)
+### WLED.set_speed(device:string, speed:int) -> int
 
 Set the effect speed.
 
@@ -142,7 +156,7 @@ import WLED
 WLED.set_speed("Kitchen Strip", 200)
 ```
 
-### WLED.set_state(device, json_string)
+### WLED.set_state(device:string, json_string:string) -> int
 
 Send a raw JSON state to the WLED API for full control. See [WLED JSON API](https://kno.wled.ge/interfaces/json-api/) for all available fields.
 
@@ -158,7 +172,7 @@ import WLED
 WLED.set_state("Kitchen Strip", '{"on":true,"bri":200,"seg":[{"col":[[255,0,0]]}]}')
 ```
 
-### WLED.get_state(device)
+### WLED.get_state(device:string) -> map
 
 Read the current state from the device.
 
@@ -185,7 +199,7 @@ print(state["bri"])    # 0-255
 print(state["color"])  # e.g. 16711680 (0xFF0000)
 ```
 
-### WLED.devices()
+### WLED.devices() -> list<string>
 
 List all configured WLED device names (from UI config).
 

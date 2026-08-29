@@ -27,9 +27,14 @@ WHATSAPP.setup("123456", "34612345678")
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### WHATSAPP.setup(api_key, phone)
+| Function | Description |
+|----------|-------------|
+| `WHATSAPP.setup(api_key:string, phone:string) -> nil` | Override credentials for this script session. |
+| `WHATSAPP.send(text:string) -> int` | Send a text message to the configured phone number. |
+
+### WHATSAPP.setup(api_key:string, phone:string) -> nil
 
 Override credentials for this script session.
 
@@ -43,7 +48,7 @@ import WHATSAPP
 WHATSAPP.setup("123456", "34612345678")
 ```
 
-### WHATSAPP.send(text)
+### WHATSAPP.send(text:string) -> int
 
 Send a text message to the configured phone number. Returns the HTTP status code (200 = success).
 

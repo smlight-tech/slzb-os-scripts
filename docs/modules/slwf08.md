@@ -66,23 +66,23 @@ import SLWF08
 SLWF08.press("Living Room TV", "mute")
 ```
 
-## All Available Functions
+## API Reference
 
 Since SLWF08 is an alias for ESPHOME, all functions are available:
 
 | Function | Description |
 |----------|-------------|
-| `turn_on(device, domain, id)` | Turn on an entity |
-| `turn_off(device, domain, id)` | Turn off an entity |
-| `toggle(device, domain, id)` | Toggle an entity |
-| `press(device, id)` | Press a button |
-| `set_number(device, id, value)` | Set a number value |
-| `set_select(device, id, option)` | Set a select option |
-| `set_climate(device, id, temp [, mode])` | Control climate |
-| `set_light(device, id, on [, bri [, r, g, b]])` | Control a light |
-| `get_sensor(device, id)` | Read a sensor |
-| `get_state(device, domain, id)` | Read any entity state |
-| `devices()` | List configured devices |
+| `SLWF08.turn_on(device:string, domain:string, id:string) -> int` | Turn on an entity |
+| `SLWF08.turn_off(device:string, domain:string, id:string) -> int` | Turn off an entity |
+| `SLWF08.toggle(device:string, domain:string, id:string) -> int` | Toggle an entity |
+| `SLWF08.press(device:string, id:string) -> int` | Press a button |
+| `SLWF08.set_number(device:string, id:string, value:int\|real) -> int` | Set a number value |
+| `SLWF08.set_select(device:string, id:string, option:string) -> int` | Set a select option |
+| `SLWF08.set_climate(device:string, id:string, target_temp:int\|real, mode:string?) -> int` | Control climate |
+| `SLWF08.set_light(device:string, id:string, on:bool, brightness:int?, r:int?, g:int?, b:int?) -> int` | Control a light |
+| `SLWF08.get_sensor(device:string, id:string) -> map` | Read a sensor |
+| `SLWF08.get_state(device:string, domain:string, id:string) -> map` | Read any entity state |
+| `SLWF08.devices() -> list<string>` | List configured devices |
 
 See the [ESPHOME module documentation](esphome.md) for full details on each function.
 

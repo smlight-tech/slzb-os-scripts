@@ -19,44 +19,44 @@ relay.sendOnOff(1)  # turn on
 
 ### Module Functions
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `ZHB.getDevice(identifier:string\|int)` | Get device by name (`string`), network address (`int`), or IEEE address (`string`, format `"0x0000000000000000"`). | `ZigbeeDevice` (or error if not found) |
-| `ZHB.waitForStart(timeout:int)` | Block until Zigbee Hub is fully started. Max 254 seconds. Use `255` to wait forever. | — |
-| `ZHB.permitJoin(time:int, addr:int?)` | Open network for new devices. `time`: 1–254 sec, `0` = close, `255` = permanent. `addr` (optional): specific device address. *(since v3.0.6)* | — |
-| `ZHB.mqttAction(topic:string, payload:string)` | Run a Zigbee Hub MQTT command locally (same handlers as a real MQTT message on `{base}/cmd/...` or `{base}/write/...`, incl. ZCN converters). *(since v3.3.8: returns a request id for `ZHB.await()`)* | request id (`int`) for cmd/write topics, `nil` otherwise |
-| `ZHB.await(seq:int, timeoutMs:int?)` | Block until the device answers the request `seq`. See *Waiting for a Response* below. *(since v3.3.8)* | `bool` |
-| `ZHB.on_response(seq:int, callback:function, timeoutMs:int?)` | Non-blocking variant: `callback(ok, status)`. *(since v3.3.8)* | `bool` |
-| `ZHB.lastStatus()` | Raw ZCL status of the last `ZHB.await()`. *(since v3.3.8)* | `int` / `nil` |
+| Function | Description |
+|----------|-------------|
+| `ZHB.getDevice(identifier:string\|int) -> ZigbeeDevice` | Get device by name (`string`), network address (`int`), or IEEE address (`string`, format `"0x0000000000000000"`). Returns: `ZigbeeDevice` (or error if not found). |
+| `ZHB.waitForStart(timeout:int) -> nil` | Block until Zigbee Hub is fully started. Max 254 seconds. Use `255` to wait forever. |
+| `ZHB.permitJoin(time:int, addr:int?) -> nil` | Open network for new devices. `time`: 1–254 sec, `0` = close, `255` = permanent. `addr` (optional): specific device address. *(since v3.0.6)* |
+| `ZHB.mqttAction(topic:string, payload:string) -> int\|nil` | Run a Zigbee Hub MQTT command locally (same handlers as a real MQTT message on `{base}/cmd/...` or `{base}/write/...`, incl. ZCN converters). *(since v3.3.8: returns a request id for `ZHB.await()`)* Returns: request id (`int`) for cmd/write topics, `nil` otherwise. |
+| `ZHB.await(seq:int, timeoutMs:int=3000) -> bool` | Block until the device answers the request `seq`. See *Waiting for a Response* below. *(since v3.3.8)* |
+| `ZHB.on_response(seq:int, callback:function(ok:bool, status:int\|nil) -> nil, timeoutMs:int?) -> bool` | Non-blocking variant: `callback(ok, status)`. *(since v3.3.8)* |
+| `ZHB.lastStatus() -> int\|nil` | Raw ZCL status of the last `ZHB.await()`. *(since v3.3.8)* |
 
-### ZigbeeDevice Class
+### Class ZigbeeDevice
 
 #### Device Information
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `getName()` | User-set device name | `string` |
-| `getIeee()` | Device IEEE as HEX string | `string` |
-| `getModel()` | Device model | `string` |
-| `getManuf()` | Device manufacturer | `string` |
-| `getNwk()` | Network address | `int` |
-| `getPS()` | Power source | `int` |
-| `getBattery()` | Battery percentage | `int` |
-| `getIAS()` | IAS type | `int` |
-| `getLastSeen()` | Timestamp of last received packet | `int` |
-| `getLqi()` | Link quality indicator | `int` |
-| `matcher(manufacturer:string, model:string)` | Check if device matches manufacturer and model. **Case sensitive.** | `bool` |
+| Function | Description |
+|----------|-------------|
+| `ZigbeeDevice.getName() -> string` | User-set device name |
+| `ZigbeeDevice.getIeee() -> string` | Device IEEE as HEX string |
+| `ZigbeeDevice.getModel() -> string` | Device model |
+| `ZigbeeDevice.getManuf() -> string` | Device manufacturer |
+| `ZigbeeDevice.getNwk() -> int` | Network address |
+| `ZigbeeDevice.getPS() -> int` | Power source |
+| `ZigbeeDevice.getBattery() -> int` | Battery percentage |
+| `ZigbeeDevice.getIAS() -> int` | IAS type |
+| `ZigbeeDevice.getLastSeen() -> int` | Timestamp of last received packet |
+| `ZigbeeDevice.getLqi() -> int` | Link quality indicator |
+| `ZigbeeDevice.matcher(manufacturer:string, model:string) -> bool` | Check if device matches manufacturer and model. **Case sensitive.** |
 
 #### Control Commands
 
 | Function | Description |
 |----------|-------------|
-| `sendOnOff(state:int, channel:int?)` | Turn on (`1`), off (`0`), or toggle (`2`). `channel` optional, defaults to 1. |
-| `sendBri(brightness:int, channel:int?)` | Set brightness (1–254). `channel` optional. |
-| `sendColor(color:string, channel:int?)` | Set color. Format: `"#rrggbb"` or `"r,g,b"`. `channel` optional. |
-| `sendColorTemp(mireds:int, channel:int?)` | Set color temperature in [mireds](https://en.wikipedia.org/wiki/Mired). `channel` optional. |
-| `sendCmd(endpoint:int, cluster:int, command:int, payload:bytes?)` | Send any ZCL command. `payload` (`bytes`) optional. Returns ZCL transaction number (`int`). |
-| `readAttr(endpoint:int, cluster:int, attr:int, ...)` | Request attribute read. Does **not** wait for response. Supports multiple attributes. Returns ZCL transaction number (`int`). *(since v3.0.6)* |
+| `ZigbeeDevice.sendOnOff(state:int, channel:int=1) -> int` | Turn on (`1`), off (`0`), or toggle (`2`). `channel` optional, defaults to 1. |
+| `ZigbeeDevice.sendBri(brightness:int, channel:int=1) -> int` | Set brightness (1–254). `channel` optional. |
+| `ZigbeeDevice.sendColor(color:string, channel:int=1) -> int` | Set color. Format: `"#rrggbb"` or `"r,g,b"`. `channel` optional. |
+| `ZigbeeDevice.sendColorTemp(mireds:int, channel:int=1) -> int` | Set color temperature in [mireds](https://en.wikipedia.org/wiki/Mired). `channel` optional. |
+| `ZigbeeDevice.sendCmd(endpoint:int, cluster:int, command:int, payload:bytes?) -> int` | Send any ZCL command. `payload` (`bytes`) optional. Returns ZCL transaction number (`int`). |
+| `ZigbeeDevice.readAttr(endpoint:int, cluster:int, attr:int, ...attrs:int) -> int` | Request attribute read. Does **not** wait for response. Supports multiple attributes. Returns ZCL transaction number (`int`). *(since v3.0.6)* |
 
 ```berry
 dev.sendOnOff(1)         # turn on relay
@@ -75,9 +75,9 @@ dev.readAttr(1, 0x0b04, 0x0505, 0x0508, 0x050b) # request voltage, current, and 
 
 #### Reading Values
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `getVal(endpoint:int, cluster:int, attribute:int)` | Last saved value from the device. Returns `nil` if not yet reported. | `bool` / `float` / `int` / `string` / `bytes` |
+| Function | Description |
+|----------|-------------|
+| `ZigbeeDevice.getVal(endpoint:int, cluster:int, attribute:int) -> bool\|real\|int\|string\|bytes` | Last saved value from the device. Returns `nil` if not yet reported. |
 
 ```berry
 # Read temperature from a sensor (cluster 0x0402, attribute 0)
@@ -94,11 +94,11 @@ Every send function (`sendOnOff`, `sendBri`, `sendColor`, `sendColorTemp`, `send
 number (`seq`). The `ZHB` module offers two ways to get the device's answer for it
 (the target device is resolved from `seq` automatically):
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `ZHB.await(seq:int, timeoutMs:int?)` | **Blocking.** Waits until the response for `seq` arrives. Default timeout 3000 ms, max 30000. | `true` only when the device answered with ZCL **SUCCESS**; `false` on any error status, timeout or failed send |
-| `ZHB.lastStatus()` | Raw ZCL status of the last `ZHB.await()` in this script (for diagnostics after a `false`). | `int` (`0` = success) or `nil` on timeout / failed send |
-| `ZHB.on_response(seq:int, callback:function, timeoutMs:int?)` | **Non-blocking.** `callback(ok, status)` is called when the response (or timeout) arrives: `ok` — `bool` like `await()`, `status` — raw ZCL status or `nil` on timeout. | `bool` — `false` if `seq` is unknown or too many pending waits |
+| Function | Description |
+|----------|-------------|
+| `ZHB.await(seq:int, timeoutMs:int=3000) -> bool` | **Blocking.** Waits until the response for `seq` arrives. Default timeout 3000 ms, max 30000. Returns: `true` only when the device answered with ZCL **SUCCESS**; `false` on any error status, timeout or failed send. |
+| `ZHB.lastStatus() -> int\|nil` | Raw ZCL status of the last `ZHB.await()` in this script (for diagnostics after a `false`). Returns: `int` (`0` = success) or `nil` on timeout / failed send. |
+| `ZHB.on_response(seq:int, callback:function(ok:bool, status:int\|nil) -> nil, timeoutMs:int?) -> bool` | **Non-blocking.** `callback(ok, status)` is called when the response (or timeout) arrives: `ok` — `bool` like `await()`, `status` — raw ZCL status or `nil` on timeout. Returns: `bool` — `false` if `seq` is unknown or too many pending waits. |
 
 `ZHB.mqttAction()` is awaitable too: for `cmd`/`write` topics it returns a request id and the
 wait resolves on the **next** response from the target endpoint/cluster (the MQTT/ZCN handlers
@@ -160,11 +160,11 @@ Rules:
 
 #### Binding *(since v3.0.6)*
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `bindToHub(srcEp:int, srcCl:int)` | Bind endpoint/cluster to the hub. | `bool` |
-| `bindToDevice(srcEp:int, srcCl:int, dstIeee:string, dstEp:int)` | Bind to another device. `dstIeee` in hex string format. | `bool` |
-| `bindToGroup(srcEp:int, srcCl:int, dstGroupAddr:int)` | Bind to a group address. | `bool` |
+| Function | Description |
+|----------|-------------|
+| `ZigbeeDevice.bindToHub(srcEp:int, srcCl:int) -> bool` | Bind endpoint/cluster to the hub. |
+| `ZigbeeDevice.bindToDevice(srcEp:int, srcCl:int, dstIeee:string, dstEp:int) -> bool` | Bind to another device. `dstIeee` in hex string format. |
+| `ZigbeeDevice.bindToGroup(srcEp:int, srcCl:int, dstGroupAddr:int) -> bool` | Bind to a group address. |
 
 ### Identifying Devices in Callbacks
 
@@ -201,7 +201,11 @@ ZHB.on_action(on_action)
 
 ### Events
 
-#### ZHB.on_action(callback:function) *(since v3.2.6.dev1)*
+| Function | Description |
+|----------|-------------|
+| `ZHB.on_action(callback:function(action:string, dev:ZigbeeDevice) -> nil) -> nil` *(since v3.2.6.dev1)* | Called when a Zigbee device sends an action — button click, double click, long press, rotary encoder rotation, etc. |
+
+#### ZHB.on_action(callback:function(action:string, dev:ZigbeeDevice) -> nil) -> nil *(since v3.2.6.dev1)*
 
 Called when a Zigbee device sends an action — button click, double click, long press, rotary encoder rotation, etc.
 

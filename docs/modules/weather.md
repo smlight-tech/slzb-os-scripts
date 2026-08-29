@@ -26,9 +26,14 @@ WEATHER.setup("your_api_key", "London")
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### WEATHER.setup(api_key, city)
+| Function | Description |
+|----------|-------------|
+| `WEATHER.setup(api_key:string, city:string) -> nil` | Override API key and default city for this script session. |
+| `WEATHER.get(city:string?) -> map` | Get current weather data. |
+
+### WEATHER.setup(api_key:string, city:string) -> nil
 
 Override API key and default city for this script session.
 
@@ -42,7 +47,7 @@ import WEATHER
 WEATHER.setup("abc123def456", "Berlin")
 ```
 
-### WEATHER.get([city])
+### WEATHER.get(city:string?) -> map
 
 Get current weather data. Uses the configured city, or pass a city name to override.
 

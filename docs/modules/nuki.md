@@ -46,9 +46,20 @@ for id : devs.keys()
 end
 ```
 
-## Functions
+## API Reference
 
-### NUKI.setup(host, token [, port [, nuki_id]])
+| Function | Description |
+|----------|-------------|
+| `NUKI.setup(host:string, token:string, port:int=8080, nuki_id:int?) -> nil` | Configure connection from script. |
+| `NUKI.lock(nuki_id:int?) -> bool` | Lock the door. |
+| `NUKI.unlock(nuki_id:int?) -> bool` | Unlock the door. |
+| `NUKI.unlatch(nuki_id:int?) -> bool` | Unlatch the door (fully open — for electric strikes / door openers). |
+| `NUKI.lock_n_go(nuki_id:int?) -> bool` | Unlock, wait a few seconds, then lock again automatically. |
+| `NUKI.state(nuki_id:int?) -> map` | Get the current lock state. |
+| `NUKI.list() -> map` | List all smart locks paired with the Bridge. |
+| `NUKI.unpair(nuki_id:int) -> bool` | Remove a lock from the Bridge pairing. |
+
+### NUKI.setup(host:string, token:string, port:int=8080, nuki_id:int?) -> nil
 
 Configure connection from script. Overrides UI settings.
 
@@ -59,7 +70,7 @@ Configure connection from script. Overrides UI settings.
 | `port` | int | (optional) Bridge port, default `8080` |
 | `nuki_id` | int | (optional) Default lock ID for all calls |
 
-### NUKI.lock([nuki_id])
+### NUKI.lock(nuki_id:int?) -> bool
 
 Lock the door.
 
@@ -69,25 +80,25 @@ Lock the door.
 
 **Returns:** `bool` — `true` if successful
 
-### NUKI.unlock([nuki_id])
+### NUKI.unlock(nuki_id:int?) -> bool
 
 Unlock the door.
 
 **Returns:** `bool`
 
-### NUKI.unlatch([nuki_id])
+### NUKI.unlatch(nuki_id:int?) -> bool
 
 Unlatch the door (fully open — for electric strikes / door openers).
 
 **Returns:** `bool`
 
-### NUKI.lock_n_go([nuki_id])
+### NUKI.lock_n_go(nuki_id:int?) -> bool
 
 Unlock, wait a few seconds, then lock again automatically. Useful for letting someone in without leaving the door unlocked.
 
 **Returns:** `bool`
 
-### NUKI.state([nuki_id])
+### NUKI.state(nuki_id:int?) -> map
 
 Get the current lock state.
 
@@ -123,13 +134,13 @@ if s["battery_critical"]
 end
 ```
 
-### NUKI.list()
+### NUKI.list() -> map
 
 List all smart locks paired with the Bridge.
 
 **Returns:** `map` — keys are Nuki IDs (as strings), values are device names
 
-### NUKI.unpair(nuki_id)
+### NUKI.unpair(nuki_id:int) -> bool
 
 Remove a lock from the Bridge pairing.
 

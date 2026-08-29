@@ -20,8 +20,8 @@ BUZZER.play("Arkanoid:d=4,o=5,b=140:8g6,16p,16g.6,2a#6,32p,8a6,8g6,8f6,8a6,2g6")
 
 | Function | Description |
 |----------|-------------|
-| `BUZZER.play(melody:string)` | Play a melody string in [RTTTL format](https://en.wikipedia.org/wiki/Ring_Tone_Text_Transfer_Language). |
-| `BUZZER.playPreset(id:int)` | Play a built-in sound preset by ID. Returns `true` on success, `false` if ID is invalid. |
+| `BUZZER.play(melody:string) -> nil` | Play a melody string in [RTTTL format](https://en.wikipedia.org/wiki/Ring_Tone_Text_Transfer_Language). |
+| `BUZZER.playPreset(id:int) -> bool` | Play a built-in sound preset by ID. Returns `true` on success, `false` if ID is invalid. |
 
 ## Sound Presets
 

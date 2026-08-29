@@ -40,18 +40,18 @@ end
 
 ### Standard Mode
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `HTTP.open(url:string, method:string, buffer:int, streamMode:bool)` | Open the HTTP client. `method`: `"get"` or `"post"` (**case sensitive**). `buffer`: response buffer size in bytes (recommended max ~4096; U-series can use more). `streamMode`: set client to stream mode, optional | `bool` |
-| `HTTP.perform()` | Execute the request. | `int` (HTTP status code, 200 = OK) |
-| `HTTP.getResponse()` | Get the response text, up to `buffer` size. **Do not log responses longer than 1024 characters — this will crash!** | `string` |
-| `HTTP.setPostData(data:string)` | Set POST request body. | `bool` |
-| `HTTP.setHeader(name:string, value:string)` | Set a request header. | `bool` |
-| `HTTP.setMethod(method:string)` | Change method on an already-open client (**reuse API**). | `bool` |
-| `HTTP.setUrl(url:string)` | Change URL on an already-open client (**reuse API**). | `bool` |
-| `HTTP.isOpened()` | Check if the client is currently open. | `bool` |
-| `HTTP.isStreamMode()` | Check if the client is in stream mode. | `bool` |
-| `HTTP.close()` | Close the client and free memory. | — |
+| Function | Description |
+|----------|-------------|
+| `HTTP.open(url:string, method:string, buffer:int, streamMode:bool?) -> bool` | Open the HTTP client. `method`: `"get"` or `"post"` (**case sensitive**). `buffer`: response buffer size in bytes (recommended max ~4096; U-series can use more). `streamMode`: set client to stream mode, optional |
+| `HTTP.perform() -> int` | Execute the request. Returns: `int` (HTTP status code, 200 = OK). |
+| `HTTP.getResponse() -> string` | Get the response text, up to `buffer` size. **Do not log responses longer than 1024 characters — this will crash!** |
+| `HTTP.setPostData(data:string) -> bool` | Set POST request body. |
+| `HTTP.setHeader(name:string, value:string) -> bool` | Set a request header. |
+| `HTTP.setMethod(method:string) -> bool` | Change method on an already-open client (**reuse API**). |
+| `HTTP.setUrl(url:string) -> bool` | Change URL on an already-open client (**reuse API**). |
+| `HTTP.isOpened() -> bool` | Check if the client is currently open. |
+| `HTTP.isStreamMode() -> bool` | Check if the client is in stream mode. |
+| `HTTP.close() -> nil` | Close the client and free memory. |
 
 ### Stream Mode
 Stream mode allows you to upload or download large amounts of data because it does not use internal buffer.
@@ -123,15 +123,15 @@ SLZB.log("Running stream example...")
 stream_http_example()
 ```
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `HTTP.streamReadBytes(count:int, buffer:bytes)` | Read bytes from the stream into a `bytes` buffer. `buffer` size must be >= `count`. Returns actual bytes read. | `int` |
-| `HTTP.streamReadString(count:int)` | Read bytes from the stream as a string. | `string` |
-| `HTTP.streamFlush(count:int)` | Discard `count` bytes from the stream. | — |
-| `HTTP.streamWriteString(data:string)` | Write string to stream. | — |
-| `HTTP.streamWriteBytes(data:bytes)` | Write bytes to stream. | — |
-| `HTTP.completeStreamConfig()` | Call this after the client settings are complete (headers and timeout are set). | — |
-| `HTTP.streamGetLen()` | Returns response size (from `Content-Length` header). Wil return -1 for chunked response. | `int` |
+| Function | Description |
+|----------|-------------|
+| `HTTP.streamReadBytes(count:int, buffer:bytes) -> int` | Read bytes from the stream into a `bytes` buffer. `buffer` size must be >= `count`. Returns actual bytes read. |
+| `HTTP.streamReadString(count:int) -> string` | Read bytes from the stream as a string. |
+| `HTTP.streamFlush(count:int) -> nil` | Discard `count` bytes from the stream. |
+| `HTTP.streamWriteString(data:string) -> nil` | Write string to stream. |
+| `HTTP.streamWriteBytes(data:bytes) -> nil` | Write bytes to stream. |
+| `HTTP.completeStreamConfig() -> nil` | Call this after the client settings are complete (headers and timeout are set). |
+| `HTTP.streamGetLen() -> int` | Returns response size (from `Content-Length` header). Wil return -1 for chunked response. |
 
 ## See Also
 

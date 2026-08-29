@@ -67,9 +67,14 @@ import GSHEETS
 GSHEETS.setup("https://script.google.com/macros/s/AKfycbx.../exec")
 ```
 
-## Functions
+## API Reference
 
-### GSHEETS.setup(webhook_url)
+| Function | Description |
+|----------|-------------|
+| `GSHEETS.setup(webhook_url:string) -> nil` | Override the webhook URL for this script session. |
+| `GSHEETS.append(...values:string\|int\|real) -> int` | Append a row to the spreadsheet. |
+
+### GSHEETS.setup(webhook_url:string) -> nil
 
 Override the webhook URL for this script session.
 
@@ -82,15 +87,15 @@ import GSHEETS
 GSHEETS.setup("https://script.google.com/macros/s/AKfycbx.../exec")
 ```
 
-### GSHEETS.append(value1 [, value2, ...])
+### GSHEETS.append(...values:string|int|real) -> int
 
 Append a row to the spreadsheet. Accepts any number of arguments — strings, integers, or real numbers. Each argument becomes a column in the new row.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `value1` | string / int / real | First column value |
-| `value2` | string / int / real | (optional) Second column value |
-| `...` | string / int / real | (optional) Additional column values |
+| `value1` | string|int|real | First column value |
+| `value2` | string|int|real | (optional) Second column value |
+| `...` | string|int|real | (optional) Additional column values |
 
 **Returns:** `int` — HTTP status code (200 on success)
 

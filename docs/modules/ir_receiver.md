@@ -18,16 +18,16 @@ end)
 
 | Function | Description |
 |----------|-------------|
-| `IR.on_receive(callback:function)` | Register a callback that fires on every received IR code. Callback: `def (protocol:int, address:int, command:int)`. |
+| `IR.on_receive(callback:function(protocol:int, address:int, command:int) -> nil) -> nil` | Register a callback that fires on every received IR code. |
 
 ### Reading Last Received Code
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `IR.getProtocol()` | Protocol number of the last received code (`0` = UNKNOWN). | `int` |
-| `IR.getAddress()` | Device address of the last received code. | `int` |
-| `IR.getCommand()` | Command code of the last received code. | `int` |
-| `IR.getRaw()` | Raw timing data as hex string. Use with `IR.sendRaw()` to replay unknown protocols. | `string` |
+| Function | Description |
+|----------|-------------|
+| `IR.getProtocol() -> int` | Protocol number of the last received code (`0` = UNKNOWN). |
+| `IR.getAddress() -> int` | Device address of the last received code. |
+| `IR.getCommand() -> int` | Command code of the last received code. |
+| `IR.getRaw() -> string` | Raw timing data as hex string. Use with `IR.sendRaw()` to replay unknown protocols. |
 
 ## Protocol Constants
 

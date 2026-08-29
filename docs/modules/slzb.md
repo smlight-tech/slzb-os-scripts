@@ -14,14 +14,14 @@ SLZB.log("Uptime: " .. SLZB.millis() / 1000 .. " seconds")
 
 ## API Reference
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `SLZB.delay(ms:int)` | Pause script execution for `ms` milliseconds. Max: 4,294,967,295 ms (~1193 hours). | — |
-| `SLZB.millis()` | Milliseconds since device started. | `int` |
-| `SLZB.reboot()` | Reboot the device immediately. | — |
-| `SLZB.log(text:string)` | Send text to the debug console. | — |
-| `SLZB.freeHeap()` | Total free RAM in the system (bytes). | `int` |
-| `SLZB.deviceModel()` | Device model name (e.g. `"SLZB-06P7"`). *(since v2.8.2.dev1)* | `string` |
+| Function | Description |
+|----------|-------------|
+| `SLZB.delay(ms:int) -> nil` | Pause script execution for `ms` milliseconds. Max: 4,294,967,295 ms (~1193 hours). |
+| `SLZB.millis() -> int` | Milliseconds since device started. |
+| `SLZB.reboot() -> nil` | Reboot the device immediately. |
+| `SLZB.log(text:string) -> nil` | Send text to the debug console. |
+| `SLZB.freeHeap() -> int` | Total free RAM in the system (bytes). |
+| `SLZB.deviceModel() -> string` | Device model name (e.g. `"SLZB-06P7"`). *(since v2.8.2.dev1)* |
 
 ## See Also
 

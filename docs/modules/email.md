@@ -37,9 +37,14 @@ EMAIL.setup("smtp.gmail.com", 465, "user@gmail.com", "app-password", "user@gmail
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### EMAIL.setup(host, port, user, pass, from, to)
+| Function | Description |
+|----------|-------------|
+| `EMAIL.setup(host:string, port:int, user:string, pass:string, from:string, to:string) -> nil` | Override SMTP credentials for this script session. |
+| `EMAIL.send(subject:string, body:string) -> bool` | Send an email. |
+
+### EMAIL.setup(host:string, port:int, user:string, pass:string, from:string, to:string) -> nil
 
 Override SMTP credentials for this script session.
 
@@ -57,7 +62,7 @@ import EMAIL
 EMAIL.setup("smtp.gmail.com", 465, "user@gmail.com", "app-password", "user@gmail.com", "alerts@example.com")
 ```
 
-### EMAIL.send(subject, body)
+### EMAIL.send(subject:string, body:string) -> bool
 
 Send an email. Returns `true` on success, `false` on failure.
 

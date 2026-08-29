@@ -28,9 +28,14 @@ DISCORD.setup("https://discord.com/api/webhooks/1234567890/abcdefg...")
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### DISCORD.setup(webhook_url)
+| Function | Description |
+|----------|-------------|
+| `DISCORD.setup(webhook_url:string) -> nil` | Override the webhook URL for this script session. |
+| `DISCORD.send(text:string) -> int` | Send a text message to the configured Discord channel. |
+
+### DISCORD.setup(webhook_url:string) -> nil
 
 Override the webhook URL for this script session.
 
@@ -43,7 +48,7 @@ import DISCORD
 DISCORD.setup("https://discord.com/api/webhooks/1234567890/abcdefg...")
 ```
 
-### DISCORD.send(text)
+### DISCORD.send(text:string) -> int
 
 Send a text message to the configured Discord channel. Returns the HTTP status code (204 = success).
 

@@ -23,15 +23,19 @@ Then visit: `http://<device-ip>/script/webhook?name=World`
 
 ## API Reference
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `WEBSERVER.getArg(x:int\|string)` | Get argument value by index (`int`) or by name (`string`). Returns `""` if argument does not exist. | `string` |
-| `WEBSERVER.hasArg(name:string)` | Check if argument exists by name. | `bool` |
-| `WEBSERVER.send(code:int, content_type:string, body:string)` | Send a response to the client. **Use only inside `on_webhook` callback.** | — |
+| Function | Description |
+|----------|-------------|
+| `WEBSERVER.getArg(x:int\|string) -> string` | Get argument value by index (`int`) or by name (`string`). Returns `""` if argument does not exist. |
+| `WEBSERVER.hasArg(name:string) -> bool` | Check if argument exists by name. |
+| `WEBSERVER.send(code:int, content_type:string, body:string) -> nil` | Send a response to the client. **Use only inside `on_webhook` callback.** |
 
 ### Events
 
-#### WEBSERVER.on_webhook(callback:`function`)
+| Function | Description |
+|----------|-------------|
+| `WEBSERVER.on_webhook(callback:function(arg_count:int) -> nil) -> nil` | Triggered when a GET or POST request is made to `<device-ip>/script/webhook`. |
+
+#### WEBSERVER.on_webhook(callback:function(arg_count:int) -> nil) -> nil
 
 Triggered when a GET or POST request is made to `<device-ip>/script/webhook`.
 

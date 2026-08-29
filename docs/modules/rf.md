@@ -38,53 +38,53 @@ A raw command is a comma separated list of pulse durations in **microseconds**, 
 
 ### Status & Settings
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `RF.isPresent()` | `true` if the CC1101 add-on was detected at boot. All other functions return `false` / empty values when it is not. | `bool` |
-| `RF.getStatus()` | Current state: `"rx"` (listening), `"idle"`, `"tx"`, `"no_chip"`, `"not_init"`. | `string` |
-| `RF.isBusy()` | `true` while a transmission is queued / in progress (`send()` returns `false` meanwhile). | `bool` |
-| `RF.getFrequency()` | Receiver frequency in Hz (also the default TX frequency). | `int` |
-| `RF.setFrequency(hz:int)` | Change frequency (runtime only, not persisted). Allowed bands: 300–348, 387–464, 779–928 MHz. Use the `RF.Freq_*` constants. | `bool` |
-| `RF.getRxEnabled()` | `true` if the receiver (sniffer) is running. | `bool` |
-| `RF.setRxEnabled(en:bool)` | Start / stop the receiver (runtime only). Stopping it saves ~3 % CPU and stops `on_receive` events. | `bool` |
+| Function | Description |
+|----------|-------------|
+| `RF.isPresent() -> bool` | `true` if the CC1101 add-on was detected at boot. All other functions return `false` / empty values when it is not. |
+| `RF.getStatus() -> string` | Current state: `"rx"` (listening), `"idle"`, `"tx"`, `"no_chip"`, `"not_init"`. |
+| `RF.isBusy() -> bool` | `true` while a transmission is queued / in progress (`send()` returns `false` meanwhile). |
+| `RF.getFrequency() -> int` | Receiver frequency in Hz (also the default TX frequency). |
+| `RF.setFrequency(hz:int) -> bool` | Change frequency (runtime only, not persisted). Allowed bands: 300–348, 387–464, 779–928 MHz. Use the `RF.Freq_*` constants. |
+| `RF.getRxEnabled() -> bool` | `true` if the receiver (sniffer) is running. |
+| `RF.setRxEnabled(en:bool) -> bool` | Start / stop the receiver (runtime only). Stopping it saves ~3 % CPU and stops `on_receive` events. |
 
 ### Sending
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `RF.send(raw:string, [freq_hz:int], [repeats:int])` | Transmit a raw command. `freq_hz` = `0` or omitted → current frequency; `repeats` 1..10, default 1. Non-blocking: the command is queued and sent by the RF task, the receiver resumes automatically afterwards. | `bool` — `false` if busy, invalid command or add-on missing |
-| `RF.sendSaved(name:string, [repeats:int])` | Transmit a command saved on the device (see below / RF page). Uses the frequency the command was saved with. | `bool` |
+| Function | Description |
+|----------|-------------|
+| `RF.send(raw:string, freq_hz:int?, repeats:int=1) -> bool` | Transmit a raw command. `freq_hz` = `0` or omitted → current frequency; `repeats` 1..10, default 1. Non-blocking: the command is queued and sent by the RF task, the receiver resumes automatically afterwards. Returns: `bool` — `false` if busy, invalid command or add-on missing. |
+| `RF.sendSaved(name:string, repeats:int?) -> bool` | Transmit a command saved on the device (see below / RF page). Uses the frequency the command was saved with. |
 
 ### Last Received Command
 
 The receiver keeps the last valid capture (noise and captures shorter than 20 pulses / 10 ms are discarded).
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `RF.getRaw()` | Raw pulse string of the last captured command, `""` if none. | `string` |
-| `RF.getRssi()` | Peak RSSI of the last capture, dBm. | `int` |
-| `RF.getPulses()` | Number of pulses in the last capture. | `int` |
-| `RF.getDuration()` | Air time of the last capture, µs. | `int` |
-| `RF.getLastFrequency()` | Frequency (Hz) the last command was captured on. | `int` |
-| `RF.clear()` | Forget the last captured command. | — |
+| Function | Description |
+|----------|-------------|
+| `RF.getRaw() -> string` | Raw pulse string of the last captured command, `""` if none. |
+| `RF.getRssi() -> int` | Peak RSSI of the last capture, dBm. |
+| `RF.getPulses() -> int` | Number of pulses in the last capture. |
+| `RF.getDuration() -> int` | Air time of the last capture, µs. |
+| `RF.getLastFrequency() -> int` | Frequency (Hz) the last command was captured on. |
+| `RF.clear() -> nil` | Forget the last captured command. |
 
 ### Saved Commands
 
 Commands are stored as `/rf/<name>.json` on the device and shared with the *RF Transceiver* web page. Names: letters, digits, `_`, `-`, max 24 characters.
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `RF.save(name:string, raw:string, [freq_hz:int])` | Save a raw command under a name (`freq_hz` `0`/omitted → current frequency). Overwrites an existing command. | `bool` |
-| `RF.saveLast(name:string)` | Save the last captured command under a name (frequency taken from the capture). | `bool` |
-| `RF.remove(name:string)` | Delete a saved command. | `bool` |
-| `RF.getSaved(name:string)` | Raw pulse string of a saved command, `""` if it does not exist. | `string` |
-| `RF.list()` | Names of all saved commands. | `list` of `string` |
+| Function | Description |
+|----------|-------------|
+| `RF.save(name:string, raw:string, freq_hz:int?) -> bool` | Save a raw command under a name (`freq_hz` `0`/omitted → current frequency). Overwrites an existing command. |
+| `RF.saveLast(name:string) -> bool` | Save the last captured command under a name (frequency taken from the capture). |
+| `RF.remove(name:string) -> bool` | Delete a saved command. |
+| `RF.getSaved(name:string) -> string` | Raw pulse string of a saved command, `""` if it does not exist. |
+| `RF.list() -> list<string>` | Names of all saved commands. |
 
 ### Events
 
 | Function | Description |
 |----------|-------------|
-| `RF.on_receive(callback:function)` | Register a callback fired for every captured command. Callback: `def (raw:string, rssi:int, pulses:int)`. Fires only while the receiver is enabled. |
+| `RF.on_receive(callback:function(raw:string, rssi:int, pulses:int) -> nil) -> nil` | Register a callback fired for every captured command. Fires only while the receiver is enabled. |
 
 ## Constants
 

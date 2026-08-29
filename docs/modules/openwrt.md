@@ -28,9 +28,18 @@ import OPENWRT
 OPENWRT.setup("192.168.1.1", "root", "your-password")
 ```
 
-## Functions
+## API Reference
 
-### OPENWRT.setup(host, username, password)
+| Function | Description |
+|----------|-------------|
+| `OPENWRT.setup(host:string, username:string, password:string) -> nil` | Override router credentials for this script session. |
+| `OPENWRT.is_connected(mac:string) -> bool` | Check if a device with the given MAC address is on the network. |
+| `OPENWRT.clients() -> list<map>` | Get a list of network clients (DHCP leases + WiFi associations). |
+| `OPENWRT.info() -> map` | Get router system information. |
+| `OPENWRT.reboot() -> bool` | Reboot the router. |
+| `OPENWRT.call(object:string, method:string, args_json:string?) -> string` | Make a raw ubus JSON-RPC call for advanced use cases. |
+
+### OPENWRT.setup(host:string, username:string, password:string) -> nil
 
 Override router credentials for this script session.
 
@@ -40,7 +49,7 @@ Override router credentials for this script session.
 | `username` | string | Login username |
 | `password` | string | Login password |
 
-### OPENWRT.is_connected(mac)
+### OPENWRT.is_connected(mac:string) -> bool
 
 Check if a device with the given MAC address is on the network. Useful for **presence detection**.
 
@@ -59,7 +68,7 @@ if home
 end
 ```
 
-### OPENWRT.clients()
+### OPENWRT.clients() -> list<map>
 
 Get a list of network clients (DHCP leases + WiFi associations).
 
@@ -87,7 +96,7 @@ for c : clients
 end
 ```
 
-### OPENWRT.info()
+### OPENWRT.info() -> map
 
 Get router system information.
 
@@ -112,7 +121,7 @@ print("Uptime: " .. str(info["uptime"] / 3600) .. " hours")
 print("Free memory: " .. str(info["mem_free"] / 1024) .. " KB")
 ```
 
-### OPENWRT.reboot()
+### OPENWRT.reboot() -> bool
 
 Reboot the router.
 
@@ -123,7 +132,7 @@ import OPENWRT
 OPENWRT.reboot()
 ```
 
-### OPENWRT.call(object, method [, args_json])
+### OPENWRT.call(object:string, method:string, args_json:string?) -> string
 
 Make a raw ubus JSON-RPC call for advanced use cases.
 

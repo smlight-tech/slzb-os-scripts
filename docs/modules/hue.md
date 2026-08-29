@@ -40,9 +40,23 @@ HUE.setup("192.168.1.50", "your-api-key-here")
 
 This overrides the UI config for the current script session only.
 
-## Functions
+## API Reference
 
-### HUE.setup(host, api_key)
+| Function | Description |
+|----------|-------------|
+| `HUE.setup(host:string, api_key:string) -> nil` | Override Hue Bridge credentials for this script session. |
+| `HUE.on(light_id:int) -> int` | Turn on a light. |
+| `HUE.off(light_id:int) -> int` | Turn off a light. |
+| `HUE.toggle(light_id:int) -> int` | Toggle a light on/off. |
+| `HUE.set_brightness(light_id:int, bri:int) -> int` | Set light brightness (also turns it on). |
+| `HUE.set_color(light_id:int, hue:int, sat:int) -> int` | Set light color using hue and saturation (also turns it on). |
+| `HUE.set_ct(light_id:int, ct:int) -> int` | Set color temperature in mireds (also turns it on). |
+| `HUE.set_xy(light_id:int, x:real, y:real) -> int` | Set color using CIE xy color space (also turns it on). |
+| `HUE.alert(light_id:int, mode:string) -> int` | Trigger a light alert effect. |
+| `HUE.get_state(light_id:int) -> map` | Read the current state of a light. |
+| `HUE.lights() -> map` | List all lights on the bridge. |
+
+### HUE.setup(host:string, api_key:string) -> nil
 
 Override Hue Bridge credentials for this script session.
 
@@ -51,7 +65,7 @@ Override Hue Bridge credentials for this script session.
 | `host` | string | Hue Bridge IP address |
 | `api_key` | string | API key (username) |
 
-### HUE.on(light_id)
+### HUE.on(light_id:int) -> int
 
 Turn on a light.
 
@@ -61,15 +75,15 @@ Turn on a light.
 
 **Returns:** `int` — HTTP status code (200 on success)
 
-### HUE.off(light_id)
+### HUE.off(light_id:int) -> int
 
 Turn off a light.
 
-### HUE.toggle(light_id)
+### HUE.toggle(light_id:int) -> int
 
 Toggle a light on/off. Reads the current state first, then switches.
 
-### HUE.set_brightness(light_id, bri)
+### HUE.set_brightness(light_id:int, bri:int) -> int
 
 Set light brightness (also turns it on).
 
@@ -78,7 +92,7 @@ Set light brightness (also turns it on).
 | `light_id` | int | Light ID |
 | `bri` | int | Brightness, 0–254 |
 
-### HUE.set_color(light_id, hue, sat)
+### HUE.set_color(light_id:int, hue:int, sat:int) -> int
 
 Set light color using hue and saturation (also turns it on).
 
@@ -88,7 +102,7 @@ Set light color using hue and saturation (also turns it on).
 | `hue` | int | Hue value, 0–65535 (0=red, 21845=green, 43690=blue) |
 | `sat` | int | Saturation, 0–254 (0=white, 254=full color) |
 
-### HUE.set_ct(light_id, ct)
+### HUE.set_ct(light_id:int, ct:int) -> int
 
 Set color temperature in mireds (also turns it on).
 
@@ -97,7 +111,7 @@ Set color temperature in mireds (also turns it on).
 | `light_id` | int | Light ID |
 | `ct` | int | Color temperature in mireds, 153–500 (153=cold/6500K, 500=warm/2000K) |
 
-### HUE.set_xy(light_id, x, y)
+### HUE.set_xy(light_id:int, x:real, y:real) -> int
 
 Set color using CIE xy color space (also turns it on).
 
@@ -107,7 +121,7 @@ Set color using CIE xy color space (also turns it on).
 | `x` | real | CIE x coordinate, 0.0–1.0 |
 | `y` | real | CIE y coordinate, 0.0–1.0 |
 
-### HUE.alert(light_id, mode)
+### HUE.alert(light_id:int, mode:string) -> int
 
 Trigger a light alert effect.
 
@@ -116,7 +130,7 @@ Trigger a light alert effect.
 | `light_id` | int | Light ID |
 | `mode` | string | `"none"` — stop, `"select"` — one flash, `"lselect"` — 15 seconds of flashing |
 
-### HUE.get_state(light_id)
+### HUE.get_state(light_id:int) -> map
 
 Read the current state of a light.
 
@@ -139,7 +153,7 @@ Read the current state of a light.
 | `reachable` | bool | Whether the light is reachable |
 | `colormode` | string | Current color mode (`"hs"`, `"ct"`, `"xy"`) |
 
-### HUE.lights()
+### HUE.lights() -> map
 
 List all lights on the bridge.
 

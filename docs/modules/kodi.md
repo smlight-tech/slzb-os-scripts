@@ -26,9 +26,21 @@ KODI.setup("192.168.1.50")
 KODI.setup("192.168.1.50", 8080, "kodi", "mypassword")
 ```
 
-## Functions
+## API Reference
 
-### KODI.setup(host [, port [, user [, pass]]])
+| Function | Description |
+|----------|-------------|
+| `KODI.setup(host:string, port:int=8080, user:string?, pass:string?) -> nil` | Configure Kodi connection from script. |
+| `KODI.notify(title:string, message:string, duration_ms:int=5000) -> bool` | Show an on-screen notification on the TV. |
+| `KODI.play_pause(playerid:int?) -> bool` | Toggle play/pause. |
+| `KODI.stop(playerid:int?) -> bool` | Stop playback. |
+| `KODI.volume(level:int) -> bool` | Set volume level. |
+| `KODI.mute(on:bool?) -> bool` | Mute, unmute, or toggle mute. |
+| `KODI.get_playing() -> map` | Get information about the currently playing item. |
+| `KODI.input(action:string) -> bool` | Send navigation and input actions to Kodi. |
+| `KODI.send(method:string, params_json:string?) -> map` | Send a raw JSON-RPC call for any Kodi API method. |
+
+### KODI.setup(host:string, port:int=8080, user:string?, pass:string?) -> nil
 
 Configure Kodi connection from script. Overrides UI settings.
 
@@ -39,7 +51,7 @@ Configure Kodi connection from script. Overrides UI settings.
 | `user` | string | (optional) Username for HTTP basic auth |
 | `pass` | string | (optional) Password for HTTP basic auth |
 
-### KODI.notify(title, message [, duration_ms])
+### KODI.notify(title:string, message:string, duration_ms:int=5000) -> bool
 
 Show an on-screen notification on the TV.
 
@@ -57,7 +69,7 @@ KODI.notify("SLZB Alert", "Motion detected in hallway!")
 KODI.notify("Temperature", "Living room: 28°C", 10000)
 ```
 
-### KODI.play_pause([playerid])
+### KODI.play_pause(playerid:int?) -> bool
 
 Toggle play/pause. Auto-detects active player if no ID given.
 
@@ -67,7 +79,7 @@ Toggle play/pause. Auto-detects active player if no ID given.
 
 **Returns:** `bool`
 
-### KODI.stop([playerid])
+### KODI.stop(playerid:int?) -> bool
 
 Stop playback. Auto-detects active player if no ID given.
 
@@ -77,7 +89,7 @@ Stop playback. Auto-detects active player if no ID given.
 
 **Returns:** `bool`
 
-### KODI.volume(level)
+### KODI.volume(level:int) -> bool
 
 Set volume level.
 
@@ -87,7 +99,7 @@ Set volume level.
 
 **Returns:** `bool`
 
-### KODI.mute([on])
+### KODI.mute(on:bool?) -> bool
 
 Mute, unmute, or toggle mute.
 
@@ -97,7 +109,7 @@ Mute, unmute, or toggle mute.
 
 **Returns:** `bool`
 
-### KODI.get_playing()
+### KODI.get_playing() -> map
 
 Get information about the currently playing item.
 
@@ -126,7 +138,7 @@ if p["playing"]
 end
 ```
 
-### KODI.input(action)
+### KODI.input(action:string) -> bool
 
 Send navigation and input actions to Kodi.
 
@@ -147,7 +159,7 @@ KODI.input("select")
 KODI.input("fullscreen")
 ```
 
-### KODI.send(method [, params_json])
+### KODI.send(method:string, params_json:string?) -> map
 
 Send a raw JSON-RPC call for any Kodi API method.
 

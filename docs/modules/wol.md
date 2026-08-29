@@ -20,9 +20,15 @@ import WOL
 WOL.wake("AA:BB:CC:DD:EE:FF")
 ```
 
-## Functions
+## API Reference
 
-### WOL.wake(mac [, port])
+| Function | Description |
+|----------|-------------|
+| `WOL.wake(mac:string, port:int=9) -> bool` | Send a Wake-on-LAN magic packet to a MAC address. |
+| `WOL.wake_name(name:string) -> bool` | Wake a device by its configured name (from UI). |
+| `WOL.devices() -> map` | List all configured WOL devices. |
+
+### WOL.wake(mac:string, port:int=9) -> bool
 
 Send a Wake-on-LAN magic packet to a MAC address.
 
@@ -41,7 +47,7 @@ WOL.wake("AA:BB:CC:DD:EE:FF")
 WOL.wake("AA:BB:CC:DD:EE:FF", 7)
 ```
 
-### WOL.wake_name(name)
+### WOL.wake_name(name:string) -> bool
 
 Wake a device by its configured name (from UI).
 
@@ -57,7 +63,7 @@ WOL.wake_name("Gaming PC")
 WOL.wake_name("NAS")
 ```
 
-### WOL.devices()
+### WOL.devices() -> map
 
 List all configured WOL devices.
 

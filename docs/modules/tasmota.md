@@ -28,9 +28,22 @@ TASMOTA.setup("Desk Lamp", "192.168.1.51")
 TASMOTA.on("192.168.1.50")
 ```
 
-## Functions
+## API Reference
 
-### TASMOTA.setup(name, host)
+| Function | Description |
+|----------|-------------|
+| `TASMOTA.setup(name:string, host:string) -> nil` | Register a device by friendly name. |
+| `TASMOTA.on(name_or_host:string) -> bool` | Turn on the device. |
+| `TASMOTA.off(name_or_host:string) -> bool` | Turn off the device. |
+| `TASMOTA.toggle(name_or_host:string) -> bool` | Toggle the device. |
+| `TASMOTA.dimmer(name_or_host:string, level:int) -> bool` | Set dimmer level. |
+| `TASMOTA.color(name_or_host:string, hex_color:string) -> bool` | Set light color. |
+| `TASMOTA.ct(name_or_host:string, value:int) -> bool` | Set color temperature. |
+| `TASMOTA.status(name_or_host:string) -> map` | Get device status. |
+| `TASMOTA.cmd(name_or_host:string, command:string) -> map` | Send any Tasmota command. |
+| `TASMOTA.devices() -> map` | List all configured devices. |
+
+### TASMOTA.setup(name:string, host:string) -> nil
 
 Register a device by friendly name.
 
@@ -39,7 +52,7 @@ Register a device by friendly name.
 | `name` | string | Friendly name |
 | `host` | string | IP address or hostname |
 
-### TASMOTA.on(name_or_host)
+### TASMOTA.on(name_or_host:string) -> bool
 
 Turn on the device.
 
@@ -49,19 +62,19 @@ Turn on the device.
 
 **Returns:** `bool`
 
-### TASMOTA.off(name_or_host)
+### TASMOTA.off(name_or_host:string) -> bool
 
 Turn off the device.
 
 **Returns:** `bool`
 
-### TASMOTA.toggle(name_or_host)
+### TASMOTA.toggle(name_or_host:string) -> bool
 
 Toggle the device.
 
 **Returns:** `bool`
 
-### TASMOTA.dimmer(name_or_host, level)
+### TASMOTA.dimmer(name_or_host:string, level:int) -> bool
 
 Set dimmer level.
 
@@ -72,7 +85,7 @@ Set dimmer level.
 
 **Returns:** `bool`
 
-### TASMOTA.color(name_or_host, hex_color)
+### TASMOTA.color(name_or_host:string, hex_color:string) -> bool
 
 Set light color.
 
@@ -83,7 +96,7 @@ Set light color.
 
 **Returns:** `bool`
 
-### TASMOTA.ct(name_or_host, value)
+### TASMOTA.ct(name_or_host:string, value:int) -> bool
 
 Set color temperature.
 
@@ -94,7 +107,7 @@ Set color temperature.
 
 **Returns:** `bool`
 
-### TASMOTA.status(name_or_host)
+### TASMOTA.status(name_or_host:string) -> map
 
 Get device status.
 
@@ -118,7 +131,7 @@ print("Power: " .. s["power"])
 print("WiFi: " .. str(s["rssi"]) .. "%")
 ```
 
-### TASMOTA.cmd(name_or_host, command)
+### TASMOTA.cmd(name_or_host:string, command:string) -> map
 
 Send any Tasmota command. Full command list at [tasmota.github.io/docs/Commands](https://tasmota.github.io/docs/Commands/).
 
@@ -143,7 +156,7 @@ var r = TASMOTA.cmd("Temp Sensor", "Status 10")
 print(r["response"])
 ```
 
-### TASMOTA.devices()
+### TASMOTA.devices() -> map
 
 List all configured devices.
 

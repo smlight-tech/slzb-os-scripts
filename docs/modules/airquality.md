@@ -22,9 +22,14 @@ import AIRQUALITY
 AIRQUALITY.setup("your-api-key", "48.8566", "2.3522")
 ```
 
-## Functions
+## API Reference
 
-### AIRQUALITY.setup(api_key, lat, lng)
+| Function | Description |
+|----------|-------------|
+| `AIRQUALITY.setup(api_key:string, lat:string, lng:string) -> nil` | Override credentials and coordinates for this script session. |
+| `AIRQUALITY.get() -> map` | Get current air quality data. |
+
+### AIRQUALITY.setup(api_key:string, lat:string, lng:string) -> nil
 
 Override credentials and coordinates for this script session.
 
@@ -34,7 +39,7 @@ Override credentials and coordinates for this script session.
 | `lat` | string | Latitude |
 | `lng` | string | Longitude |
 
-### AIRQUALITY.get()
+### AIRQUALITY.get() -> map
 
 Get current air quality data.
 

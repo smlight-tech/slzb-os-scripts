@@ -2,9 +2,14 @@
 
 Check if network hosts are reachable using ICMP ping. Works with IP addresses and hostnames — no external services required.
 
-## Functions
+## API Reference
 
-### PING.check(host [, count [, timeout_ms]])
+| Function | Description |
+|----------|-------------|
+| `PING.check(host:string, count:int=3, timeout_ms:int=1000) -> map` | Send ICMP ping packets and get detailed results. |
+| `PING.alive(host:string) -> bool` | Quick reachability check — sends a single ping. |
+
+### PING.check(host:string, count:int=3, timeout_ms:int=1000) -> map
 
 Send ICMP ping packets and get detailed results.
 
@@ -36,7 +41,7 @@ print("Loss: " .. str(r["loss"]) .. "%")
 var r2 = PING.check("google.com", 5, 2000)
 ```
 
-### PING.alive(host)
+### PING.alive(host:string) -> bool
 
 Quick reachability check — sends a single ping.
 

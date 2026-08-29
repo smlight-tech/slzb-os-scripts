@@ -26,7 +26,7 @@ BUTTON.on_press(0, press_handler)
 
 | Function | Description |
 |----------|-------------|
-| `BUTTON.on_press(button_id:int, callback:function)` | Override button actions.<br>`button_id` - button number(id) starting from zero. All devices except SLZB-Ultima have only button `0`. |
+| `BUTTON.on_press(button_id:int, callback:function(press_type:int) -> nil) -> nil` | Override button actions.<br>`button_id` - button number(id) starting from zero. All devices except SLZB-Ultima have only button `0`. |
 
 Callback receives one argument:
 - `press_type` (`int`) — `0` for short press, `1` for long press

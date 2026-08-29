@@ -18,11 +18,11 @@ SLZB.log("Date: " .. t["year"] .. "-" .. t["month"] .. "-" .. t["day"])
 
 ## API Reference
 
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `TIME.waitSync(timeout:int)` | Wait for NTP time synchronization. Max 254 seconds. Use `255` to wait forever. Returns instantly if already synced. | `bool` (`false` if timed out) |
-| `TIME.getAll()` | Get full date and time. Returns `nil` if time is not yet synced. | `map` |
-| `TIME.getTime()` | Get time only. | `map` |
+| Function | Description |
+|----------|-------------|
+| `TIME.waitSync(timeout:int) -> bool` | Wait for NTP time synchronization. Max 254 seconds. Use `255` to wait forever. Returns instantly if already synced. Returns: `bool` (`false` if timed out). |
+| `TIME.getAll() -> map` | Get full date and time. Returns `nil` if time is not yet synced. |
+| `TIME.getTime() -> map` | Get time only. |
 
 ### Return value structure
 
