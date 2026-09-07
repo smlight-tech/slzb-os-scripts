@@ -134,6 +134,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
 | [BLE](docs/modules/ble.md) | Receiving BLE advertisements | v3.3.3.dev7 | U series and Ultima |
+| [ISC](docs/modules/isc.md) | Inter-script communication — send messages between running scripts | v3.3.8.dev7 | U series and Ultima |
 
 ### Integrations
 
