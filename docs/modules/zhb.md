@@ -55,8 +55,9 @@ relay.sendOnOff(1)  # turn on
 | `ZigbeeDevice.sendBri(brightness:int, channel:int=1) -> int` | Set brightness (1–254). `channel` optional. |
 | `ZigbeeDevice.sendColor(color:string, channel:int=1) -> int` | Set color. Format: `"#rrggbb"` or `"r,g,b"`. `channel` optional. |
 | `ZigbeeDevice.sendColorTemp(mireds:int, channel:int=1) -> int` | Set color temperature in [mireds](https://en.wikipedia.org/wiki/Mired). `channel` optional. |
-| `ZigbeeDevice.sendCmd(endpoint:int, cluster:int, command:int, payload:bytes?) -> int` | Send any ZCL command. `payload` (`bytes`) optional. Returns ZCL transaction number (`int`). |
+| `ZigbeeDevice.sendCmd(endpoint:int, cluster:int, command:int, payload:bytes?, manufCode:int?) -> int` | Send any ZCL command. `payload` (`bytes`) optional. `manufCode` builds a manufacturer-specific frame *(since v3.3.8.dev7)*. Returns ZCL transaction number (`int`). |
 | `ZigbeeDevice.readAttr(endpoint:int, cluster:int, attr:int, ...attrs:int) -> int` | Request attribute read. Does **not** wait for response. Supports multiple attributes. Returns ZCL transaction number (`int`). *(since v3.0.6)* |
+| `ZigbeeDevice.writeAttr(endpoint:int, cluster:int, attr:int, dtype:int, payload:bytes, manufCode:int?) -> int` | ZCL Write Attribute with a raw payload. `manufCode` makes the write manufacturer-specific *(since v3.3.8.dev7)*. Returns ZCL transaction number (`int`). |
 
 ```berry
 dev.sendOnOff(1)         # turn on relay
