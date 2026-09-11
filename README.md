@@ -136,6 +136,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [BLE](docs/modules/ble.md) | Receiving BLE advertisements | v3.3.3.dev7 | U series and Ultima |
 | [ISC](docs/modules/isc.md) | Inter-script communication — send messages between running scripts | v3.3.8.dev7 | U series and Ultima |
 | [UI](docs/modules/ui.md) | Show messages to the user in the web interface | v3.3.8.dev7 | U series and Ultima |
+| [BEAPP](docs/modules/beapp.md) | App backend — web-app page lifecycle and messaging | v3.3.8.dev7 | U series and Ultima |
 
 ### Integrations
 
