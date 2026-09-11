@@ -135,6 +135,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
 | [BLE](docs/modules/ble.md) | Receiving BLE advertisements | v3.3.3.dev7 | U series and Ultima |
 | [ISC](docs/modules/isc.md) | Inter-script communication — send messages between running scripts | v3.3.8.dev7 | U series and Ultima |
+| [UI](docs/modules/ui.md) | Show messages to the user in the web interface | v3.3.8.dev7 | U series and Ultima |
 
 ### Integrations
 
