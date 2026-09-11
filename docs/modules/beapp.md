@@ -149,4 +149,5 @@ end
 - A blocking `receive()` blocks the whole script; the same TIMER-callback restrictions apply as for `ISC.receive()` — block only in the main script flow
 - Channels are allocated dynamically from the reserved ISC range (fixed system channels are skipped); scripts cannot access reserved channels directly through the ISC module
 - The app card in the coordinator UI has per-app toggles: **Start on boot** (the app main script is loaded and started with the other scripts at boot), **Restart if crashed** (an app that entered the error state is restarted automatically after a short delay) and **Show in sidebar**
+- The **Remove** button on the app card uninstalls the app: the backend script is stopped, `/beapps/<folder>/` is deleted with all files, and the app's config entry, pending restarts and ring log are dropped
 - `BEAPP.log()` writes to a per-app circular buffer (PSRAM, up to 8 apps); read it with the **Log** button on the app card in the coordinator UI
