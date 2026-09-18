@@ -131,6 +131,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [IR Receiver](docs/modules/ir_receiver.md) | Receive IR signals from remote controls, learn and replay codes | v3.2.5.dev1 | Ultima only |
 | [RF](docs/modules/rf.md) | Sub-1 GHz RF transceiver add-on (CC1101): sniff, replay and store 315/433/868/915 MHz OOK commands | v3.3.5 | Ultima + RF add-on |
 | [LTE](docs/modules/lte.md) | 4G/LTE add-on modem: raw AT commands, connection status, read / send / receive SMS | v3.3.8.dev8 | Ultima / U2L + 4G/LTE add-on |
+| [WG](docs/modules/wg.md) | WireGuard VPN client: tunnel / peer state, last handshake, reconnect, state change callback | v3.3.8.dev8 | All |
 | [Audio Player](docs/modules/audio_player.md) | Play mp3 files from HTTP stream or from internal memory | v3.3.3.dev0 | Ultima only |
 | [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
