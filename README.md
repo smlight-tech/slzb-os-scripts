@@ -133,6 +133,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [LTE](docs/modules/lte.md) | 4G/LTE add-on modem: raw AT commands, connection status, read / send / receive SMS | v3.3.8.dev8 | Ultima / U2L + 4G/LTE add-on |
 | [WG](docs/modules/wg.md) | WireGuard VPN client: tunnel / peer state, last handshake, reconnect, state change callback | v3.3.8.dev8 | All |
 | [Audio Player](docs/modules/audio_player.md) | Play mp3 files from HTTP stream or from internal memory | v3.3.3.dev0 | Ultima only |
+| [NETWORK](docs/modules/network.md) | Network state — readiness, Ethernet/Wi-Fi status, IP addresses | v2.9.7 | All |
 | [SSE](docs/modules/sse.md) | Server-Sent Events for real-time push to browsers | v3.2.5.dev1 | All |
 | [TIMER](docs/modules/timer.md) | Repeating and one-shot timers | v3.2.5.dev1 | All |
 | [BLE](docs/modules/ble.md) | Receiving BLE advertisements | v3.3.3.dev7 | U series and Ultima |
