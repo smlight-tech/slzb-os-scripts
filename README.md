@@ -140,6 +140,10 @@ Each module is documented in its own file with API details, examples, and cross-
 | [ISC](docs/modules/isc.md) | Inter-script communication — send messages between running scripts | v3.3.8.dev7 | U series and Ultima |
 | [UI](docs/modules/ui.md) | Show messages to the user in the web interface | v3.3.8.dev7 | U series and Ultima |
 | [BEAPP](docs/modules/beapp.md) | App backend — web-app page lifecycle and messaging | v3.3.8.dev7 | U series and Ultima |
+| [TCP_SERVER](docs/modules/tcpserver.md) | Raw TCP server class — accept connections, exchange binary-safe data | v3.3.8.dev8 | U series and Ultima |
+| [TCP_CLIENT](docs/modules/tcpclient.md) | Raw TCP client class — outgoing connections to plain-TCP services | v3.3.8.dev8 | U series and Ultima |
+| [UDP_SERVER](docs/modules/udpserver.md) | UDP server class — receive datagrams on a port, multicast groups | v3.3.8.dev8 | U series and Ultima |
+| [UDP_CLIENT](docs/modules/udpclient.md) | UDP client class — send datagrams, read the replies | v3.3.8.dev8 | U series and Ultima |
 
 ### Integrations
 
