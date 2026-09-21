@@ -132,7 +132,10 @@ Trigger a light alert effect.
 
 ### HUE.get_state(light_id:int) -> map
 
-Read the current state of a light.
+Read the current state of a light. Raises an error when the bridge cannot be
+reached, answers with an HTTP error, or reports an API error (e.g.
+`"unauthorized user"` for a wrong API key) — wrap in `try`/`except` if you
+want to handle that in the script.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -155,7 +158,9 @@ Read the current state of a light.
 
 ### HUE.lights() -> map
 
-List all lights on the bridge.
+List all lights on the bridge. Raises an error when the bridge cannot be
+reached, answers with an HTTP error, or reports an API error (e.g.
+`"unauthorized user"` for a wrong API key).
 
 **Returns:** `map` — keys are light IDs (as strings), values are light names.
 
@@ -164,7 +169,7 @@ import HUE
 
 var all = HUE.lights()
 for id : all.keys()
-    print("Light " .. id .. ": " .. all[id])
+    SLZB.log("Light " .. id .. ": " .. all[id])
 end
 ```
 
