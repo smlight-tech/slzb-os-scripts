@@ -22,6 +22,7 @@ relay.sendOnOff(1)  # turn on
 | Function | Description |
 |----------|-------------|
 | `ZHB.getDevice(identifier:string\|int) -> ZigbeeDevice` | Get device by name (`string`), network address (`int`), or IEEE address (`string`, format `"0x0000000000000000"`). Returns: `ZigbeeDevice` (or error if not found). |
+| `ZHB.getDevices() -> list` | All paired devices as a `list` of `ZigbeeDevice` instances (may be empty). *(since v3.3.8.dev8)* |
 | `ZHB.waitForStart(timeout:int) -> nil` | Block until Zigbee Hub is fully started. Max 254 seconds. Use `255` to wait forever. |
 | `ZHB.permitJoin(time:int, addr:int?) -> nil` | Open network for new devices. `time`: 1–254 sec, `0` = close, `255` = permanent. `addr` (optional): specific device address. *(since v3.0.6)* |
 | `ZHB.mqttAction(topic:string, payload:string) -> int\|nil` | Run a Zigbee Hub MQTT command locally (same handlers as a real MQTT message on `{base}/cmd/...` or `{base}/write/...`, incl. ZCN converters). *(since v3.3.8: returns a request id for `ZHB.await()`)* Returns: request id (`int`) for cmd/write topics, `nil` otherwise. |
@@ -199,6 +200,25 @@ ZHB.on_action(on_action)
 ```
 
 > **Important:** Many devices have **no custom name** — `getName()` returns `""`. In that case, always use the IEEE/NWK matching pattern above.
+
+### Listing Paired Devices (since v3.3.8.dev8)
+
+`ZHB.getDevices()` returns every paired device as a regular Berry `list` of `ZigbeeDevice` instances — iterate it, filter it, take its `.size()`:
+
+```berry
+import ZHB
+import SLZB
+
+ZHB.waitForStart(255)
+
+var devs = ZHB.getDevices()
+SLZB.log("paired devices: " .. str(devs.size()))
+
+for dev: devs
+  SLZB.log(dev.getIeee() .. " " .. dev.getModel() ..
+           " (" .. (dev.hasName() ? dev.getName() : "no name") .. "), lqi " .. str(dev.getLqi()))
+end
+```
 
 ### Events
 
