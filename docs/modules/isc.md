@@ -2,9 +2,11 @@
 
 Inter-script communication — exchange messages between running Berry scripts through numbered channels. Each channel is a thread-safe FIFO queue, so one script can safely produce data while another consumes it.
 
-Supported message types: `int`, `real`, `string`.
+Supported message types: `int`, `real`, `string`, `bytes`.
 
-A channel must be **claimed** before writing to it (`ISC.claim`): **private** — a single writer owns the channel, or **public** — every script that wants to write claims the same channel. Reading needs no claim — anyone can listen.
+A channel must be **claimed** before writing to it (`ISC.claim`): **private** — a single writer owns the channel, or **public** — every script that wants to write claims the same channel. Reading needs no claim — anyone can listen, but each message is delivered to **one** reader (whoever receives it first).
+
+To deliver every message to **several** scripts, use a **broadcast** channel: one writer claims it with `ISC.CH_TYPE_BROADCAST`, and every reader calls `ISC.subscribe()` — each subscriber gets its own copy of every message. See [Broadcast Channels](#broadcast-channels).
 
 ## Setup
 
@@ -28,12 +30,14 @@ ISC.send(1, "hello")
 
 | Function | Description |
 |----------|-------------|
-| `ISC.claim(channel:int, ch_type:int) -> bool` | Claim a channel for writing (private or public). |
+| `ISC.claim(channel:int, ch_type:int) -> bool` | Claim a channel for writing (private, public or broadcast). |
 | `ISC.release(channel:int) -> bool` | Release this script's claim on a channel. |
-| `ISC.send(channel:int, value:int\|real\|string) -> bool` | Send an int, real or string message to a claimed channel. Non-blocking. |
-| `ISC.receive(channel:int, timeout_ms:int=0) -> int\|real\|string` | Receive the next message from a channel, waiting up to `timeout_ms`. |
+| `ISC.send(channel:int, value:int\|real\|string\|bytes) -> bool\|int` | Send an int, real, string or bytes message to a claimed channel. Non-blocking. Returns: `bool` for private/public channels, `int` (number of subscribers reached) for broadcast channels. |
+| `ISC.receive(channel:int, timeout_ms:int=0) -> int\|real\|string\|bytes` | Receive the next message from a channel, waiting up to `timeout_ms`. |
 | `ISC.available(channel:int) -> int` | Number of messages waiting in a channel. |
 | `ISC.clear(channel:int) -> nil` | Drop all pending messages in a channel. |
+| `ISC.subscribe(channel:int) -> bool` | Subscribe to a broadcast channel: from now on this script gets its own copy of every message. |
+| `ISC.unsubscribe(channel:int) -> bool` | Stop receiving a broadcast channel; pending copies are dropped. |
 
 ### ISC.claim(channel:int, ch_type:int) -> bool
 
@@ -42,12 +46,13 @@ Claim a channel before writing to it.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `channel` | int | Channel id, 0–100 |
-| `ch_type` | int | `ISC.CH_TYPE_PRIVATE` — single writer, or `ISC.CH_TYPE_PUBLIC` — shared writers |
+| `ch_type` | int | `ISC.CH_TYPE_PRIVATE` — single writer, `ISC.CH_TYPE_PUBLIC` — shared writers, or `ISC.CH_TYPE_BROADCAST` — single writer, every subscriber gets each message |
 
-**Returns:** `bool` — `true` if the claim succeeded; `false` if the channel is already taken: a private channel claimed by another script, a type mismatch, or no writer slots left
+**Returns:** `bool` — `true` if the claim succeeded; `false` if the channel is already taken: a private/broadcast channel claimed by another script, a type mismatch, no writer slots left, or the channel has subscribers and the type is not broadcast
 
 - **Private** channel: the claiming script becomes the only writer. `claim()` from any other script returns `false` — that means the channel is busy.
-- **Public** (broadcast) channel: several scripts can write — each writer calls `claim(ch, ISC.CH_TYPE_PUBLIC)` on the same channel.
+- **Public** channel: several scripts can write — each writer calls `claim(ch, ISC.CH_TYPE_PUBLIC)` on the same channel. Each message still goes to one reader.
+- **Broadcast** channel: one writer, any number of subscribed readers — see [Broadcast Channels](#broadcast-channels).
 - Repeating `claim()` from the same script is a no-op and returns `true`.
 - The claim is released automatically when the script stops.
 
@@ -76,16 +81,16 @@ import ISC
 ISC.release(1)
 ```
 
-### ISC.send(channel:int, value:int\|real\|string) -> bool
+### ISC.send(channel:int, value:int\|real\|string\|bytes) -> bool\|int
 
 Send a message to a channel claimed by this script. Never blocks. Raises an error if the channel is not claimed, or is claimed by another script (private).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `channel` | int | Channel id, 0–100 (101–255 are reserved for the system) |
-| `value` | any | Message: `int`, `real` or `string` (max 64 KB) |
+| `value` | any | Message: `int`, `real`, `string` or `bytes` (string / bytes max 64 KB) |
 
-**Returns:** `bool` — `true` if the message was queued, `false` if the channel is full (8 pending messages) or out of memory
+**Returns:** `bool` — `true` if the message was queued, `false` if the channel is full (8 pending messages) or out of memory. On a **broadcast** channel: `int` — the number of subscribers the message was delivered to (`0` = nobody is subscribed, or every subscriber queue is full).
 
 ```berry
 import ISC
@@ -93,9 +98,10 @@ import ISC
 ISC.send(1, 42)              # int
 ISC.send(1, 21.5)            # real
 ISC.send(1, "hello there")   # string
+ISC.send(1, bytes("A1B2C3"))  # bytes - binary-safe, arrives as bytes()
 ```
 
-### ISC.receive(channel:int, timeout_ms:int=0) -> int\|real\|string
+### ISC.receive(channel:int, timeout_ms:int=0) -> int\|real\|string\|bytes
 
 Receive the oldest message from a channel (FIFO order). Blocks the calling script until a message arrives or the timeout expires.
 
@@ -104,7 +110,7 @@ Receive the oldest message from a channel (FIFO order). Blocks the calling scrip
 | `channel` | int | Channel id, 0–100 (101–255 are reserved for the system) |
 | `timeout_ms` | int | (optional) How long to wait, milliseconds. `0` (default) — return immediately; `ISC.TIMEOUT_FOREVER` (`-1`) — wait forever |
 
-**Returns:** the received `int`, `real` or `string`, or `nil` if no message arrived within the timeout
+**Returns:** the received `int`, `real`, `string` or `bytes` (the same type that was sent), or `nil` if no message arrived within the timeout
 
 ```berry
 import ISC
@@ -146,6 +152,79 @@ import ISC
 ISC.clear(1)
 ```
 
+On a broadcast channel `clear()` drops only the calling subscriber's own pending copies.
+
+### ISC.subscribe(channel:int) -> bool
+
+Subscribe to a broadcast channel. From now on every message sent to the channel is copied into this script's own queue (up to 8 pending messages); read them with `receive()` as usual. Subscribing is allowed before the writer claims the channel — the start order of the scripts does not matter.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `channel` | int | Channel id, 0–100 |
+
+**Returns:** `bool` — `true` if subscribed (repeating the call is a no-op); `false` if the channel is a private/public channel, or the subscription limit (32 across all scripts) is reached
+
+```berry
+import ISC
+ISC.subscribe(5)
+var msg = ISC.receive(5, 1000)   # this script's own copy
+```
+
+### ISC.unsubscribe(channel:int) -> bool
+
+Stop receiving a broadcast channel. Messages still pending for this script are dropped. Called automatically for every subscription when the script stops.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `channel` | int | Channel id, 0–100 |
+
+**Returns:** `bool` — `false` if the calling script was not subscribed
+
+```berry
+import ISC
+ISC.unsubscribe(5)
+```
+
+## Broadcast Channels
+
+A regular channel is a single queue: with several readers every message goes to whoever receives it first. A **broadcast** channel delivers every message to **every** subscribed script:
+
+- the writer claims the channel with `ISC.claim(ch, ISC.CH_TYPE_BROADCAST)` — like private, only one script may write;
+- each reader calls `ISC.subscribe(ch)` once and then uses `receive()` / `available()` / `clear()` as usual — they work on the reader's own copy of the stream;
+- `send()` returns the number of subscribers the message reached;
+- a slow subscriber only loses its own messages: when its queue (8 messages) is full, the new message is dropped for that subscriber, the others still get it;
+- messages are not stored for scripts that subscribe later — a new subscriber sees only messages sent after `subscribe()`;
+- string and bytes messages are stored once in PSRAM and shared by all subscribers, so broadcasting a long payload to many scripts does not multiply memory use.
+
+```berry
+# Publisher script — the only writer
+import ISC
+import TIMER
+import WEATHER
+
+ISC.claim(5, ISC.CH_TYPE_BROADCAST)
+
+TIMER.setInterval(def ()
+    var n = ISC.send(5, WEATHER.get()["temp"])
+    if n == 0
+        # nobody listens at the moment
+    end
+end, 60000)
+```
+
+```berry
+# Any number of subscriber scripts, each gets every value
+import ISC
+import SLZB
+
+ISC.subscribe(5)
+
+while true
+    var temp = ISC.receive(5, ISC.TIMEOUT_FOREVER)
+    SLZB.log("temperature: " .. str(temp))
+end
+```
+
 ## Constants
 
 | Constant | Value | Description |
@@ -153,7 +232,8 @@ ISC.clear(1)
 | `ISC.TIMEOUT_FOREVER` | -1 | Pass as `timeout_ms` to `receive()` to wait forever |
 | `ISC.MAX_CHANNEL` | 100 | Highest channel id available to scripts |
 | `ISC.CH_TYPE_PRIVATE` | 1 | Channel with a single writer |
-| `ISC.CH_TYPE_PUBLIC` | 2 | Broadcast channel — several scripts may claim and write |
+| `ISC.CH_TYPE_PUBLIC` | 2 | Shared channel — several scripts may claim and write; each message goes to one reader |
+| `ISC.CH_TYPE_BROADCAST` | 3 | Broadcast channel — a single writer, every subscribed script gets each message |
 
 ## Examples
 
@@ -245,3 +325,6 @@ end
 - A blocking `receive()` blocks the whole calling script — its timers and event callbacks do not run until a message arrives
 - IMPORTANT: timer and event callbacks of ALL scripts are serialized — a long blocking `receive()` inside a `TIMER` or event callback stalls callbacks of every script, including the sender's, and can deadlock until the timeout. Inside callbacks use `timeout_ms = 0` (poll); block with `ISC.TIMEOUT_FOREVER` only allowed in the main script flow without timers
 - Messages survive the sender script stopping, but a channel keeps its pending messages until they are received or cleared — call `clear()` at script start if stale data is a concern
+- Broadcast: `receive()` on a broadcast channel without `subscribe()` raises an error; subscriptions (up to 32 in total) are removed automatically when the script stops. A channel that has subscribers accepts only a `CH_TYPE_BROADCAST` claim, and subscribing to a private/public channel returns `false`
+- Broadcast: when the writer stops, the subscriptions stay — a restarted writer claims the channel again and the subscribers keep receiving
+- Firmware features use broadcast on reserved system channels too — e.g. incoming SMS of the 4G/LTE add-on are broadcast to every script that calls `LTE.smsReceive()`

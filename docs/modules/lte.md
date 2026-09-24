@@ -136,8 +136,10 @@ The message stays in the SMS storage — delete it with `smsDelete(msg["i"])` on
 ## Notes
 
 - AT commands and SMS functions work in the states `STATE_CONNECTING`, `STATE_CONNECTED` and `STATE_NO_SIGNAL`; otherwise they return `""` / `-1` / `nil` / `false`.
-- Incoming SMS are detected by the firmware within 30 s after arrival. The queue behind `smsReceive()` keeps the 8 newest messages and is shared by all scripts: a message is delivered to the script that reads it first, so handle SMS in one script.
-- Messages that arrived while no script was reading stay queued (also from before the script was started) — check `ts` if old commands must be ignored.
+- Incoming SMS are detected by the firmware within 30 s after arrival. Every incoming SMS is delivered to **every** script that uses `smsReceive()` — each script gets its own copy, so several scripts can react to the same message independently.
+- A script starts receiving with its **first** `smsReceive()` call (it subscribes to the incoming SMS stream) — messages that arrived before that call are not delivered to it. Call `LTE.smsReceive()` once right at the script start to subscribe early. The SMS itself stays on the SIM and can be read with `smsRead()`.
+- Each script's queue keeps its 8 newest messages: when a script does not read, its oldest pending message is dropped (for that script only).
+- Several scripts may process the same message — decide which one deletes it with `smsDelete()`, otherwise the others may try to read an already deleted message.
 - Parts of a long (concatenated) incoming message arrive as separate messages.
 - `smsRead()` marks the message as read on the SIM; `smsReceive()` reports every message only once.
 - SMS functions wait up to 30 s if the web page or the firmware is using the SMS storage at the same moment.
