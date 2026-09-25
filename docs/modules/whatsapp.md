@@ -81,16 +81,19 @@ end, 3600000)
 
 ```berry
 import WHATSAPP
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0402
-        var temp = msg["value"] / 100.0
+ZHB.waitForStart(255)
+
+while true
+    var msg = ZHB.dataReceive(-1)  # wait for the next value from any Zigbee device
+    if msg != nil && msg["cl"] == 0x0402 && msg.contains("value")
+        var temp = msg["value"]  # already in °C
         if temp > 30
             WHATSAPP.send("High temperature: " .. str(temp) .. " C")
         end
     end
-end)
+end
 ```
 
 ### Periodic status report

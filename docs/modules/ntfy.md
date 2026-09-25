@@ -85,29 +85,36 @@ end)
 
 ```berry
 import NTFY
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0402
-        var temp = msg["value"] / 100.0
+ZHB.waitForStart(255)
+
+while true
+    var msg = ZHB.dataReceive(-1)  # wait for the next value from any Zigbee device
+    if msg != nil && msg["cl"] == 0x0402 && msg.contains("value")
+        var temp = msg["value"]  # already in °C
         if temp > 30
             NTFY.send("High temperature: " .. str(temp) .. " C")
         end
     end
-end)
+end
 ```
 
 ### Water leak alert
 
 ```berry
 import NTFY
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0500
-        NTFY.send("Water leak detected!")
+ZHB.waitForStart(255)
+
+while true
+    var msg = ZHB.dataReceive(-1)
+    # water leak sensors report through the IAS Zone cluster: bit 0 of the zone status = alarm
+    if msg != nil && msg["cl"] == 0x0500 && msg.contains("value") && (msg["value"] & 1)
+        NTFY.send("Water leak detected: " .. msg["name"])
     end
-end)
+end
 ```
 
 ## Notes

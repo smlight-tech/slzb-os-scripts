@@ -290,18 +290,27 @@ end, 60000)
 
 ```berry
 import ESPHOME
-import ZB
+import ZHB
+import SLZB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0402
-        var temp = msg["value"] / 100.0
+ZHB.waitForStart(255)
+
+var lastChange = -300000  # SLZB.millis() of the last A/C command
+
+while true
+    var msg = ZHB.dataReceive(-1)  # wait for the next value from any Zigbee device
+    # at most one A/C command every 5 minutes
+    if msg != nil && msg["cl"] == 0x0402 && msg.contains("value") && SLZB.millis() - lastChange >= 300000
+        var temp = msg["value"]  # already in °C
         if temp > 28
             ESPHOME.set_climate("My AC", "climate_1", 24, "cool")
+            lastChange = SLZB.millis()
         elif temp < 18
             ESPHOME.set_climate("My AC", "climate_1", 22, "heat")
+            lastChange = SLZB.millis()
         end
     end
-end, 300000)
+end
 ```
 
 ### Read sensor and log

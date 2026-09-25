@@ -118,16 +118,21 @@ end, 30000)
 
 ```berry
 import SLWF08
-import ZB
+import ZHB
 
+ZHB.waitForStart(255)
+
+var button = ZHB.getDevice("TV Button")
 var current_input = 1
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0006
+while true
+    var msg = ZHB.dataReceive(-1)
+    # any On/Off cluster command (on, off, toggle) sent by the button
+    if msg != nil && msg["nwk"] == button.getNwk() && msg["cl"] == 0x0006 && msg.contains("cmd")
         current_input = current_input == 1 ? 2 : 1
         SLWF08.set_number("Living Room TV", "hdmi_input", current_input)
     end
-end)
+end
 ```
 
 ### Notify when TV turns on

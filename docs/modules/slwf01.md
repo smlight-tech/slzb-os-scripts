@@ -78,18 +78,27 @@ See the [ESPHOME module documentation](esphome.md) for full details on each func
 
 ```berry
 import SLWF01
-import ZB
+import ZHB
+import SLZB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0402
-        var temp = msg["value"] / 100.0
+ZHB.waitForStart(255)
+
+var lastChange = -600000  # SLZB.millis() of the last A/C command
+
+while true
+    var msg = ZHB.dataReceive(-1)  # wait for the next value from any Zigbee device
+    # at most one A/C command every 10 minutes
+    if msg != nil && msg["cl"] == 0x0402 && msg.contains("value") && SLZB.millis() - lastChange >= 600000
+        var temp = msg["value"]  # already in °C
         if temp > 28
             SLWF01.set_climate("Bedroom AC", "climate_1", 24, "cool")
+            lastChange = SLZB.millis()
         elif temp < 20
             SLWF01.set_climate("Bedroom AC", "climate_1", 0, "off")
+            lastChange = SLZB.millis()
         end
     end
-end, 600000)
+end
 ```
 
 ### Turn on A/C on button press

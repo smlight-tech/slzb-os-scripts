@@ -231,19 +231,27 @@ end)
 
 ```berry
 import SLWF09
-import ZB
+import ZHB
 import TIMER
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0500
-        SLWF09.set_color("Alert Strip", 0xFF0000)
-        SLWF09.set_effect("Alert Strip", 1)
-        SLWF09.on("Alert Strip")
-        TIMER.once(10000, def ()
-            SLWF09.off("Alert Strip")
-        end)
+ZHB.waitForStart(255)
+
+# poll with timeout 0 from a timer: a script blocked in dataReceive(-1) would never run its TIMER callbacks
+TIMER.setInterval(def ()
+    var msg = ZHB.dataReceive(0)
+    while msg != nil
+        # IAS Zone cluster (motion, door, water leak, smoke): bit 0 of the zone status = alarm
+        if msg["cl"] == 0x0500 && msg.contains("value") && (msg["value"] & 1) != 0
+            SLWF09.set_color("Alert Strip", 0xFF0000)
+            SLWF09.set_effect("Alert Strip", 1)
+            SLWF09.on("Alert Strip")
+            TIMER.setTimeout(def ()
+                SLWF09.off("Alert Strip")
+            end, 10000)
+        end
+        msg = ZHB.dataReceive(0)
     end
-end)
+end, 500)
 ```
 
 ### Cycle through all configured devices

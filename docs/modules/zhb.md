@@ -23,6 +23,8 @@ relay.sendOnOff(1)  # turn on
 |----------|-------------|
 | `ZHB.getDevice(identifier:string\|int) -> ZigbeeDevice` | Get device by name (`string`), network address (`int`), or IEEE address (`string`, format `"0x0000000000000000"`). Returns: `ZigbeeDevice` (or error if not found). |
 | `ZHB.getDevices() -> list` | All paired devices as a `list` of `ZigbeeDevice` instances (may be empty). *(since v3.3.8.dev8)* |
+| `ZHB.dataReceive(timeout:int=0) -> map` | Next parsed value or command from any paired device, `nil` if nothing arrived. `timeout`: ms, `0` — just check, `-1` — wait forever. Result keys: `ieee`, `name`, `nwk`, `ep`, `cl`, `lqi`, `status`, `manufCode`, `zType`, attributes: `attr`, `value`; commands: `cmd`, `action`. See *Receiving Device Data* below. ESP32-S3 devices only. *(since v3.3.8.dev8)* |
+| `ZHB.zclReceive(timeout:int=0) -> map` | Next raw incoming ZCL frame from any device, `nil` if nothing arrived. `timeout`: ms, `0` — just check, `-1` — wait forever. Result keys: `ieee`, `nwk`, `ep`, `dstEp`, `cl`, `group`, `lqi`, `broadcast`, `specific`, `dir`, `manufCode`, `seq`, `cmd`, `zcl`, `payload`. See *Raw ZCL Frames* below. ESP32-S3 devices only. *(since v3.3.8.dev8)* |
 | `ZHB.waitForStart(timeout:int) -> nil` | Block until Zigbee Hub is fully started. Max 254 seconds. Use `255` to wait forever. |
 | `ZHB.permitJoin(time:int, addr:int?) -> nil` | Open network for new devices. `time`: 1–254 sec, `0` = close, `255` = permanent. `addr` (optional): specific device address. *(since v3.0.6)* |
 | `ZHB.mqttAction(topic:string, payload:string) -> int\|nil` | Run a Zigbee Hub MQTT command locally (same handlers as a real MQTT message on `{base}/cmd/...` or `{base}/write/...`, incl. ZCN converters). *(since v3.3.8: returns a request id for `ZHB.await()`)* Returns: request id (`int`) for cmd/write topics, `nil` otherwise. |
@@ -217,6 +219,128 @@ SLZB.log("paired devices: " .. str(devs.size()))
 for dev: devs
   SLZB.log(dev.getIeee() .. " " .. dev.getModel() ..
            " (" .. (dev.hasName() ? dev.getName() : "no name") .. "), lqi " .. str(dev.getLqi()))
+end
+```
+
+### Receiving Device Data (since v3.3.8.dev8)
+
+`ZHB.dataReceive()` gives a script every value the hub receives from paired devices, already decoded: temperature in °C, humidity in %, on/off as `bool`, and so on. These are the same values the hub shows on the dashboard and publishes to MQTT. Commands sent by devices (button clicks, remotes) arrive too, with the recognized action string. Available on ESP32-S3 devices (U-series, MRU, Ultima).
+
+Each value goes to **every** script that uses `dataReceive()`, and each script gets its own copy. A script starts receiving with its **first** `dataReceive()` call, and values that arrived before it are not delivered, so call it once at the script start. Up to 8 values are buffered per script: when the script does not keep up, the oldest are dropped. The subscription ends when the script stops.
+
+A waiting `dataReceive()` blocks the whole script. Inside `TIMER` or event callbacks call it only with `timeout = 0` (poll): callbacks of all scripts are serialized, so a blocking wait there stalls every script.
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `ieee` | string | Device IEEE, same format as `ZigbeeDevice.getIeee()` |
+| `name` | string | Device name, `""` if not set |
+| `nwk` | int | Device network address — `ZHB.getDevice(msg["nwk"])` |
+| `ep` | int | Endpoint |
+| `cl` | int | Cluster id, e.g. `0x0402` temperature |
+| `lqi` | int | Link quality of the device |
+| `status` | int | ZCL status, `0` = success. A failed read arrives with an error status and no `value` |
+| `manufCode` | int | Manufacturer code of a manufacturer-specific attribute, `0` otherwise |
+| `zType` | int | ZCL data type of the attribute (Tuya DP type for cluster `0xEF00`) |
+| `attr` | int | Attribute: attribute id (Tuya: DP number) |
+| `value` | int\|real\|bool\|string\|bytes | Attribute: decoded value, the same one published to MQTT. Missing if the attribute had no value |
+| `cmd` | int | Command: ZCL command id (instead of `attr` / `value`) |
+| `action` | string | Command: the recognized action, e.g. `"single"`, `"double"`, `"on"`, the same string as in `ZHB.on_action()`. Missing if the command is not mapped to an action |
+
+Common clusters and their `value`:
+
+| Cluster | `cl` | `value` |
+|---------|------|---------|
+| On/Off | `0x0006` | `bool` |
+| Level | `0x0008` | `int`, 0–254 |
+| Illuminance | `0x0400` | `real`, lux |
+| Temperature | `0x0402` | `real`, °C |
+| Pressure | `0x0403` | `real`, kPa |
+| Humidity | `0x0405` | `real`, % |
+| Occupancy | `0x0406` | `int`, `1` — occupied |
+| IAS Zone (motion, door, water leak, smoke) | `0x0500` | `int`, zone status bits: bit 0 — alarm |
+| Power Configuration (battery) | `0x0001` | `int`, % |
+
+Devices with a converter (Tuya, Aqara and others) may use their own clusters and values — log the messages to see them.
+
+To check the exact values of your devices, log every message first:
+
+```berry
+import ZHB
+import SLZB
+
+ZHB.waitForStart(255)
+
+while true
+  var msg = ZHB.dataReceive(-1)
+  if msg != nil
+    SLZB.log(msg["name"] .. " " .. str(msg))
+  end
+end
+```
+
+Temperature alert from one sensor:
+
+```berry
+import ZHB
+import SLZB
+
+ZHB.waitForStart(255)
+var sensor = ZHB.getDevice("Bedroom sensor")
+
+while true
+  var msg = ZHB.dataReceive(-1)
+  if msg != nil && msg["nwk"] == sensor.getNwk() && msg["cl"] == 0x0402 && msg.contains("value")
+    if msg["value"] > 30
+      SLZB.log("Too hot: " .. str(msg["value"]) .. " C")
+    end
+  end
+end
+```
+
+`ZHB.dataReceive()` fits scripts that react to many devices in one place. For button actions of one device, `ZHB.on_action()` works as well. For frames the hub does not decode, use `ZHB.zclReceive()`.
+
+### Raw ZCL Frames (since v3.3.8.dev8)
+
+`ZHB.zclReceive()` gives a script every incoming ZCL frame exactly as the device sent it — any cluster, any command (attribute reports, read responses, cluster commands, manufacturer-specific frames), before converters and MQTT processing. Use it for devices or commands the hub does not decode itself. Available on ESP32-S3 devices (U-series, MRU, Ultima).
+
+Each frame is delivered to **every** script that uses `zclReceive()` — each script gets its own copy. A script starts receiving with its **first** `zclReceive()` call; frames that arrived before it are not delivered, so call it once at the script start. Up to 8 frames are buffered per script: when the script does not keep up, the oldest are dropped. The subscription ends when the script stops.
+
+A waiting `zclReceive()` blocks the whole script. Inside `TIMER` or event callbacks call it with `timeout = 0` (poll) only — callbacks of all scripts are serialized, so a blocking wait there stalls every script.
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `ieee` | string | Sender IEEE, same format as `ZigbeeDevice.getIeee()`. Missing when the sender is not in the device list yet (joining) |
+| `nwk` | int | Sender network address — `ZHB.getDevice(msg["nwk"])` |
+| `ep` | int | Source endpoint |
+| `dstEp` | int | Destination endpoint |
+| `cl` | int | Cluster id |
+| `group` | int | Group id for group-addressed frames, `0` otherwise |
+| `lqi` | int | Link quality of the frame |
+| `broadcast` | bool | Frame was sent as a broadcast |
+| `specific` | bool | `true` — cluster-specific command, `false` — global (profile-wide) command such as attribute report `0x0A` |
+| `dir` | int | `0` — client to server, `1` — server to client |
+| `manufCode` | int | Manufacturer code of a manufacturer-specific frame, `0` otherwise |
+| `seq` | int | ZCL transaction sequence number |
+| `cmd` | int | ZCL command id |
+| `zcl` | bytes | The whole ZCL frame: header + payload |
+| `payload` | bytes | ZCL payload only (after the header) |
+
+```berry
+import ZHB
+import SLZB
+
+ZHB.waitForStart(255)
+
+while true
+  var msg = ZHB.zclReceive(-1)
+  if msg == nil continue end
+
+  # Scenes cluster (0x0005) recall command from a remote
+  if msg["cl"] == 0x0005 && msg["specific"] && msg["cmd"] == 0x05
+    var p = msg["payload"]
+    # payload: group id (u16, little endian), scene id (u8)
+    SLZB.log("recall scene " .. str(p[2]) .. " of group " .. str(p.get(0, 2)) .. " from nwk " .. str(msg["nwk"]))
+  end
 end
 ```
 

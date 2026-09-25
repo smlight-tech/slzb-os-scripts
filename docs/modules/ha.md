@@ -177,18 +177,21 @@ end, 300000)
 
 ```berry
 import HA
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0402
-        var temp = msg["value"] / 100.0
+ZHB.waitForStart(255)
+
+while true
+    var msg = ZHB.dataReceive(-1)  # wait for the next value from any Zigbee device
+    if msg != nil && msg["cl"] == 0x0402 && msg.contains("value")
+        var temp = msg["value"]  # already in °C
         if temp > 28
             HA.call("climate", "set_temperature", "climate.thermostat", '{"temperature": 24}')
         elif temp < 18
             HA.call("climate", "set_temperature", "climate.thermostat", '{"temperature": 22}')
         end
     end
-end, 5000)
+end
 ```
 
 ### Monitor HA sensor and alert
@@ -229,13 +232,17 @@ end)
 
 ```berry
 import HA
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0406 && msg["value"] == 1
+ZHB.waitForStart(255)
+
+while true
+    var msg = ZHB.dataReceive(-1)
+    # Occupancy Sensing cluster: 1 = motion detected
+    if msg != nil && msg["cl"] == 0x0406 && msg.find("value") == 1
         HA.fire_event("slzb_motion", '{"zone": "living_room"}')
     end
-end)
+end
 ```
 
 ## Common Service Domains

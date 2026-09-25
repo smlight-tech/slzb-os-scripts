@@ -140,17 +140,25 @@ end, 300000)
 
 ```berry
 import GSHEETS
-import ZB
+import ZHB
+import SLZB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0402
-        var temp = msg["value"] / 100.0
-        GSHEETS.append("temperature", temp, msg["src_addr"])
-    elif msg["cluster"] == 0x0405
-        var hum = msg["value"] / 100.0
-        GSHEETS.append("humidity", hum, msg["src_addr"])
+ZHB.waitForStart(255)
+
+var last = {}  # "<ieee>/<cluster>" -> SLZB.millis() of the last logged row
+
+while true
+    var msg = ZHB.dataReceive(-1)  # values arrive already scaled: °C, %
+    if msg != nil && msg.contains("value") && (msg["cl"] == 0x0402 || msg["cl"] == 0x0405)
+        # at most one row per sensor and hour
+        var key = msg["ieee"] .. "/" .. str(msg["cl"])
+        var now = SLZB.millis()
+        if !last.contains(key) || now - last[key] >= 3600000
+            last[key] = now
+            GSHEETS.append(msg["cl"] == 0x0402 ? "temperature" : "humidity", msg["value"], msg["name"])
+        end
     end
-end, 3600000)
+end
 ```
 
 ### Log button presses

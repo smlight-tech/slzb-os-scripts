@@ -218,27 +218,37 @@ end, 3000)
 
 ```berry
 import HUE
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0406 && msg["value"] == 1
+ZHB.waitForStart(255)
+
+while true
+    var msg = ZHB.dataReceive(-1)
+    # Occupancy Sensing cluster: 1 = motion detected
+    if msg != nil && msg["cl"] == 0x0406 && msg.find("value") == 1
         HUE.alert(1, "lselect")
     end
-end)
+end
 ```
 
-### Sync brightness from Zigbee dimmer
+### Mirror brightness of a Zigbee light to Hue
 
 ```berry
 import HUE
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0008
-        # Scale Zigbee brightness (0-254) to Hue brightness (0-254)
+ZHB.waitForStart(255)
+
+var lamp = ZHB.getDevice("Desk Lamp")
+
+while true
+    var msg = ZHB.dataReceive(-1)
+    # Level Control cluster: current level reported by the Zigbee light
+    if msg != nil && msg["nwk"] == lamp.getNwk() && msg["cl"] == 0x0008 && msg.contains("value")
+        # Zigbee brightness (0-254) maps 1:1 to Hue brightness (0-254)
         HUE.set_brightness(1, msg["value"])
     end
-end)
+end
 ```
 
 ### Color cycle

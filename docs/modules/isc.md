@@ -327,4 +327,4 @@ end
 - Messages survive the sender script stopping, but a channel keeps its pending messages until they are received or cleared — call `clear()` at script start if stale data is a concern
 - Broadcast: `receive()` on a broadcast channel without `subscribe()` raises an error; subscriptions (up to 32 in total) are removed automatically when the script stops. A channel that has subscribers accepts only a `CH_TYPE_BROADCAST` claim, and subscribing to a private/public channel returns `false`
 - Broadcast: when the writer stops, the subscriptions stay — a restarted writer claims the channel again and the subscribers keep receiving
-- Firmware features use broadcast on reserved system channels too — e.g. incoming SMS of the 4G/LTE add-on are broadcast to every script that calls `LTE.smsReceive()`
+- Firmware features use broadcast on reserved system channels too — e.g. incoming SMS of the 4G/LTE add-on are broadcast to every script that calls `LTE.smsReceive()`, parsed Zigbee Hub values to every script that calls `ZHB.dataReceive()`, raw ZCL frames to every script that calls `ZHB.zclReceive()`. Each such subscribed script uses one of the 32 subscriptions

@@ -81,34 +81,40 @@ end)
 
 ```berry
 import DISCORD
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0402
-        var temp = msg["value"] / 100.0
+ZHB.waitForStart(255)
+
+while true
+    var msg = ZHB.dataReceive(-1)  # wait for the next value from any Zigbee device
+    if msg != nil && msg["cl"] == 0x0402 && msg.contains("value")
+        var temp = msg["value"]  # already in °C
         if temp > 30
             DISCORD.send("High temperature alert: " .. str(temp) .. " C")
         end
     end
-end)
+end
 ```
 
 ### Door sensor notification
 
 ```berry
 import DISCORD
-import ZB
+import ZHB
 
-ZB.on_message(def (msg)
-    if msg["cluster"] == 0x0006
-        var state = msg["value"]
-        if state == 1
-            DISCORD.send("Door opened!")
+ZHB.waitForStart(255)
+
+while true
+    var msg = ZHB.dataReceive(-1)
+    # door / window sensors report through the IAS Zone cluster: bit 0 of the zone status = open
+    if msg != nil && msg["cl"] == 0x0500 && msg.contains("value")
+        if msg["value"] & 1
+            DISCORD.send(msg["name"] .. ": door opened!")
         else
-            DISCORD.send("Door closed.")
+            DISCORD.send(msg["name"] .. ": door closed.")
         end
     end
-end)
+end
 ```
 
 ## Notes
