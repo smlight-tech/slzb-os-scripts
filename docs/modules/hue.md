@@ -2,7 +2,7 @@
 
 Control Philips Hue lights via the Hue Bridge **v1 API** over your local network.
 
-> **API notice:** Uses the publicly documented [Philips Hue Bridge v1 API](https://developers.meethue.com/) (HTTP, local network). Requires a Hue Bridge. SMLIGHT is not affiliated with Signify N.V. (Philips Hue).
+> **API notice:** Uses the publicly documented [Philips Hue Bridge v1 API](https://developers.meethue.com/) (HTTP / HTTPS, local network). Requires a Hue Bridge. SMLIGHT is not affiliated with Signify N.V. (Philips Hue).
 
 ## Setup
 
@@ -14,6 +14,8 @@ Control Philips Hue lights via the Hue Bridge **v1 API** over your local network
    - **Bridge IP** — your Hue Bridge IP address (e.g. `192.168.1.50`)
    - **API Key** — a username/API key for the Bridge (see below)
 4. Enable and save
+
+> **HTTPS-only bridges** *(since v3.4.2)*: newer Hue Bridge firmware may refuse plain HTTP. The module handles it automatically — the first request after a reboot tries HTTP, falls back to HTTPS and uses HTTPS from then on (the log shows `bridge did not answer over HTTP ..., trying HTTPS`). To skip this probe, enter the address **with the prefix**: `https://192.168.1.50` (in the **Bridge IP** field or in `HUE.setup()`). `http://192.168.1.50` likewise forces plain HTTP. The Bridge certificate is self-signed and is not verified.
 
 ### How to create an API Key
 
@@ -31,11 +33,15 @@ Alternatively, use curl:
 curl -X POST http://<bridge-ip>/api -d '{"devicetype":"slzb#device"}'
 ```
 
+If the Bridge does not answer over plain HTTP, use `https://<bridge-ip>/debug/clip.html` in the browser (accept the certificate warning) or `curl -k -X POST https://<bridge-ip>/api -d '{"devicetype":"slzb#device"}'`.
+
 ### Option B — Configure in script
 
 ```berry
 import HUE
 HUE.setup("192.168.1.50", "your-api-key-here")
+# HTTPS-only bridge: force HTTPS right away
+HUE.setup("https://192.168.1.50", "your-api-key-here")
 ```
 
 This overrides the UI config for the current script session only.
@@ -62,7 +68,7 @@ Override Hue Bridge credentials for this script session.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `host` | string | Hue Bridge IP address |
+| `host` | string | Hue Bridge IP address. Optional `https://` / `http://` prefix forces the scheme (see Notes) |
 | `api_key` | string | API key (username) |
 
 ### HUE.on(light_id:int) -> int
@@ -289,10 +295,11 @@ end)
 
 ## Notes
 
-- Uses the Hue Bridge **v1 REST API** over plain HTTP (not HTTPS)
+- Uses the Hue Bridge **v1 REST API** over plain HTTP or HTTPS. Plain HTTP is tried first; if the Bridge cannot be reached that way (newer Bridge firmware may close plain HTTP connections), HTTPS is used, and the working scheme is remembered until reboot. To force one, set the host with a prefix: `"https://192.168.1.50"` or `"http://192.168.1.50"`. The Bridge certificate is not verified *(since v3.4.2)*
+- The functions that return an HTTP status (`on()`, `off()`, `set_*()`, `alert()`, `toggle()`) return a **negative** number when the Bridge cannot be reached at all (no answer, connection closed) *(since v3.4.2; `0` before)*
 - The SLZB device must be on the same local network as the Hue Bridge
 - Light IDs are integers assigned by the Bridge — use `lights()` to discover them
-- Each function call makes one HTTP request (~1-2 KB temporary RAM, freed immediately)
+- Each function call makes one HTTP request (~1-2 KB temporary RAM, freed immediately; `lights()` up to ~60 KB of PSRAM for bridges with many lights)
 - The `toggle()` function makes two HTTP requests (GET + PUT)
 - API keys do not expire unless manually deleted from the Bridge
 - The v1 API is still supported on current Hue Bridge firmware
