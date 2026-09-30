@@ -36,10 +36,53 @@ After executing `ZB.suspend(chip_id, true)`, the following events will **not** b
 | `ZB.flashMode(chip_id:int) -> nil` | Put Zigbee chip into firmware mode. Restart the chip or send the bootloader command to return to normal mode.<br>`chip_id` - radio module number. |
 | `ZB.routerPairMode(chip_id:int) -> nil` | Start network search for pairing (when chip is flashed as a router). |
 | `ZB.writeBytes(chip_id:int, data:bytes) -> int` | Send bytes directly to the Zigbee chip. Returns: `int` (bytes sent). |
-| `ZB.readBytes(chip_id:int) -> bytes` | Read bytes from the Zigbee chip. **Requires `ZB.suspend(true)` first!** |
+| `ZB.readBytes(chip_id:int, max_len:int?) -> bytes` | Read the bytes received from the Zigbee chip, at most `max_len` (all available by default); never waits, returns an empty `bytes()` when nothing arrived. **Requires `ZB.suspend(true)` first!** |
 | `ZB.available(chip_id:int) -> int` | Number of bytes available for reading from the Zigbee chip. |
 | `ZB.getZbClients(chip_id:int) -> int` | Number of clients connected to the Zigbee socket. |
-| `ZB.suspend(chip_id:int, state:bool) -> nil` | Stop (`true`) or resume (`false`) Zigbee socket processing. |
+| `ZB.suspend(chip_id:int, state:bool) -> nil` | Stop (`true`) or resume (`false`) Zigbee socket processing. A radio suspended by a script is resumed automatically when that script stops (since v3.4.2). |
+| `ZB.chipModel(chip_id:int=1) -> string` | Model of the radio module chip: `"CC2652P"`, `"CC2652P7"`, `"CC2674P10"`, `"EFR32MG21"`, `"EFR32MG24"`, `"EFR32MG26"`, `"EFR32ZG23"`, `"RF433"`, `"DIY"` or `"Unknown"`. Since v3.4.2. |
+| `ZB.isEFR(chip_id:int=1) -> bool` | `true` if the radio module is a Silicon Labs EFR32 chip (EFR32MG21 / MG24 / MG26, and the EFR32ZG23 of Z-Wave radios). Since v3.4.2. |
+| `ZB.isCC(chip_id:int=1) -> bool` | `true` if the radio module is a Texas Instruments CC chip (CC2652P / CC2652P7 / CC2674P10). Since v3.4.2. |
+| `ZB.isZW(chip_id:int=1) -> bool` | `true` if the radio module is a Z-Wave radio (EFR32ZG23, e.g. the Ultima Z-Wave add-on). Since v3.4.2. |
+| `ZB.getFirmwareRev(chip_id:int=1) -> int` | Revision of the firmware flashed into the radio module, e.g. `20250321` (`-1` if unknown). Since v3.4.2. |
+| `ZB.getFirmwareType(chip_id:int=1) -> int` | Type of the firmware flashed into the radio module: one of the `ZB.FW_*` constants (Zigbee coordinator / router, Thread, Z-Wave, ...). Since v3.4.2. |
+
+`chipModel`, `isEFR`, `isCC`, `isZW`, `getFirmwareRev` and `getFirmwareType` raise an error if the selected radio module does not exist. The firmware revision and type are the ones SLZB-OS recorded when the radio firmware was flashed (the same values the web UI shows), the chip is not queried. A Z-Wave radio is an EFR32 chip too, so `isEFR()` is `true` for it as well — check `isZW()` first when the two must be told apart:
+
+```berry
+import ZB
+
+for chip_id: 1 .. 3
+  try
+    var kind = ZB.isZW(chip_id) ? "Z-Wave" : ZB.isEFR(chip_id) ? "EFR32" : ZB.isCC(chip_id) ? "TI CC" : "other"
+    SLZB.log("Radio " .. chip_id .. ": " .. ZB.chipModel(chip_id) .. " (" .. kind .. "), firmware " ..
+             ZB.getFirmwareRev(chip_id) .. ", type " .. ZB.getFirmwareType(chip_id))
+    if ZB.getFirmwareType(chip_id) == ZB.FW_COORDINATOR
+      SLZB.log("Radio " .. chip_id .. " runs Zigbee coordinator firmware")
+    end
+  except .. as e, m
+    break  # no more radio modules
+  end
+end
+```
+
+## Constants
+
+Firmware types returned by `ZB.getFirmwareType()`:
+
+| Constant | Value | Description |
+|----------|-------|-------------|
+| `ZB.FW_UNKNOWN` | -1 | Unknown firmware (never flashed by SLZB-OS, or the record is missing) |
+| `ZB.FW_COORDINATOR` | 0 | Zigbee coordinator |
+| `ZB.FW_ROUTER` | 1 | Zigbee router |
+| `ZB.FW_THREAD_RCP` | 2 | Thread RCP (OpenThread radio co-processor) |
+| `ZB.FW_MULTIPAN` | 3 | Multi-PAN (Zigbee + Thread) |
+| `ZB.FW_STANDALONE` | 4 | Zigbee Hub (standalone coordinator of SLZB-OS) |
+| `ZB.FW_ZWAVE_EU` | 5 | Z-Wave, EU region |
+| `ZB.FW_ZWAVE_US` | 6 | Z-Wave, US region |
+| `ZB.FW_ZWAVE_ANZ` | 7 | Z-Wave, ANZ region |
+| `ZB.FW_THREAD_OTBR` | 8 | Thread Border Router |
+| `ZB.FW_REMOTE_ROUTER` | 9 | Remote Zigbee router |
 
 ## Events
 
