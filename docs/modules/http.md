@@ -126,7 +126,7 @@ stream_http_example()
 | Function | Description |
 |----------|-------------|
 | `HTTP.streamReadBytes(count:int, buffer:bytes) -> int` | Read bytes from the stream into a `bytes` buffer. `buffer` size must be >= `count`. Returns actual bytes read. |
-| `HTTP.streamReadString(count:int) -> string` | Read bytes from the stream as a string. |
+| `HTTP.streamReadString(count:int) -> string` | Read up to `count` bytes (max 16384 per call) from the stream as a string. May return fewer bytes than asked; returns `""` at the end of the response or on a read error — always check for `""` in read loops. |
 | `HTTP.streamFlush(count:int) -> nil` | Discard `count` bytes from the stream. |
 | `HTTP.streamWriteString(data:string) -> nil` | Write string to stream. |
 | `HTTP.streamWriteBytes(data:bytes) -> nil` | Write bytes to stream. |
