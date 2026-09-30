@@ -46,6 +46,9 @@ After executing `ZB.suspend(chip_id, true)`, the following events will **not** b
 | `ZB.isZW(chip_id:int=1) -> bool` | `true` if the radio module is a Z-Wave radio (EFR32ZG23, e.g. the Ultima Z-Wave add-on). Since v3.4.2. |
 | `ZB.getFirmwareRev(chip_id:int=1) -> int` | Revision of the firmware flashed into the radio module, e.g. `20250321` (`-1` if unknown). Since v3.4.2. |
 | `ZB.getFirmwareType(chip_id:int=1) -> int` | Type of the firmware flashed into the radio module: one of the `ZB.FW_*` constants (Zigbee coordinator / router, Thread, Z-Wave, ...). Since v3.4.2. |
+| `ZB._deinitUart(chip_id:int) -> nil` | **Very low-level APIs. You should really only look at these if you understand what you are doing!**<br>Stop the UART of the radio module (the driver is removed, the RX/TX pins are released). The radio itself keeps running; nothing can talk to it until `ZB._initUart()`. Since v3.4.2. |
+| `ZB._initUart(chip_id:int, options:map) -> nil` | **Very low-level APIs. You should really only look at these if you understand what you are doing!**<br>(Re)start the UART of the radio module with its current parameters, replacing the ones given in `options` (`baud`, `hwFlow`, `rx`, `tx`, `rts`, `cts`, `rst`, `flsh`, `zbCip`). The new parameters are used until the next reboot, they are not saved. Since v3.4.2. |
+
 
 `chipModel`, `isEFR`, `isCC`, `isZW`, `getFirmwareRev` and `getFirmwareType` raise an error if the selected radio module does not exist. The firmware revision and type are the ones SLZB-OS recorded when the radio firmware was flashed (the same values the web UI shows), the chip is not queried. A Z-Wave radio is an EFR32 chip too, so `isEFR()` is `true` for it as well — check `isZW()` first when the two must be told apart:
 
@@ -64,6 +67,43 @@ for chip_id: 1 .. 3
     break  # no more radio modules
   end
 end
+```
+
+### ZB._initUart(chip_id:int, options:map) -> nil
+**Very low-level APIs. You should really only look at these if you understand what you are doing!**
+Low-level control of the UART between the ESP32 and the radio module, together with `ZB._deinitUart(chip_id)`. The underscore marks them as advanced: wrong pins or a wrong baud rate cut the radio off from the Zigbee socket, Zigbee Hub and the firmware updater until the parameters are fixed or the device is rebooted.
+
+`_initUart()` takes the parameters the radio uses now and replaces those present in `options`; keys that are missing (or `nil`) keep their current value, so `ZB._initUart(1, {})` simply restarts the UART after `ZB._deinitUart(1)`. `options` must be a map, otherwise an error is raised.
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `baud` | int | Baud rate, e.g. `115200`, `460800` |
+| `hwFlow` | bool | RTS/CTS hardware flow control (only when both `rts` and `cts` are set). Without it RTS is held low |
+| `rx` | int | ESP32 GPIO of the UART RX pin |
+| `tx` | int | ESP32 GPIO of the UART TX pin |
+| `rts` | int | GPIO of the RTS pin |
+| `cts` | int | GPIO of the CTS pin |
+| `rst` | int | GPIO of the radio reset pin, driven high (radio running) by `_initUart()` |
+| `flsh` | int | GPIO of the radio bootloader pin, driven high (normal boot) by `_initUart()` |
+| `zbCip` | int | Chip type used by SLZB-OS for this radio (affects `chipModel()`, `isEFR()`, the bootloader sequence) — change only for a DIY / custom radio |
+
+Pins: `255` means "not used"; on ESP32-S3 devices (U series, Ultima) `rst`, `flsh` and `rts` may also be pins of the TCA9555 I/O expander, numbered `100 + n`. `rx`, `tx` and `cts` must be ESP32 GPIOs.
+
+Notes:
+- The UART is shared with the Zigbee socket — call `ZB.suspend(chip_id, true)` before `_deinitUart()` and `ZB.suspend(chip_id, false)` after `_initUart()`.
+- The new parameters stay in effect for everything that uses the radio (Zigbee socket, `ZB.readBytes()` / `writeBytes()`, `ZB.reboot()`, `ZB.flashMode()`) until the device reboots; the saved configuration is not changed.
+- The radio firmware defines its own baud rate — `baud` must match it, `_initUart()` does not reconfigure the radio.
+- Keys in `options` are read from firmware v3.4.2 on (the older `initUart()` ignored them and always restarted with the current parameters).
+- To use "hwFlow" the radio module firmware must support hardware flow control, and the coordinator must be of the U series.
+
+```berry
+import ZB
+
+# radio 1 was flashed with firmware that talks at 460800 baud with RTS/CTS
+ZB.suspend(1, true)
+ZB._deinitUart(1)
+ZB._initUart(1, {"baud": 460800, "hwFlow": true})
+ZB.suspend(1, false)
 ```
 
 ## Constants
