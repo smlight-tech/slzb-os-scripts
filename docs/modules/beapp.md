@@ -144,6 +144,7 @@ end
 ## Notes
 
 - Available only on U series, MRU series and Ultima
+- The app backend is sandboxed: it can read and write files only inside its own folder `/beapps/<app_folder>/` (`meta.json` is read-only) — keep the app's config and data there. `/be/`, system configs and other apps' folders are not accessible (see [FS](fs.md#notes)). An app that really needs them declares `"fs.system"` in the `permissions` of its `meta.json`; the manifest is read when the backend starts, and the permission is shown to the user before the install
 - The app main script is always `/beapps/<app_folder>/app.be` — when the user opens the app page while it is not running, the coordinator offers to start it first; apps without `app.be` are UI-only
 - Start the backend script **before** the user opens the app page — `open` events sent while no backend is running stay in the queue but are cleared on a fresh `claim()`
 - A blocking `receive()` blocks the whole script; the same TIMER-callback restrictions apply as for `ISC.receive()` — block only in the main script flow

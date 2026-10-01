@@ -41,6 +41,10 @@ The object returned by `FS.open()`. Wraps the standard [Berry file class](https:
 | `File.flush() -> nil` | Flush the write buffer — force all pending writes to storage. |
 | `File.close() -> nil` | Close the file and free all associated resources. |
 
+## Notes
+
+- **App backends are sandboxed.** The main script of an installed app (`/beapps/<folder>/app.be`) can only access files inside its own folder `/beapps/<folder>/`, and `meta.json` there is read-only. Everything else is denied: `FS.open()` raises `io_error` ("permission denied"), `FS.exists()` returns `false`, `FS.deleteFile()` / `FS.deleteDir()` do nothing. The same applies to loading code from files (`load()`, `compile(path, "file")`, `import`). An app with the `"fs.system"` permission in its manifest has no such limits. Regular scripts in `/be/` have no such limits either
+
 ## Examples
 
 ### Check if a file exists
