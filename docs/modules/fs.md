@@ -43,7 +43,7 @@ The object returned by `FS.open()`. Wraps the standard [Berry file class](https:
 
 ## Notes
 
-- **App backends are sandboxed.** The main script of an installed app (`/beapps/<folder>/app.be`) can only access files inside its own folder `/beapps/<folder>/`, and `meta.json` there is read-only. Everything else is denied: `FS.open()` raises `io_error` ("permission denied"), `FS.exists()` returns `false`, `FS.deleteFile()` / `FS.deleteDir()` do nothing. The same applies to loading code from files (`compile(path, "file")`, `import`): an app loads its own modules with `import lib` (finds `/beapps/<folder>/lib.be`, the app folder is in the module path of the backend) or `compile("/beapps/<folder>/lib.be", "file")()`. An app with the `"fs.system"` permission in its manifest has no such limits. Regular scripts in `/be/` have no such limits either
+- **App backends are sandboxed.** The main script of an installed app (`/beapps/<folder>/app.be`) can only access files inside its own folder `/beapps/<folder>/`, and `meta.json` and the compiled `*.bec` files there are read-only (bytecode is loaded only from `.bec` files built by the firmware). Everything else is denied: `FS.open()` raises `io_error` ("permission denied"), `FS.exists()` returns `false`, `FS.deleteFile()` / `FS.deleteDir()` do nothing. The same applies to loading code from files (`compile(path, "file")`, `import`): an app loads its own modules with `import lib` (finds `/beapps/<folder>/lib.be`, the app folder is in the module path of the backend) or `compile("/beapps/<folder>/lib.be", "file")()`. An app with the `"fs.system"` permission in its manifest has no such limits. Regular scripts in `/be/` have no such limits either
 
 ## Examples
 
