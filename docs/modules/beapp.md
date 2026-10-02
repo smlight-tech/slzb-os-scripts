@@ -75,7 +75,7 @@ Receive the next event addressed to the claimed app. Events of other apps are dr
 
 ### BEAPP.log(msg:string) -> nil
 
-Append a line to the app's private ring log — viewable in the coordinator UI via the **Log** button on the app card. **No `claim()` needed** — a background app script can log at any time; the app is identified by the script's own path (`/beapps/<folder>/app.be`). The buffer lives in PSRAM, is created on first use (4096 bytes by default) and silently drops the oldest lines when full; it survives script restarts, so the log stays readable while the app is stopped. Lines are prefixed with the current time.
+Append a line to the app's private ring log — viewable in the coordinator UI via the **Log** button on the app card. **No `claim()` needed** — a background app script can log at any time; the app is identified by the script's own path (`/beapps/<folder>/app.be`). The buffer lives in PSRAM, is created on first use (4096 bytes by default) and silently drops the oldest lines when full; it survives script restarts, so the log stays readable while the app is stopped. Lines are prefixed with the current time. The firmware writes into the same log too: a load or runtime error of the backend (also in TIMER / event callbacks) with its traceback as an `[E]` line, and the crash-restarts of **Restart if crashed** as `[W]` lines — a crashed app can be diagnosed from its own log.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -155,4 +155,4 @@ end
 - Channels are allocated dynamically from the reserved ISC range (fixed system channels are skipped); scripts cannot access reserved channels directly through the ISC module
 - The app card in the coordinator UI has per-app toggles: **Start on boot** (the app main script is loaded and started with the other scripts at boot), **Restart if crashed** (an app that entered the error state is restarted automatically after a short delay) and **Show in sidebar**
 - The **Remove** button on the app card uninstalls the app: the backend script is stopped, `/beapps/<folder>/` is deleted with all files, and the app's config entry, pending restarts and ring log are dropped
-- `BEAPP.log()` writes to a per-app circular buffer (PSRAM, up to 8 apps); read it with the **Log** button on the app card in the coordinator UI
+- `BEAPP.log()` writes to a per-app circular buffer (PSRAM, up to 8 apps); read it with the **Log** button on the app card in the coordinator UI. Backend errors land there automatically (`[E]` lines, shown in red), no `BEAPP.log()` call is needed for that
