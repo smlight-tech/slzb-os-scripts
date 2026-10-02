@@ -82,6 +82,7 @@ The event system lets you "subscribe" to things that happen in SLZB-OS — like 
 - **Do not** use `SLZB.delay()` — events must complete quickly.
 - **Do not** use infinite loops.
 - **Do not** run for too long — this can block other operations (e.g., a slow `ZB.on_pkt` handler will cause Z2M/ZHA disconnections).
+- A callback (event handler, `TIMER` callback) still running **1 second** after it started is stopped with a `timeout_error` (the error and the line it stopped at are in the log), so an endless loop in a handler cannot hang the device. The check runs between Berry instructions: a blocking native call inside a callback is not interrupted, the error comes as soon as Berry code runs again.
 - If an error occurs during execution, the script is stopped and all subscriptions are canceled.
 - Some events provide extra data to your callback. Check the documentation for each specific event.
 - Some events use your `return` value. For example, returning `true` from `ZB.on_pkt` blocks the packet from reaching the Zigbee socket.
@@ -97,6 +98,10 @@ end
 
 ZB.on_connect(conn_cb)
 ```
+
+### Long-running scripts
+
+The main body of a script runs in its own task and has no time limit: a `while true ... end` loop with blocking calls (`ISC.receive(ch, -1)`, `BEAPP.receive(-1)`) is fine. A loop that never blocks is paused for a moment every ~50 ms so the rest of the system (web UI, MQTT, Zigbee) keeps running; it still wastes CPU, so prefer timers or blocking receives.
 
 ### Multiple simultaneous events
 
