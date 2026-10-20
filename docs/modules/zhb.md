@@ -26,10 +26,10 @@ relay.sendOnOff(1)  # turn on
 | `ZHB.dataReceive(timeout:int=0) -> map` | Next parsed value or command from any paired device, `nil` if nothing arrived. `timeout`: ms, `0` — just check, `-1` — wait forever. Result keys: `ieee`, `name`, `nwk`, `ep`, `cl`, `lqi`, `status`, `manufCode`, `zType`, attributes: `attr`, `value`; commands: `cmd`, `action`. See *Receiving Device Data* below. ESP32-S3 devices only. *(since v3.3.8.dev8)* |
 | `ZHB.zclReceive(timeout:int=0) -> map` | Next raw incoming ZCL frame from any device, `nil` if nothing arrived. `timeout`: ms, `0` — just check, `-1` — wait forever. Result keys: `ieee`, `nwk`, `ep`, `dstEp`, `cl`, `group`, `lqi`, `broadcast`, `specific`, `dir`, `manufCode`, `seq`, `cmd`, `zcl`, `payload`. See *Raw ZCL Frames* below. ESP32-S3 devices only. *(since v3.3.8.dev8)* |
 | `ZHB.waitForStart(timeout:int) -> nil` | Block until Zigbee Hub is fully started. Max 254 seconds. Use `255` to wait forever. |
-| `ZHB.permitJoin(time:int, addr:int?) -> nil` | Open network for new devices. `time`: 1–254 sec, `0` = close, `255` = permanent. `addr` (optional): specific device address. *(since v3.0.6)* |
+| `ZHB.permitJoin(time:int, addr:int?) -> nil` | Open network for new devices. `time`: 1–254 sec (more is 254: a network is never left open for good), `0` = close. `addr` (optional): specific device address. *(since v3.0.6)* |
 | `ZHB.mqttAction(topic:string, payload:string) -> int\|nil` | Run a Zigbee Hub MQTT command locally (same handlers as a real MQTT message on `{base}/cmd/...` or `{base}/write/...`, incl. ZCN converters). *(since v3.3.8: returns a request id for `ZHB.await()`)* Returns: request id (`int`) for cmd/write topics, `nil` otherwise. |
 | `ZHB.await(seq:int, timeoutMs:int=3000) -> bool` | Block until the device answers the request `seq`. See *Waiting for a Response* below. *(since v3.3.8)* |
-| `ZHB.on_response(seq:int, callback:function(ok:bool, status:int\|nil) -> nil, timeoutMs:int?) -> bool` | Non-blocking variant: `callback(ok, status)`. *(since v3.3.8)* |
+| `ZHB.on_response(seq:int, callback:function(ok:bool, status:int\|nil) -> nil, timeoutMs:int=3000) -> bool` | Non-blocking variant: `callback(ok, status)`. *(since v3.3.8)* |
 | `ZHB.lastStatus() -> int\|nil` | Raw ZCL status of the last `ZHB.await()`. *(since v3.3.8)* |
 
 ### Class ZigbeeDevice
@@ -100,9 +100,9 @@ number (`seq`). The `ZHB` module offers two ways to get the device's answer for 
 
 | Function | Description |
 |----------|-------------|
-| `ZHB.await(seq:int, timeoutMs:int=3000) -> bool` | **Blocking.** Waits until the response for `seq` arrives. Default timeout 3000 ms, max 30000. Returns: `true` only when the device answered with ZCL **SUCCESS**; `false` on any error status, timeout or failed send. |
+| `ZHB.await(seq:int, timeoutMs:int=3000) -> bool` | **Blocking.** Waits until the response for `seq` arrives. Default timeout 3000 ms (also for `timeoutMs` ≤ 0), max 30000 (larger values are cut to it). Returns: `true` only when the device answered with ZCL **SUCCESS**; `false` on any error status, timeout or failed send. Raises an error when `seq` is unknown (not one of the last remembered requests) or no wait slot is free, and when called outside the main script code (see the rules below). |
 | `ZHB.lastStatus() -> int\|nil` | Raw ZCL status of the last `ZHB.await()` in this script (for diagnostics after a `false`). Returns: `int` (`0` = success) or `nil` on timeout / failed send. |
-| `ZHB.on_response(seq:int, callback:function(ok:bool, status:int\|nil) -> nil, timeoutMs:int?) -> bool` | **Non-blocking.** `callback(ok, status)` is called when the response (or timeout) arrives: `ok` — `bool` like `await()`, `status` — raw ZCL status or `nil` on timeout. Returns: `bool` — `false` if `seq` is unknown or too many pending waits. |
+| `ZHB.on_response(seq:int, callback:function(ok:bool, status:int\|nil) -> nil, timeoutMs:int=3000) -> bool` | **Non-blocking.** `callback(ok, status)` is called when the response (or timeout) arrives and the script is free to run it (see the rules below): `ok` — `bool` like `await()`, `status` — raw ZCL status or `nil` on timeout. Timeout limits as for `await()`. Returns: `bool` — `false` if `seq` is unknown or too many pending waits. |
 
 `ZHB.mqttAction()` is awaitable too: for `cmd`/`write` topics it returns a request id and the
 wait resolves on the **next** response from the target endpoint/cluster (the MQTT/ZCN handlers
@@ -120,6 +120,7 @@ Which response counts:
 ```berry
 import ZHB
 var relay = ZHB.getDevice("0xa4c1389ffb198304")
+var sensor = ZHB.getDevice("0x00158d0001a2b3c4")
 
 # synchronous style - plain sequential code
 if ZHB.await(relay.sendOnOff(1))
@@ -151,16 +152,25 @@ end)
 
 Rules:
 
-- `ZHB.await()` **cannot** be called inside ZCN converter callbacks or `ZHB.on_message`
-  handlers — those run on the Zigbee Hub task that delivers responses, so blocking there
-  would deadlock. It raises an error instead; use `ZHB.on_response()` in that context.
-- While a script is blocked in `ZHB.await()` its other callbacks (TIMER, ZCN, on_message,
-  on_response) **keep running** as usual — the wait only pauses the code that called `await()`.
+- `ZHB.await()` works in the **main script code only**. Inside any callback it raises an error —
+  use `ZHB.on_response()` there: ZCN converter callbacks and `ZHB.on_message` handlers run on the
+  Zigbee Hub task that delivers the responses (blocking there would deadlock), the other callbacks
+  (TIMER, MQTT, ...) run on system tasks that must not block for seconds.
+- While a script is blocked in `ZHB.await()` its callbacks (TIMER, ZCN, on_message, on_response)
+  **keep running** as usual — the wait only pauses the code that called `await()`. If one of these
+  callbacks fails meanwhile, `await()` raises an error when it returns and the script stops (as
+  after any callback error). If a callback still holds the script 10 s after the wait ended, the
+  script is stopped with an error.
+- An `on_response()` callback runs only when the script is free: its main code has finished, or
+  waits in `ZHB.await()`. When the response arrives while the main code is busy (a running loop,
+  `SLZB.delay()`, a blocking `ZHB.dataReceive()` / `ISC.receive()`, ...) for more than 50 ms, the
+  callback is dropped (a line in the system log). A script with an endless main loop should wait
+  with `ZHB.await()` instead.
 - Commands sent with the "disable default response" flag never get a Default Response:
   `await()` returns `false` (`lastStatus()` is `nil`) / the callback receives `status = nil`.
 - Call `await()`/`on_response()` right after the send: `seq` is an 8-bit rolling counter and
-  only the last 16 requests are remembered.
-- Up to 16 pending waits at a time across all scripts.
+  only the last 16 requests are remembered (5 on ESP32 devices without the S3 chip).
+- Up to 16 pending waits at a time across all scripts (5 on ESP32 devices without the S3 chip).
 
 #### Binding *(since v3.0.6)*
 
@@ -242,6 +252,7 @@ A waiting `dataReceive()` blocks the whole script. Inside `TIMER` or event callb
 | `manufCode` | int | Manufacturer code of a manufacturer-specific attribute, `0` otherwise |
 | `zType` | int | ZCL data type of the attribute (Tuya DP type for cluster `0xEF00`) |
 | `attr` | int | Attribute: attribute id (Tuya: DP number) |
+| `sub` | int | Attribute: part of the attribute value this entry holds, when the device converter splits one value into several entities (e.g. voltage, current and power of one Tuya datapoint). Missing for an ordinary attribute *(since v3.4.1.dev1)* |
 | `value` | int\|real\|bool\|string\|bytes | Attribute: decoded value, the same one published to MQTT. Missing if the attribute had no value |
 | `cmd` | int | Command: ZCL command id (instead of `attr` / `value`) |
 | `action` | string | Command: the recognized action, e.g. `"single"`, `"double"`, `"on"`, the same string as in `ZHB.on_action()`. Missing if the command is not mapped to an action |
