@@ -145,6 +145,7 @@ Each module is documented in its own file with API details, examples, and cross-
 | [UDP_SERVER](docs/modules/udpserver.md) | UDP server class — receive datagrams on a port, multicast groups | v3.3.8.dev8 | U series and Ultima |
 | [UDP_CLIENT](docs/modules/udpclient.md) | UDP client class — send datagrams, read the replies | v3.3.8.dev8 | U series and Ultima |
 | [USBH](docs/modules/usbh.md) | Your gateway to USB serial devices: list, open, read / write, baud rate, DTR / RTS | v3.4.2.dev1 | U series and Ultima |
+| [OT_CLI](docs/modules/ot_cli.md) | OpenThread CLI of the on-device border router: run commands, get the output | v3.4.3.dev2 | U series and Ultima, Thread+OTBR mode |
 
 ### Integrations
 
