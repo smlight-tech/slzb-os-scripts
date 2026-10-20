@@ -20,7 +20,7 @@ end, 5000)
 |----------|-------------|
 | `TIMER.setInterval(callback:function() -> nil, ms:int) -> int` | Create a repeating timer. |
 | `TIMER.setTimeout(callback:function() -> nil, ms:int) -> int` | Create a one-shot timer that fires the callback once after `ms` milliseconds. |
-| `TIMER.clear(timerId:int) -> nil` | Cancel a previously created timer (repeating or one-shot). |
+| `TIMER.clear(timerId:int) -> bool` | Cancel a timer of this script (repeating or one-shot). |
 
 ### TIMER.setInterval(callback:function() -> nil, ms:int) -> int
 
@@ -61,13 +61,15 @@ TIMER.setTimeout(def()
 end, 10000)
 ```
 
-### TIMER.clear(timerId:int) -> nil
+### TIMER.clear(timerId:int) -> bool
 
-Cancel a previously created timer (repeating or one-shot).
+Cancel a timer of this script (repeating or one-shot). Timer IDs are shared by all scripts, a script can only cancel its own timers.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `timerId` | int | Timer ID returned by setInterval or setTimeout |
+
+**Returns:** `bool` — `true` when the timer was cancelled, `nil` when the ID is not an active timer of this script
 
 ```berry
 import TIMER
@@ -122,6 +124,7 @@ end, 300000)
 - Maximum practical interval: ~49 days (2³² ms)
 - Minimum practical interval: ~10 ms (lower values may be unreliable)
 - Multiple timers can run concurrently within the same script
+- A callback may create or cancel timers itself (`TIMER.setTimeout()` / `TIMER.clear()` inside a callback)
 
 ## See Also
 
