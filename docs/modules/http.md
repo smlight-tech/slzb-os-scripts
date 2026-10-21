@@ -2,7 +2,7 @@
 
 > Available since: v2.9.8. Stream mode since v3.1.6.dev3.
 
-Make HTTP/HTTPS GET and POST requests from your scripts and process responses.
+Make HTTP/HTTPS GET, POST and PUT requests from your scripts and process responses.
 
 - HTTPS is supported (without certificate verification).
 - **All scripts share one HTTP client** — only one script can use it at a time.
@@ -35,6 +35,30 @@ def http_example()
   HTTP.close()
 end
 ```
+```berry
+# keep the client open and reuse it: one TLS handshake (~0.6 s over HTTPS), then every
+# request on the same connection takes ~20 ms. Example: Philips Hue bridge, v1 API
+var base = "https://192.168.1.20/api/<api key>/lights/1"
+
+HTTP.open(base, "get", 2048, false)
+HTTP.perform()
+SLZB.log("light 1: " .. HTTP.getResponse())
+
+HTTP.setUrl(base .. "/state")
+HTTP.setMethod("put")
+HTTP.setHeader("Content-Type", "application/json")
+HTTP.setPostData('{"on":true,"bri":200}')
+SLZB.log("on: " .. HTTP.perform())
+
+HTTP.setPostData('{"xy":[0.3,0.3]}')  # same method and URL, new body
+HTTP.perform()
+
+HTTP.setUrl(base)
+HTTP.setMethod("get")                 # drops the PUT body
+HTTP.perform()
+
+HTTP.close()                          # the client is shared by all scripts: close it when done
+```
 
 ## API Reference
 
@@ -42,12 +66,12 @@ end
 
 | Function | Description |
 |----------|-------------|
-| `HTTP.open(url:string, method:string, buffer:int, streamMode:bool?) -> bool` | Open the HTTP client. `method`: `"get"` or `"post"` (**case sensitive**). `buffer`: response buffer size in bytes (recommended max ~4096; U-series can use more). `streamMode`: set client to stream mode, optional |
+| `HTTP.open(url:string, method:string, buffer:int, streamMode:bool?) -> bool` | Open the HTTP client. `method`: `"get"`, `"post"` or `"put"` (**case sensitive**, `"put"` since v3.4.3.dev2). `buffer`: response buffer size in bytes (recommended max ~4096; U-series can use more). `streamMode`: set client to stream mode, optional |
 | `HTTP.perform() -> int` | Execute the request. Returns: `int` (HTTP status code, 200 = OK). |
 | `HTTP.getResponse() -> string` | Get the response text, up to `buffer` size. **Do not log responses longer than 1024 characters — this will crash!** |
-| `HTTP.setPostData(data:string) -> bool` | Set POST request body. |
+| `HTTP.setPostData(data:string) -> bool` | Set the request body of a POST or PUT request. Without a `Content-Type` header set before, `application/x-www-form-urlencoded` is sent. |
 | `HTTP.setHeader(name:string, value:string) -> bool` | Set a request header. |
-| `HTTP.setMethod(method:string) -> bool` | Change method on an already-open client (**reuse API**). |
+| `HTTP.setMethod(method:string) -> bool` | Change method on an already-open client (**reuse API**): `"get"`, `"post"` or `"put"`. Switching to `"get"` drops the body set by `setPostData()` and the `Content-Type` header. |
 | `HTTP.setUrl(url:string) -> bool` | Change URL on an already-open client (**reuse API**). |
 | `HTTP.isOpened() -> bool` | Check if the client is currently open. |
 | `HTTP.isStreamMode() -> bool` | Check if the client is in stream mode. |
