@@ -300,6 +300,9 @@ end)
 - The SLZB device must be on the same local network as the Hue Bridge
 - Light IDs are integers assigned by the Bridge — use `lights()` to discover them
 - Each function call makes one HTTP request (~1-2 KB temporary RAM, freed immediately; `lights()` up to ~60 KB of PSRAM for bridges with many lights)
+- ESP32-S3 devices (U series, MRU, Ultima) keep the connection to the Bridge open between calls: the first call pays the connection setup (~0.6 s over HTTPS, the TLS handshake), the next ones take ~20 ms. The connection holds ~40 KB of PSRAM; `lights()` uses its own one-time connection. Other devices open a new connection for every call *(since v3.4.3.dev2)*
+- Calls from several scripts run one after another, never at the same time *(since v3.4.3.dev2)*
+- A host / API key saved on the integrations page is used from the next call; `setup()` overrides it until reboot
 - The `toggle()` function makes two HTTP requests (GET + PUT)
 - API keys do not expire unless manually deleted from the Bridge
 - The v1 API is still supported on current Hue Bridge firmware
