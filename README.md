@@ -234,6 +234,7 @@ Ready-to-use scripts in the [`examples/`](examples/) folder:
 | [zigbee_button_sends_ir.be](examples/ir_transmitter/zigbee_button_sends_ir.be) | Zigbee button sends IR commands to TV | IR, ZHB |
 | [log_ir_codes.be](examples/ir_receiver/log_ir_codes.be) | Log all received IR codes (discovery tool) | IR |
 | [ir_to_zigbee_bridge.be](examples/ir_receiver/ir_to_zigbee_bridge.be) | Control Zigbee devices with an IR remote | IR, ZHB |
+| [znp_router.be](examples/zigbee_router/) | Zigbee router on a TI radio with the coordinator firmware (no reflash) | ZB |
 
 Community examples:
 - [Scheduled socket management](https://github.com/Tarik2142/slzb-outage-commander/blob/main/commander.be) — ZHB + TIME

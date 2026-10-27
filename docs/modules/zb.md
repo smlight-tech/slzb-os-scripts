@@ -189,3 +189,4 @@ Callback receives:
 - [Getting Started: Event System](../getting-started.md#event-system)
 - [Example: Reboot Zigbee on client drop](../../examples/basic/zb_reboot_on_drop.be)
 - [Example: Report stats](../../examples/report_stats/)
+- [Example: Zigbee router on a TI coordinator radio (raw MT frames)](../../examples/zigbee_router/)
