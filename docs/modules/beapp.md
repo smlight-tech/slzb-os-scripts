@@ -129,6 +129,7 @@ end
 ### Page side (ui.html, BeApp SDK)
 
 ```html
+<link rel="stylesheet" href="/css/merged.css">
 <script src="/js/beAppSdk.js"></script>
 <script>
     BeApp.onMessage((data) => {
@@ -141,9 +142,69 @@ end
 </script>
 ```
 
+## Page styles
+
+Link the coordinator's stylesheet and include the SDK, and the page looks like the rest of the web UI:
+
+```html
+<link rel="stylesheet" href="/css/merged.css">
+<script src="/js/beAppSdk.js"></script>
+```
+
+The stylesheet holds a part of Bootstrap 5.3 in the colours of the web UI. Its text size is 14 px (`1rem`). The list below is what it offers: anything else of Bootstrap (nav, modal, dropdown, list group, progress, spinner, form validation, ...) is not there, style it in the page's own CSS.
+
+**Light and dark theme.** The SDK sets `data-bs-theme` and `data-theme` (`light` / `dark`) on `<html>` and follows a change of the theme. The stylesheet needs nothing more; for the page's own CSS use the variables below, or `[data-theme="dark"]`.
+
+**Accent colour.** The user chooses it under General → Appearance. The SDK sets it on `<html>` through the variables below and follows a change while the page is open, so a `btn-primary`, a switch or a link have it without any code. Without the SDK the page keeps the default teal. Use the variables in the page's own CSS rather than a fixed colour:
+
+```css
+.my-tag { background: var(--bs-primary-bg-subtle); color: var(--bs-primary-text-emphasis); }
+.my-button { background: var(--bs-primary); color: var(--app-on-accent); }
+.my-glow { box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .25); }
+```
+
+| Variable | What it is |
+|----------|------------|
+| `--bs-primary` | The accent colour |
+| `--bs-primary-rgb` | The same as numbers, for `rgba(var(--bs-primary-rgb), .25)` |
+| `--app-on-accent` | Text on the accent colour (dark in the dark theme, whose accent is light) |
+| `--bs-primary-bg-subtle` | A soft background in the accent's hue |
+| `--bs-primary-text-emphasis`, `--bs-primary-border-subtle` | Text and border in the accent colour |
+| `--bs-link-color`, `--bs-link-hover-color` (and `-rgb`) | Links |
+| `--bs-body-bg`, `--bs-body-color` | The background of the page and of cards, the text |
+| `--bs-secondary-color` | Secondary text |
+| `--bs-secondary-bg`, `--bs-tertiary-bg` | Two more backgrounds, for parts that stand out from it |
+| `--bs-border-color` | Borders |
+| `--bs-secondary`, `--bs-success`, `--bs-danger` | Status colours (`--bs-warning-rgb`, `--bs-info-rgb` as numbers only) |
+| `--bs-font-monospace`, `--bs-border-radius` | The monospace font, the corners |
+
+`BeApp.ready()` resolves with the accent too: `accent: {color, soft, on}`, each `#rrggbb` (accent, soft background, text on the accent). That is the value at the page's start; the variables follow a change, so prefer them.
+
+**Classes.** `{n}` is `0` to `5`, `{bp}` is `sm`, `md` or `lg` (there is no `xl`, `xxl`). Only the grid columns and `d-*` have the `{bp}` forms.
+
+| Group | Classes |
+|-------|---------|
+| Grid | `container`, `container-fluid`, `row`, `col`, `col-auto`, `col-1` to `col-12`, `col-{bp}`, `col-{bp}-auto`, `col-{bp}-1` to `col-{bp}-12`, `g-{n}`, `gx-{n}`, `gy-{n}` |
+| Buttons | `btn`, `btn-primary`, `btn-secondary`, `btn-success`, `btn-danger`, `btn-warning`, `btn-link`, `btn-outline-primary`, `btn-outline-secondary`, `btn-outline-success`, `btn-outline-danger`, `btn-outline-warning`, `btn-sm`, `btn-lg`, `btn-check`, `btn-close`, `btn-group`, `btn-group-sm`, `btn-group-lg`, `btn-group-vertical`, `btn-toolbar`, `active`, `disabled` |
+| Forms | `form-label`, `form-text`, `form-control`, `form-control-sm`, `form-control-lg`, `form-control-plaintext`, `form-control-color`, `form-select`, `form-select-sm`, `form-select-lg`, `form-check`, `form-check-inline`, `form-check-reverse`, `form-check-input`, `form-check-label`, `form-switch`, `form-range`, `col-form-label`, `col-form-label-sm`, `col-form-label-lg` |
+| Input groups | `input-group`, `input-group-sm`, `input-group-lg`, `input-group-text` |
+| Tables | `table`, `table-sm`, `table-hover`, `table-striped`, `table-striped-columns`, `table-bordered`, `table-borderless`, `table-active`, `table-group-divider`, `table-responsive`, `table-responsive-sm`, `table-responsive-md`, `table-responsive-lg`, `table-primary`, `table-secondary`, `table-success`, `table-danger`, `table-warning`, `table-info`, `table-light`, `table-dark` |
+| Cards | `card`, `card-body`, `card-title`, `card-subtitle`, `card-text`, `card-link`, `card-header`, `card-footer`, `card-group`, `card-img`, `card-img-top`, `card-img-bottom`, `card-img-overlay` |
+| Alerts | `alert`, `alert-primary`, `alert-secondary`, `alert-success`, `alert-danger`, `alert-warning`, `alert-info`, `alert-light`, `alert-dark`, `alert-heading`, `alert-link`, `alert-dismissible` |
+| Badges | `badge` (with a `bg-*` of the list below) |
+| Text | `h1` to `h6`, `small`, `lead`, `mark`, `fs-1` to `fs-6`, `fw-normal`, `fw-medium`, `fw-semibold`, `fw-bold`, `font-monospace`, `text-start`, `text-center`, `text-end`, `text-wrap`, `text-nowrap`, `text-break`, `text-truncate`, `text-lowercase`, `text-uppercase`, `text-capitalize`, `text-decoration-none` |
+| Text colour | `text-body`, `text-body-secondary`, `text-muted`, `text-primary`, `text-secondary`, `text-success`, `text-danger`, `text-warning`, `text-info`, `text-light`, `text-dark`, `text-white` |
+| Background | `bg-body`, `bg-body-secondary`, `bg-body-tertiary`, `bg-primary`, `bg-secondary`, `bg-success`, `bg-danger`, `bg-warning`, `bg-info`, `bg-light`, `bg-dark`, `bg-white`, `bg-transparent` |
+| Borders | `border`, `border-0`, `border-top`, `border-bottom`, `border-start`, `border-end`, `border-top-0`, `border-bottom-0`, `border-start-0`, `border-end-0`, `border-primary`, `border-secondary`, `border-success`, `border-danger`, `border-warning`, `rounded`, `rounded-0` to `rounded-3`, `rounded-circle`, `rounded-pill` |
+| Display | `d-none`, `d-block`, `d-inline`, `d-inline-block`, `d-flex`, `d-inline-flex`, `d-grid`, `d-{bp}-none`, `d-{bp}-block`, `d-{bp}-inline`, `d-{bp}-inline-block`, `d-{bp}-flex`, `d-{bp}-inline-flex`, `d-{bp}-grid`, `invisible`, `visually-hidden` |
+| Flex | `flex-row`, `flex-row-reverse`, `flex-column`, `flex-column-reverse`, `flex-wrap`, `flex-nowrap`, `flex-fill`, `flex-grow-0`, `flex-grow-1`, `flex-shrink-0`, `flex-shrink-1`, `justify-content-start`, `justify-content-end`, `justify-content-center`, `justify-content-between`, `justify-content-around`, `justify-content-evenly`, `align-items-start`, `align-items-end`, `align-items-center`, `align-items-baseline`, `align-items-stretch`, `align-self-start`, `align-self-end`, `align-self-center`, `align-self-stretch`, `gap-{n}`, `row-gap-{n}`, `column-gap-{n}` |
+| Spacing | `m-{n}`, `mt-{n}`, `mb-{n}`, `ms-{n}`, `me-{n}`, `mx-{n}`, `my-{n}`, `m-auto`, `mt-auto`, `mb-auto`, `ms-auto`, `me-auto`, `mx-auto`, `my-auto`, `p-{n}`, `pt-{n}`, `pb-{n}`, `ps-{n}`, `pe-{n}`, `px-{n}`, `py-{n}` |
+| Size, position | `w-25`, `w-50`, `w-75`, `w-100`, `w-auto`, `h-25`, `h-50`, `h-75`, `h-100`, `h-auto`, `mw-100`, `mh-100`, `img-fluid`, `position-relative`, `position-absolute`, `position-sticky`, `overflow-auto`, `overflow-hidden`, `pe-none`, `pe-auto`, `align-baseline`, `align-top`, `align-middle`, `align-bottom` |
+
 ## Notes
 
 - Available only on U series, MRU series and Ultima
+- For the page's look see [Page styles](#page-styles)
 - The app backend is sandboxed: it can read and write files only inside its own folder `/beapps/<app_folder>/` (`meta.json` is read-only) — keep the app's config and data there. `/be/`, system configs and other apps' folders are not accessible (see [FS](fs.md#notes)). An app that really needs them declares `"fs.system"` in the `permissions` of its `meta.json`; the manifest is read when the backend starts, and the permission is shown to the user before the install
 - The app main script is always `/beapps/<app_folder>/app.be` — when the user opens the app page while it is not running, the coordinator offers to start it first; apps without `app.be` are UI-only
 - The app folder is in the module path of the backend: split the code into several files and load them with `import <name>` (`/beapps/<app_folder>/<name>.be`)
