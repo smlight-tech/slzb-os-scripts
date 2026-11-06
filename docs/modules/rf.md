@@ -41,7 +41,7 @@ A raw command is a comma separated list of pulse durations in **microseconds**, 
 | Function | Description |
 |----------|-------------|
 | `RF.isPresent() -> bool` | `true` if the CC1101 add-on was detected at boot. All other functions return `false` / empty values when it is not. |
-| `RF.getStatus() -> string` | Current state: `"rx"` (listening), `"idle"`, `"tx"`, `"no_chip"`, `"not_init"`. |
+| `RF.getStatus() -> string` | Current state: `"rx"` (listening), `"idle"`, `"tx"`, `"no_chip"` (the add-on does not answer: not there or removed; it is looked for every 2 s and goes back to `"idle"` / `"rx"` when it answers), `"not_init"`. |
 | `RF.isBusy() -> bool` | `true` while a transmission is queued / in progress (`send()` returns `false` meanwhile). |
 | `RF.getFrequency() -> int` | Receiver frequency in Hz (also the default TX frequency). |
 | `RF.setFrequency(hz:int) -> bool` | Change frequency (runtime only, not persisted). Allowed bands: 300–348, 387–464, 779–928 MHz. Use the `RF.Freq_*` constants. |
