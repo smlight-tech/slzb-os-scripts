@@ -99,7 +99,8 @@ Commands are stored as `/rf/<name>.json` on the device and shared with the *RF T
 
 - Sending and receiving share one radio: during `send()` the receiver is paused and restarted automatically.
 - `send()` / `sendSaved()` are asynchronous — they return `true` as soon as the command is queued. Wait for `RF.isBusy()` to become `false` before queuing the next one (only one command can be queued at a time).
-- Captures are also published to the web UI (SSE `RF_CODE`) and to MQTT topic `status/rf` as `{"raw","freq","rssi","count","dur","seq"}`.
+- Captures are also published to the web UI (SSE `RF_CODE`) and to MQTT topic `<base topic>/api2/status/rf` as `{"raw","freq","rssi","count","dur","seq"}`.
+- MQTT sends a command too: publish to `<base topic>/api2/write/rf` the raw pulses as plain text (`350,1050,350,...`: the receiver's frequency, once), `{"raw", "freq"?, "repeats"?}` or `{"name", "repeats"?}` (a saved command). The same checks as the web API: at most 1024 pulses, 1..10 repeats, 5 s on air; a refused command is only written to the log.
 - Frequency and receiver state set from a script are not saved to the config; use the *RF Transceiver* page for persistent settings.
 - HTTP API equivalent: `POST /api2?action=21` with `code=<raw>` or `name=<saved>` (+ optional `freq`, `repeats`).
 
