@@ -180,6 +180,96 @@ Rules:
 | `ZigbeeDevice.bindToDevice(srcEp:int, srcCl:int, dstIeee:string, dstEp:int) -> bool` | Bind to another device. `dstIeee` in hex string format. |
 | `ZigbeeDevice.bindToGroup(srcEp:int, srcCl:int, dstGroupAddr:int) -> bool` | Bind to a group address. |
 
+### Class ZclAttrRecord
+
+One value or command a device sent, as the hub parsed it: an attribute value (a report or a read response) or a ZCL command (a remote's button). Scripts get it in the callbacks of a ZCN device converter (`import ZCN`) — `on_normalize(record, dev)`, `on_serialization(record, dev, data)` and the cluster's `on_cmd(dev, record)` — and never create one. A record is valid **only inside the callback** it was passed to: do not keep it in a variable for later (a `TIMER`, the next callback).
+
+#### Address and Type
+
+| Function | Description |
+|----------|-------------|
+| `ZclAttrRecord.getEp() -> int` | Endpoint the value or command came from. |
+| `ZclAttrRecord.getCl() -> int` | Cluster id (`0x0006` On/Off, `0x0402` Temperature, `0xEF00` Tuya, ...). |
+| `ZclAttrRecord.getAttr() -> int` | Attribute id of a value. For a command: the command id — except the Tuya On/Off commands `0xFC` / `0xFD`, where it is the first payload byte (the button event); use `cmdId()` for commands. |
+| `ZclAttrRecord.getSub() -> int` | Field of the attribute value the record holds (several entities of one value: voltage, current and power of one Tuya datapoint); `0` — the whole value. |
+| `ZclAttrRecord.getStatus() -> int` | ZCL status of the value: `0` success, `0x86` unsupported attribute, ... |
+| `ZclAttrRecord.getZtype() -> int` | ZCL data type of the value (`0x10` bool, `0x20` uint8, `0x21` uint16, `0x29` int16, `0x42` string, ...; a Tuya datapoint type on cluster `0xEF00`); `255` for a command. |
+| `ZclAttrRecord.getSMtype() -> int` | How the hub stores the value — compare with the `ZclAttrRecord.TYPE_*` constants below. |
+| `ZclAttrRecord.getManufCode() -> int` *(since v3.3.8.dev7)* | Manufacturer code of the frame, `0` for a standard frame. |
+| `ZclAttrRecord.matcher(cl:int, attr:int, ep:int?) -> bool` | `true` when the record is that cluster and attribute (and endpoint, when given). |
+| `ZclAttrRecord.isTuya() -> bool` | `true` for the Tuya cluster `0xEF00` (a datapoint: `getAttr()` is its number). |
+| `ZclAttrRecord.hasPayload() -> bool` | `true` when the record holds a value (any type but `TYPE_NONE`; a command record too). |
+
+#### Reading the Value
+
+| Function | Description |
+|----------|-------------|
+| `ZclAttrRecord.asInt() -> int` | The value as a signed 32-bit integer (`TYPE_I32`, `TYPE_U32`, `TYPE_BOOL`: 0 / 1). |
+| `ZclAttrRecord.asFloat() -> real` | The value of a `TYPE_FLOAT` record. |
+| `ZclAttrRecord.asStr() -> string` | The value of a `TYPE_STR` record; raises an error for any other type. |
+| `ZclAttrRecord.asBytes() -> bytes` *(working since v3.4.5.dev2)* | The bytes of a `TYPE_BUF` record (octet strings, Tuya raw datapoints, arrays) or of a `TYPE_STR` one; raises an error for any other type. |
+| `ZclAttrRecord.asLumiStruct(start:int=0) -> map` | Xiaomi / Aqara TLV records of a `TYPE_BUF` value (Basic `0xFF01`, `0xFCC0` attribute `0x00F7`) as `{tag: number}` (`int`, `real` for float types; strings are skipped). `start`: offset of the first record. |
+| `ZclAttrRecord.getMSB16() -> int` | High 16 bits of the 32-bit value. |
+| `ZclAttrRecord.getLSB16() -> int` | Low 16 bits of the 32-bit value. |
+
+#### Commands
+
+| Function | Description |
+|----------|-------------|
+| `ZclAttrRecord.isCmd() -> bool` | `true` for a command record. |
+| `ZclAttrRecord.cmdId() -> int` *(since v3.4.5.dev2)* | ZCL command id of a command record (Tuya On/Off `0xFC` / `0xFD` included), `-1` for an attribute value. |
+| `ZclAttrRecord.cmdPayload() -> bytes\|nil` *(since v3.4.5.dev2)* | Payload of the command: the bytes after the ZCL header and command id, empty `bytes()` for a command without one. Only inside the `on_cmd` callback the record was passed to; `nil` anywhere else, for an attribute value and for a command a converter made of a value. |
+| `ZclAttrRecord.isCmdPayload() -> bool` | `true` for a record of type `TYPE_CMD_PAYLOAD` (the hub makes none today: read the payload with `cmdPayload()`). |
+
+#### Changing the Record
+
+Inside `on_normalize` a converter rewrites the record before the hub stores and publishes it: a new value (scaled, decoded), another address (a proprietary value redirected to a standard attribute — the target attribute must exist in the converter with `ram: true`), or a command made of a value (`setCmd()`: the hub then hands it to the cluster's `on_cmd`).
+
+| Function | Description |
+|----------|-------------|
+| `ZclAttrRecord.setInt(value:int) -> nil` | Store a signed integer (`TYPE_I32`). |
+| `ZclAttrRecord.setUInt(value:int) -> nil` | Store an unsigned integer (`TYPE_U32`). |
+| `ZclAttrRecord.setFloat(value:real) -> nil` | Store a float (`TYPE_FLOAT`). |
+| `ZclAttrRecord.setBool(value:bool) -> nil` | Store a bool (`TYPE_BOOL`). |
+| `ZclAttrRecord.setStr(value:string) -> nil` | Store a string (`TYPE_STR`, a copy). |
+| `ZclAttrRecord.setBuf(data:bytes) -> nil` | Store a copy of `data` (`TYPE_BUF`, 1–255 bytes). |
+| `ZclAttrRecord.setCmd(cmdId:int, tuyaCluster:int=0) -> nil` | Turn the record into a command record with id `cmdId` (`tuyaCluster`: the value of the record, `0xFC` / `0xFD` for a Tuya On/Off command). |
+| `ZclAttrRecord.setMSB16(value:int) -> nil` | Replace the high 16 bits of the 32-bit value. |
+| `ZclAttrRecord.setLSB16(value:int) -> nil` | Replace the low 16 bits of the 32-bit value. |
+| `ZclAttrRecord.setEp(ep:int) -> nil` | Move the record to another endpoint. |
+| `ZclAttrRecord.setCl(cl:int) -> nil` | Move the record to another cluster. |
+| `ZclAttrRecord.setAttr(attr:int) -> nil` | Move the record to another attribute. |
+
+#### Storage Types
+
+| Constant | Value | Description |
+|----------|-------|-------------|
+| `ZclAttrRecord.TYPE_NONE` | 0 | No value. |
+| `ZclAttrRecord.TYPE_U32` | 1 | Unsigned integer, bitmap, enum (`asInt()`). |
+| `ZclAttrRecord.TYPE_I32` | 2 | Signed integer (`asInt()`). |
+| `ZclAttrRecord.TYPE_FLOAT` | 3 | Float, also integers wider than 32 bits (`asFloat()`). |
+| `ZclAttrRecord.TYPE_BUF` | 4 | Byte array (`asBytes()`). |
+| `ZclAttrRecord.TYPE_STR` | 5 | String (`asStr()`). |
+| `ZclAttrRecord.TYPE_BOOL` | 6 | Bool (`asInt()`: 0 / 1). |
+| `ZclAttrRecord.TYPE_CMD` | 7 | A command. |
+| `ZclAttrRecord.TYPE_CMD_PAYLOAD` | 8 | A command with its payload stored (not made by the hub today). |
+
+```berry
+# on_normalize: a temperature the device reports in 0.01 °C as a signed integer
+def norm_temp(record, dev)
+  record.setFloat(record.asInt() / 100.0)
+end
+
+# on_cmd of the On/Off cluster: a remote sending its zone button as 0xFD 00 00 NN
+def on_cmd_onoff(dev, record)
+  var p = record.cmdPayload()
+  if record.cmdId() == 0xfd && p != nil && size(p) == 3 && p[2] > 0
+    return "zone_" .. p[2]       # the action, published as an HA trigger
+  end
+  return nil                     # no action: the command goes to MQTT as data (cmd, payload)
+end
+```
+
 ### Identifying Devices in Callbacks
 
 ZigbeeDevice has **no `getIeee()` method**. To identify which device triggered an `on_action` callback, look up the device by IEEE once at startup, then compare by network address (`getNwk()`) inside the callback:
