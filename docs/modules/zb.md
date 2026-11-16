@@ -46,11 +46,12 @@ After executing `ZB.suspend(chip_id, true)`, the following events will **not** b
 | `ZB.isZW(chip_id:int=1) -> bool` | `true` if the radio module is a Z-Wave radio (EFR32ZG23, e.g. the Ultima Z-Wave add-on). Since v3.4.2. |
 | `ZB.getFirmwareRev(chip_id:int=1) -> int` | Revision of the firmware flashed into the radio module, e.g. `20250321` (`-1` if unknown). Since v3.4.2. |
 | `ZB.getFirmwareType(chip_id:int=1) -> int` | Type of the firmware flashed into the radio module: one of the `ZB.FW_*` constants (Zigbee coordinator / router, Thread, Z-Wave, ...). Since v3.4.2. |
+| `ZB.getTemp(chip_id:int=1) -> real` | Temperature of the radio module in °C, the value Home Assistant shows (`zb_temp` / `zb_temp2`). The radio chip is not measured: it is an estimate from the ESP32's temperature (`SLZB.getCoreTemp()` minus 1 to 4 °C, different on every call). Since v3.4.5.dev2. |
 | `ZB._deinitUart(chip_id:int) -> nil` | **Very low-level APIs. You should really only look at these if you understand what you are doing!**<br>Stop the UART of the radio module (the driver is removed, the RX/TX pins are released). The radio itself keeps running; nothing can talk to it until `ZB._initUart()`. Since v3.4.2. |
 | `ZB._initUart(chip_id:int, options:map) -> nil` | **Very low-level APIs. You should really only look at these if you understand what you are doing!**<br>(Re)start the UART of the radio module with its current parameters, replacing the ones given in `options` (`baud`, `hwFlow`, `rx`, `tx`, `rts`, `cts`, `rst`, `flsh`, `zbCip`). The new parameters are used until the next reboot, they are not saved. Since v3.4.2. |
 
 
-`chipModel`, `isEFR`, `isCC`, `isZW`, `getFirmwareRev` and `getFirmwareType` raise an error if the selected radio module does not exist. The firmware revision and type are the ones SLZB-OS recorded when the radio firmware was flashed (the same values the web UI shows), the chip is not queried. A Z-Wave radio is an EFR32 chip too, so `isEFR()` is `true` for it as well — check `isZW()` first when the two must be told apart:
+`chipModel`, `isEFR`, `isCC`, `isZW`, `getFirmwareRev`, `getFirmwareType` and `getTemp` raise an error if the selected radio module does not exist. The firmware revision and type are the ones SLZB-OS recorded when the radio firmware was flashed (the same values the web UI shows), the chip is not queried. A Z-Wave radio is an EFR32 chip too, so `isEFR()` is `true` for it as well — check `isZW()` first when the two must be told apart:
 
 ```berry
 import ZB
