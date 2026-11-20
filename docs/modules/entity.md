@@ -35,7 +35,7 @@ While a radio runs the Zigbee Hub, every entity its dashboard shows is an entity
 | `zhb.<ieee>.<ep>_<cluster>_<attr>` | as reported | An attribute of a device, e.g. `zhb.a4c138cf833c687a.1_0402_0000` (temperature of endpoint 1). The same numbers as in the hub's MQTT topics `<base>/data/<ieee>/<ep>/<cluster>/<attr>` (cluster and attribute 4 hex digits); a field of an attribute ends in `_<n>` |
 | `zhb.<ieee>.action` | string | An *event* at every action of the device (remote buttons: `"single"`, `"on_1"`, ...) |
 
-The state is the value the hub publishes (`data.val` of its MQTT message). Entities of a device that went offline (hub setting *device availability*) are unavailable until it is back; a removed device's entities are gone.
+The state is the value the hub publishes (`data.val` of its MQTT message); a measurement the hub publishes as a text of a fixed precision (`"227.00"`: power, voltage, energy, ...) is the number. Entities of a device that went offline (hub setting *device availability*) are unavailable until it is back; a removed device's entities are gone.
 
 `ENTITY.list()` shows what your device has; `ENTITY.list("zhb.")` the Zigbee ones.
 
