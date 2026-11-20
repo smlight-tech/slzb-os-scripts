@@ -74,6 +74,7 @@ Each entity has at most one alias. An alias is looked up when the function runs:
 | `changed` | int / nil | Time of the last change, epoch seconds (`nil` while the clock is not set) |
 | `changedMs` | int / nil | `SLZB.millis()` of the last change |
 | `t` | string | `receive()` only: `"state"` |
+| `cause` | string | `receive()` only: `"value"` - the entity reported a value; `"availability"` - only `available` changed (a device went offline or is back) and `state` is the value it had |
 | `dropped` | int | `receive()` only, when events were lost: how many (see [Notes](#notes)) |
 
 ### Result map
@@ -229,6 +230,7 @@ end
 - An event (a change or a result) is kept for the script until `receive()` takes it, up to 16. When more come meanwhile, the oldest are dropped and the next event reports how many in `dropped`.
 - A `set()` without an outcome from the device within 15 seconds comes back as `"timeout"`.
 - A state entity reports a change only when its value or availability changes; an event entity (a button) reports every press.
+- A device that is back online brings the value it had before: act on `ev["cause"] == "value"` when only a value the device really reported should count (a button press, a measurement).
 - Waiting in `receive()` costs no CPU. Prefer one `while true` loop with `receive(ENTITY.TIMEOUT_FOREVER)` over polling with timers.
 - Entities of the device itself (temperature, network, buttons) are read only; Zigbee entities can be set when the hub's dashboard can set them.
 
