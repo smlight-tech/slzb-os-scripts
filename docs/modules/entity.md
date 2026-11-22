@@ -26,6 +26,21 @@ import ENTITY
 | `button.btn1` | string | `"short"` / `"long"` at every press of the device button — an *event*: pressing twice gives two changes |
 | `button.btn2` | string | The second button (SLZB-Ultima, SLZB-U2L) |
 
+### Your own entities
+
+The **Entities** page of the web interface lets you make entities of your own: `user.<id>`, an on / off (bool), a
+number or a text. They are for values that automations and scripts share and that must survive a restart - a mode, a
+counter, a target temperature.
+
+| Id | State | Description |
+|----|-------|-------------|
+| `user.<id>` | bool, int / real or string, as the entity was made | Read with `ENTITY.get`, followed with `ENTITY.subscribe`, written with `ENTITY.set` |
+
+`ENTITY.set` must bring a value of the entity's type: a text written to a number comes back as the result `"failed"`
+with the reason `"not a number"` (`"not on / off"`, `"not a text"`), and the entity keeps its value. A value a script
+writes is stored on the device within 30 seconds (and before a planned restart); one written right before a power cut
+is lost.
+
 ### Zigbee Hub entities
 
 While a radio runs the Zigbee Hub, every entity its dashboard shows is an entity here too:
