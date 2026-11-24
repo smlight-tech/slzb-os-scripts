@@ -23,8 +23,12 @@ import ENTITY
 | `network.ethernet` | bool | Ethernet has an IP address |
 | `network.wifi` | bool | Wi-Fi (station) has an IP address |
 | `network.internet` | bool | Result of the last internet check (at the start, and whenever the web interface checks) |
+| `network.vpn` | bool | The VPN tunnel is up: WireGuard has its peer, or Tailscale is connected (`false` also when no VPN is set up) |
+| `socket.clients` | int | Clients connected to the radio socket servers (Zigbee2MQTT, ZHA, ...), all radios together |
 | `button.btn1` | string | `"short"` / `"long"` at every press of the device button — an *event*: pressing twice gives two changes |
 | `button.btn2` | string | The second button (SLZB-Ultima, SLZB-U2L) |
+| `ir.code` | string | SLZB-Ultima: an IR code was received — an *event*. `"<protocol>:0x<address>:0x<command>"`, for example `"8:0x0004:0x0008"` (the numbers `IR.on_receive` gets); a protocol the receiver does not know: `"0:0x<hash>"` |
+| `rf.code` | string | SLZB-Ultima with the RF add-on: an RF command was captured — an *event*. Its code `"<bits>:<hex>"`, for example `"24:5D30C1"` (the same at every press of a button of a fixed-code remote), or `"unknown"` |
 
 ### Your own entities
 
